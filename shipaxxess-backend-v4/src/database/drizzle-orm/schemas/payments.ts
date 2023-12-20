@@ -1,0 +1,19 @@
+import { InferInsertModel, InferSelectModel, sql } from "drizzle-orm";
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+
+export const payments = sqliteTable("payments", {
+	id: integer("id").primaryKey({ autoIncrement: true }),
+	uuid: text("uuid").notNull(),
+	user_id: integer("user_id").notNull(),
+	gateway: text("gateway").notNull(),
+	credit: integer("credit").notNull(),
+	current_balance: integer("current_balance").notNull(),
+	new_balance: integer("new_balance").notNull(),
+	status: text("status").notNull().default("pending"),
+	data_id: integer("data_id"),
+	created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`),
+	updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
+});
+
+export type PaymentsSelectModel = InferSelectModel<typeof payments>;
+export type PaymentsInsertModel = InferInsertModel<typeof payments>;
