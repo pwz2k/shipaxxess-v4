@@ -54,8 +54,8 @@ export class UspsBatchService {
 		}
 	}
 
-	async sendToQueue() {
-		await this.context.BATCH_QUEUE.send(this.data, { contentType: "json" });
+	async sendToQueue(batch_uuid: string) {
+		await this.context.BATCH_QUEUE.send({ batch_uuid }, { contentType: "json" });
 	}
 
 	async payforLabel(user: UsersSelectModel, weight: WeightsSelectModel) {
@@ -81,17 +81,17 @@ export class UspsBatchService {
 		});
 	}
 
-	async storeInBatchTable(params: { cost: number; batch_uuid: string; reseller_cost: number }) {
+	async storeBatchData(params: { cost: number; batch_uuid: string; reseller_cost: number }) {
 		const model = new Model(this.context.DB);
 
-		const insert = await model.insert(batchs, {
+		await model.insert(batchs, {
 			cost_reseller: params.reseller_cost,
 			cost_user: params.cost,
 			package_height: this.data.package.height,
 			package_length: this.data.package.length,
 			package_weight: this.data.package.weight,
 			package_width: this.data.package.width,
-			recipient: "",
+			recipient: this.data.recipient,
 			sender_city: this.data.sender.city,
 			sender_country: this.data.sender.country,
 			sender_full_name: this.data.sender.full_name,

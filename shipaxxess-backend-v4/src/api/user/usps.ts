@@ -12,14 +12,14 @@ export const USPSBatchLabelUser = async (c: Context<App>) => {
 	const checked = await usps.checkBeforeGenerate();
 
 	const batch_uuid = v4();
-
-	await usps.storeInBatchTable({
+	await usps.storeBatchData({
 		batch_uuid,
 		cost: checked.weight.user_cost,
 		reseller_cost: checked.weight.reseller_cost,
 	});
-
 	await usps.payforLabel(checked.user, checked.weight);
+
+	await usps.sendToQueue(batch_uuid);
 
 	return c.json({ success: true, message: "We are processing your batch. Please check back later." });
 };
