@@ -5,6 +5,7 @@ import { LabelsUser } from "./labels";
 import { PackagesUser } from "./packages";
 import { PaymentUser } from "./payment";
 import { ReferralsUser } from "./referrals";
+import { RefundUser } from "./refund";
 import { SettingsUser } from "./settings";
 import { StatusUser } from "./status";
 import { StoresUser } from "./stores";
@@ -24,6 +25,7 @@ user.get("/dashboard", DashboardUser);
 // Labels routes
 user.get("/labels/batchs", LabelsUser.GetAll);
 user.post("/labels/usps/batch", USPSBatchLabelUser);
+user.post("/labels/usps/refund", RefundUser);
 user.post("/labels/ups/batch", UpsBatchLabelUser);
 
 // Addresses routes
