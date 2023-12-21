@@ -8,6 +8,9 @@ export const labels = sqliteTable(
 		uuid: text("uuid").notNull(),
 		user_id: integer("user_id").notNull(),
 
+		// Batch
+		batch_uuid: text("batch_uuid"),
+
 		// Status
 		status_message: text("status_message"),
 		status_label: text("status_label").default("inqueue").notNull(),

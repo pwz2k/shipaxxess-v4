@@ -22,6 +22,7 @@ export type ZODSCHEMA = z.infer<typeof ZODSCHEMA>;
 
 export const BATCHZODSCHEMA = COMMONSCHEMA.merge(
 	z.object({
+		batch_uuid: z.string().uuid(),
 		recipient: z.array(Address.ZODSCHEMA.merge(z.object({ uuid: z.string().uuid() }))).min(1),
 	}),
 );

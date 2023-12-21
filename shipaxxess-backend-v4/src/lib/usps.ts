@@ -1,4 +1,5 @@
 import { config } from "@config";
+import { batchs } from "@schemas/batchs";
 import { labels } from "@schemas/labels";
 import { UsersSelectModel, users } from "@schemas/users";
 import { WeightsSelectModel, weights } from "@schemas/weights";
@@ -224,5 +225,17 @@ export class UspsBatchService {
 		);
 
 		return update;
+	}
+
+	async storeInBatchTable(params: { cost: number; batch_uuid: string }) {
+		const model = new Model(this.context.DB);
+
+		await model.insert(batchs, {
+			data: JSON.stringify(this.data),
+			user_id: this.userid,
+			uuid: params.batch_uuid,
+			total_cost: params.cost,
+			total_labels: this.data.recipient.length,
+		});
 	}
 }

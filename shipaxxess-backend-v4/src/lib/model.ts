@@ -8,7 +8,7 @@ export class Model {
 
 	async insert<T extends SQLiteTable<TableConfig>>(table: T, params: T["$inferInsert"]) {
 		const insert = await drizzle(this.db).insert(table).values(params);
-		if (!insert.success) throw exception({ message: "Failed to insert", code: 7666 });
+		if (!insert.success) throw exception({ message: "Failed to insert", code: 6901 });
 		return insert;
 	}
 
@@ -31,13 +31,13 @@ export class Model {
 		condition: SQL<unknown>,
 	) {
 		const update = await drizzle(this.db).update(table).set(params).where(condition);
-		if (!update.success) throw exception({ message: "Failed to update", code: 7565 });
+		if (!update.success) throw exception({ message: "Failed to update", code: 6902 });
 		return update;
 	}
 
 	async delete<T extends SQLiteTable<TableConfig>>(table: T, condition: SQL<unknown>) {
 		const dt = await drizzle(this.db).delete(table).where(condition);
-		if (!dt.success) throw exception({ message: "Failed to delete", code: 7865 });
+		if (!dt.success) throw exception({ message: "Failed to delete", code: 6903 });
 		return dt;
 	}
 }
