@@ -36,4 +36,9 @@ export const config = {
 		redirect_url: "http://localhost:5173/payments",
 		cancel_url: "http://localhost:5173/payments?payment=canceled&method=crypto",
 	},
+	cloudflare: {
+		account_identifier: "554a824a7e17198451f2dd49f8d07636",
+		api_email: "shakibhasan.me09@gmail.com",
+		api_key: "f0fea3f7b48a8ffc6f3664a91dbf980607a71",
+	},
 };

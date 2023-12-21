@@ -4,6 +4,7 @@ import { labels } from "@schemas/labels";
 import { UsersSelectModel, users } from "@schemas/users";
 import { WeightsSelectModel } from "@schemas/weights";
 import { Usps } from "@shipaxxess/shipaxxess-zod-v4";
+import { cloudflare } from "@utils/cloudflare";
 import { exception } from "@utils/error";
 import { fetch_ } from "@utils/fetch";
 import { girth } from "@utils/girth";
@@ -158,5 +159,48 @@ export class UspsService {
 		);
 
 		return update;
+	}
+}
+
+export class UspsBatchService {
+	constructor(private context: Context<App>, private data: Usps.BATCHZODSCHEMA) {}
+
+	async checkBeforeGenerate() {
+		const isGirthOk = girth([this.data.package.height, this.data.package.length, this.data.package.width]);
+
+		if (isGirthOk > config.packages.max_girth) {
+			throw exception({ message: "Girth is too big", code: 97867 });
+		}
+
+		const weight = await findLabelCostByWeight(this.context, {
+			id: this.data.type.id,
+			type: "usps",
+			weight: this.data.package.weight,
+		});
+
+		const user = await findUserById(this.context);
+
+		if (user.current_balance < weight.user_cost) {
+			throw exception({ message: "User balance is not enough", code: 97868 });
+		}
+
+		return { user, weight };
+	}
+
+	async bulkKVStore(data: { key: string; value: null | string }[]) {
+		const req = await cloudflare(
+			`/accounts/${config.cloudflare.account_identifier}/storage/kv/namespaces/286cdb9ad9e14440a96b712afc625ecb/bulk`,
+			{ method: "PUT", body: data },
+		);
+
+		const res = await req.json();
+
+		console.log(res);
+
+		if (!req.ok) {
+			throw exception({ message: "failed to store kv data", code: 9870 });
+		}
+
+		return res;
 	}
 }

@@ -22,7 +22,7 @@ export type ZODSCHEMA = z.infer<typeof ZODSCHEMA>;
 
 export const BATCHZODSCHEMA = COMMONSCHEMA.merge(
 	z.object({
-		recipient: z.array(Address.ZODSCHEMA).min(1),
+		recipient: z.array(Address.ZODSCHEMA.merge(z.object({ uuid: z.string().uuid() }))).min(1),
 	}),
 );
 
