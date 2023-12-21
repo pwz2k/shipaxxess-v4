@@ -1,4 +1,5 @@
 import { admin } from "@api/admin/routes";
+import { batchLabelQueue } from "@api/queue/labels";
 import { unprotected } from "@api/unprotected/routes";
 import { user } from "@api/user/routes";
 import { webhook } from "@api/webhook/routes";
@@ -85,4 +86,19 @@ app.onError((err, c) => {
 	}
 });
 
-export default app;
+export default {
+	fetch(req: Request, env: Bindings, ctx: ExecutionContext) {
+		return app.fetch(req, env, ctx);
+	},
+	queue(batch: MessageBatch<any>, env: Bindings) {
+		switch (batch.queue) {
+			case "batch-labels": {
+				return batchLabelQueue(batch, env);
+			}
+
+			default: {
+				return;
+			}
+		}
+	},
+};

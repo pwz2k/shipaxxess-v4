@@ -1,37 +1,40 @@
 import { config } from "@config";
-import { findLabelCostByWeight, findUserById } from "@helpers/query";
 import { labels } from "@schemas/labels";
 import { UsersSelectModel, users } from "@schemas/users";
-import { WeightsSelectModel } from "@schemas/weights";
+import { WeightsSelectModel, weights } from "@schemas/weights";
 import { Usps } from "@shipaxxess/shipaxxess-zod-v4";
 import { cloudflare } from "@utils/cloudflare";
 import { exception } from "@utils/error";
 import { fetch_ } from "@utils/fetch";
 import { girth } from "@utils/girth";
-import { eq } from "drizzle-orm";
-import { Context } from "hono";
+import { and, eq } from "drizzle-orm";
 import { v4 } from "uuid";
 import { Model } from "./model";
 
 type GeneratePayloadProps = { id: number; code: string; pdf: string };
 
 export class UspsService {
-	constructor(private context: Context<App>, private data: Usps.ZODSCHEMA) {}
-
-	async checkBeforeGenerate() {
+	constructor(private context: Bindings, private data: Usps.ZODSCHEMA, private userid: number) {
 		const isGirthOk = girth([this.data.package.height, this.data.package.length, this.data.package.width]);
 
 		if (isGirthOk > config.packages.max_girth) {
 			throw exception({ message: "Girth is too big", code: 97867 });
 		}
+	}
 
-		const weight = await findLabelCostByWeight(this.context, {
-			id: this.data.type.id,
-			type: "usps",
-			weight: this.data.package.weight,
-		});
+	async checkBeforeGenerate() {
+		const model = new Model(this.context.DB);
 
-		const user = await findUserById(this.context);
+		const weight = await model.read(
+			weights,
+			and(
+				eq(weights.type, "usps"),
+				eq(weights.type_id, this.data.type.id),
+				eq(weights.weight, this.data.package.weight),
+			),
+		);
+
+		const user = await model.read(users, eq(users.id, this.userid));
 
 		if (user.current_balance < weight.user_cost) {
 			throw exception({ message: "User balance is not enough", code: 97868 });
@@ -40,22 +43,20 @@ export class UspsService {
 		return { user, weight };
 	}
 
-	async insertLabel(params: GeneratePayloadProps) {
-		const labeluuid = v4();
-
-		const model = new Model(this.context.env.DB);
+	async insertLabel(params: GeneratePayloadProps, costs: { user: number; reseller: number }) {
+		const model = new Model(this.context.DB);
 
 		const insert = await model.create(labels, {
-			uuid: labeluuid,
-			user_id: this.context.get("jwtPayload").id,
+			uuid: v4(),
+			user_id: this.userid,
 
 			type: "usps",
 			status_label: "awaiting",
 			shipping_date: this.data.shippingdate,
 
 			// Costs
-			cost_user: 1,
-			cost_reseller: 1,
+			cost_user: costs.user,
+			cost_reseller: costs.reseller,
 
 			// Remote
 			remote_id: params.id,
@@ -138,7 +139,7 @@ export class UspsService {
 
 		const buffer = await req.arrayBuffer();
 
-		const r2object = await this.context.env.LABELS_BUCKET.put(`${params.id}-${params.code}.pdf`, buffer, {
+		const r2object = await this.context.LABELS_BUCKET.put(`${params.id}-${params.code}.pdf`, buffer, {
 			customMetadata: { pdf: params.pdf },
 		});
 
@@ -146,7 +147,7 @@ export class UspsService {
 	}
 
 	async payforLabel(user: UsersSelectModel, weight: WeightsSelectModel) {
-		const model = new Model(this.context.env.DB);
+		const model = new Model(this.context.DB);
 
 		const update = await model.update(
 			users,
@@ -155,7 +156,7 @@ export class UspsService {
 				total_labels: user.total_labels + 1,
 				total_spent: user.total_spent + weight.user_cost,
 			},
-			eq(users.id, this.context.get("jwtPayload").id),
+			eq(users.id, this.userid),
 		);
 
 		return update;
@@ -163,22 +164,27 @@ export class UspsService {
 }
 
 export class UspsBatchService {
-	constructor(private context: Context<App>, private data: Usps.BATCHZODSCHEMA) {}
-
-	async checkBeforeGenerate() {
+	constructor(private context: Bindings, private data: Usps.BATCHZODSCHEMA, private userid: number) {
 		const isGirthOk = girth([this.data.package.height, this.data.package.length, this.data.package.width]);
 
 		if (isGirthOk > config.packages.max_girth) {
 			throw exception({ message: "Girth is too big", code: 97867 });
 		}
+	}
 
-		const weight = await findLabelCostByWeight(this.context, {
-			id: this.data.type.id,
-			type: "usps",
-			weight: this.data.package.weight,
-		});
+	async checkBeforeGenerate() {
+		const model = new Model(this.context.DB);
 
-		const user = await findUserById(this.context);
+		const weight = await model.read(
+			weights,
+			and(
+				eq(weights.type, "usps"),
+				eq(weights.type_id, this.data.type.id),
+				eq(weights.weight, this.data.package.weight),
+			),
+		);
+
+		const user = await model.read(users, eq(users.id, this.userid));
 
 		if (user.current_balance < weight.user_cost * this.data.recipient.length) {
 			throw exception({ message: "User balance is not enough", code: 97868 });
@@ -188,7 +194,7 @@ export class UspsBatchService {
 	}
 
 	async bulkKVStore() {
-		const kv_data = this.data.recipient.map((v) => ({ key: v.uuid, value: null }));
+		const kv_data = this.data.recipient.map((v) => ({ key: v.uuid, value: "haven't been processed yet" }));
 
 		const req = await cloudflare(
 			`/accounts/${config.cloudflare.account_identifier}/storage/kv/namespaces/286cdb9ad9e14440a96b712afc625ecb/bulk`,
@@ -201,6 +207,22 @@ export class UspsBatchService {
 	}
 
 	async sendToQueue() {
-		await this.context.env.BATCH_QUEUE.send(this.data, { contentType: "json" });
+		await this.context.BATCH_QUEUE.send(this.data, { contentType: "json" });
+	}
+
+	async payforLabel(user: UsersSelectModel, weight: WeightsSelectModel) {
+		const model = new Model(this.context.DB);
+
+		const update = await model.update(
+			users,
+			{
+				current_balance: user.current_balance - weight.user_cost * this.data.recipient.length,
+				total_labels: user.total_labels + this.data.recipient.length,
+				total_spent: user.total_spent + weight.user_cost * this.data.recipient.length,
+			},
+			eq(users.id, this.userid),
+		);
+
+		return update;
 	}
 }
