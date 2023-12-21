@@ -27,7 +27,7 @@ const Create = async (c: Context<App>) => {
 
 	const payment_uuid = v4();
 
-	await model.create(payments, {
+	await model.insert(payments, {
 		credit: parse.credit,
 		gateway: parse.gateway,
 		current_balance: user.current_balance,

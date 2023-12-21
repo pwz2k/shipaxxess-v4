@@ -6,13 +6,13 @@ import { SQLiteTable, TableConfig } from "drizzle-orm/sqlite-core";
 export class Model {
 	constructor(private db: D1Database) {}
 
-	async create<T extends SQLiteTable<TableConfig>>(table: T, params: T["$inferInsert"]) {
+	async insert<T extends SQLiteTable<TableConfig>>(table: T, params: T["$inferInsert"]) {
 		const insert = await drizzle(this.db).insert(table).values(params);
 		if (!insert.success) throw exception({ message: "Failed to insert", code: 7666 });
 		return insert;
 	}
 
-	async read<T extends SQLiteTable<TableConfig>>(table: T, condition: SQL<unknown> | undefined) {
+	async get<T extends SQLiteTable<TableConfig>>(table: T, condition: SQL<unknown> | undefined) {
 		const data = await drizzle(this.db).select().from(table).where(condition).get();
 		if (!data) throw exception({ message: "Not found", code: 7667 });
 		return data;

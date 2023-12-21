@@ -30,7 +30,7 @@ const Create = async (c: Context<App>) => {
 
 	const model = new Model(c.env.DB);
 
-	await model.create(addresses, {
+	await model.insert(addresses, {
 		city: parse.city,
 		country: parse.country,
 		full_name: parse.full_name,

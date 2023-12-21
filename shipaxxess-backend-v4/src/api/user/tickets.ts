@@ -26,7 +26,7 @@ const Create = async (c: Context<App>) => {
 	const user = await model.get(users, eq(users.id, c.get("jwtPayload").id));
 
 	const ticket_uuid = v4();
-	await model.create(tickets, {
+	await model.insert(tickets, {
 		content: parse.content,
 		title: parse.title,
 		type: parse.type,
@@ -35,7 +35,7 @@ const Create = async (c: Context<App>) => {
 		data_id: parse.data_id,
 	});
 
-	await model.create(chats, {
+	await model.insert(chats, {
 		message: parse.content,
 		message_author: `${user.first_name} ${user.last_name}`,
 		message_profile: `${user.first_name.charAt(1)}${user.last_name.charAt(1)}`,
@@ -71,7 +71,7 @@ const PostMessage = async (c: Context<App, "/:ticket_id">) => {
 	const user = await model.get(users, eq(users.id, c.get("jwtPayload").id));
 
 	const chat_uuid = v4();
-	await model.create(chats, {
+	await model.insert(chats, {
 		message: parse.message,
 		message_author: `${user.first_name} ${user.last_name}`,
 		message_profile: `${user.first_name.charAt(1)}${user.last_name.charAt(1)}`,

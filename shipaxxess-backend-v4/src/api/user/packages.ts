@@ -31,7 +31,7 @@ const Create = async (c: Context<App>) => {
 
 	const model = new Model(c.env.DB);
 
-	await model.create(packages, {
+	await model.insert(packages, {
 		height: parse.height,
 		length: parse.length,
 		name: parse.name,

@@ -46,7 +46,7 @@ export class UspsService {
 	async insertLabel(params: GeneratePayloadProps, costs: { user: number; reseller: number }) {
 		const model = new Model(this.context.DB);
 
-		const insert = await model.create(labels, {
+		const insert = await model.insert(labels, {
 			uuid: v4(),
 			user_id: this.userid,
 
