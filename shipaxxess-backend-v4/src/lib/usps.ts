@@ -12,7 +12,7 @@ import { and, eq } from "drizzle-orm";
 import { v4 } from "uuid";
 import { Model } from "./model";
 
-type GeneratePayloadProps = { id: number; code: string; pdf: string };
+type GeneratePayloadProps = { id: number | null; code: string | null; pdf: string | null };
 
 export class UspsService {
 	constructor(private context: Bindings, private data: Usps.ZODSCHEMA, private userid: number) {
@@ -136,6 +136,10 @@ export class UspsService {
 	}
 
 	async downloadLabel(params: GeneratePayloadProps) {
+		if (!params.code || !params.pdf || !params.id) {
+			throw exception({ message: "invalid payload value", code: 9870 });
+		}
+
 		const req = await fetch(params.pdf);
 
 		const buffer = await req.arrayBuffer();
@@ -214,7 +218,7 @@ export class UspsBatchService {
 	async payforLabel(user: UsersSelectModel, weight: WeightsSelectModel) {
 		const model = new Model(this.context.DB);
 
-		const update = await model.update(
+		await model.update(
 			users,
 			{
 				current_balance: user.current_balance - weight.user_cost * this.data.recipient.length,
@@ -223,8 +227,6 @@ export class UspsBatchService {
 			},
 			eq(users.id, this.userid),
 		);
-
-		return update;
 	}
 
 	async storeInBatchTable(params: { cost: number; batch_uuid: string }) {
