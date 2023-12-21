@@ -6,7 +6,7 @@
 		"deploy": "wrangler deploy --minify src/index.ts",
 		"generate": "npx drizzle-kit generate:sqlite --config ./src/database/drizzle-orm/drizzle.config.ts",
 		"migrate": "export NO_D1_WARNING=true && npx wrangler d1 migrations apply shipaxxess-backend-d1",
-		"tail": "export NO_D1_WARNING=true && npx wrangler tail"
+		"tail": "npx wrangler tail"
 	},
 	"dependencies": {
 		"@shipaxxess/shipaxxess-zod-v4": "*",
