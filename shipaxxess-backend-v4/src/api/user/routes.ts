@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { AddressesUser } from "./addresses";
 import { DashboardUser } from "./dashboard";
+import { LabelsUser } from "./labels";
 import { PackagesUser } from "./packages";
 import { PaymentUser } from "./payment";
 import { ReferralsUser } from "./referrals";
@@ -8,7 +9,8 @@ import { SettingsUser } from "./settings";
 import { StatusUser } from "./status";
 import { StoresUser } from "./stores";
 import { TicketsUser } from "./tickets";
-import { USPSBatchLabelUser, USPSSignleLabelUser } from "./usps";
+import { UpsBatchLabelUser } from "./ups";
+import { USPSBatchLabelUser } from "./usps";
 import { WeightsUser } from "./weights";
 
 const user = new Hono<App>();
@@ -20,11 +22,9 @@ user.get("/status", StatusUser);
 user.get("/dashboard", DashboardUser);
 
 // Labels routes
-user.get("/labels");
-user.post("/labels/usps", USPSSignleLabelUser);
+user.get("/labels/batchs", LabelsUser.GetAll);
 user.post("/labels/usps/batch", USPSBatchLabelUser);
-user.post("/labels/ups");
-user.post("/labels/ups/batch");
+user.post("/labels/ups/batch", UpsBatchLabelUser);
 
 // Addresses routes
 user.get("/addresses", AddressesUser.GetAll);

@@ -1,5 +1,5 @@
 import { Context } from "hono";
 
-export const UpsUser = (c: Context<App>) => {
+export const UpsBatchLabelUser = (c: Context<App>) => {
 	return c.json({});
 };
