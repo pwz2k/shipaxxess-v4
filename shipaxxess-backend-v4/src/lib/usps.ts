@@ -180,27 +180,27 @@ export class UspsBatchService {
 
 		const user = await findUserById(this.context);
 
-		if (user.current_balance < weight.user_cost) {
+		if (user.current_balance < weight.user_cost * this.data.recipient.length) {
 			throw exception({ message: "User balance is not enough", code: 97868 });
 		}
 
 		return { user, weight };
 	}
 
-	async bulkKVStore(data: { key: string; value: null | string }[]) {
+	async bulkKVStore() {
+		const kv_data = this.data.recipient.map((v) => ({ key: v.uuid, value: null }));
+
 		const req = await cloudflare(
 			`/accounts/${config.cloudflare.account_identifier}/storage/kv/namespaces/286cdb9ad9e14440a96b712afc625ecb/bulk`,
-			{ method: "PUT", body: data },
+			{ method: "PUT", body: kv_data },
 		);
-
-		const res = await req.json();
-
-		console.log(res);
 
 		if (!req.ok) {
 			throw exception({ message: "failed to store kv data", code: 9870 });
 		}
+	}
 
-		return res;
+	async sendToQueue() {
+		await this.context.env.BATCH_QUEUE.send(this.data, { contentType: "json" });
 	}
 }

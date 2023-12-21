@@ -3,6 +3,7 @@ type Bindings = {
 	FRONTEND_URL: string;
 	LABELS_BUCKET: R2Bucket;
 	BATCH_KV: KVNamespace;
+	BATCH_QUEUE: Queue;
 };
 
 type Variables = {
