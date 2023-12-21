@@ -8,7 +8,7 @@ import { v4 } from "uuid";
 const GetAll = async (c: Context<App>) => {
 	const model = new Model(c.env.DB);
 
-	const pe = await model.readAll(packages, eq(packages.user_id, c.get("jwtPayload").id));
+	const pe = await model.all(packages, eq(packages.user_id, c.get("jwtPayload").id));
 
 	return c.json(pe);
 };
@@ -16,7 +16,7 @@ const GetAll = async (c: Context<App>) => {
 const Get = async (c: Context<App, "/:uuid">) => {
 	const model = new Model(c.env.DB);
 
-	const pe = await model.read(
+	const pe = await model.get(
 		packages,
 		and(eq(packages.uuid, c.req.param("uuid")), eq(packages.user_id, c.get("jwtPayload").id)),
 	);
@@ -51,7 +51,7 @@ const Edit = async (c: Context<App>) => {
 
 	const model = new Model(c.env.DB);
 
-	await model.read(packages, eq(packages.id, parse.id));
+	await model.get(packages, eq(packages.id, parse.id));
 
 	await model.update(packages, parse, eq(packages.id, parse.id));
 
@@ -65,7 +65,7 @@ const Delete = async (c: Context<App>) => {
 
 	const model = new Model(c.env.DB);
 
-	await model.read(packages, eq(packages.id, parse.id));
+	await model.get(packages, eq(packages.id, parse.id));
 
 	await model.delete(packages, eq(packages.id, parse.id));
 

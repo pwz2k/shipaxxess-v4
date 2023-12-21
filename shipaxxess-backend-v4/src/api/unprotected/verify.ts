@@ -19,7 +19,7 @@ export const VerifyUser = async (c: Context<App>) => {
 
 	const model = new Model(c.env.DB);
 
-	const us = await model.read(users, eq(users.email_token, parse.token));
+	const us = await model.get(users, eq(users.email_token, parse.token));
 
 	if (parse.type === "email_verification") {
 		return c.json({ message: "Email verified. Please login" });

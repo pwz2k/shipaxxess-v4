@@ -11,7 +11,7 @@ const Get = async (c: Context<App>) => {
 
 	const model = new Model(c.env.DB);
 
-	const wt = await model.read(
+	const wt = await model.get(
 		weights,
 		and(eq(weights.weight, parse.weight), eq(weights.type, parse.type), eq(weights.type_id, parse.id)),
 	);

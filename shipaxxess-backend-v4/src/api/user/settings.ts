@@ -11,7 +11,7 @@ const Edit = async (c: Context<App>) => {
 
 	const model = new Model(c.env.DB);
 
-	const user = await model.read(users, eq(users.id, c.get("jwtPayload").id));
+	const user = await model.get(users, eq(users.id, c.get("jwtPayload").id));
 
 	await model.update(users, parse, eq(users.id, user.id));
 

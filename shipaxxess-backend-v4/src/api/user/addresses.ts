@@ -10,7 +10,7 @@ const Get = async (c: Context<App, "/:uuid">) => {
 
 	const model = new Model(c.env.DB);
 
-	const res = await model.read(addresses, and(eq(addresses.uuid, uuid), eq(addresses.user_id, c.get("jwtPayload").id)));
+	const res = await model.get(addresses, and(eq(addresses.uuid, uuid), eq(addresses.user_id, c.get("jwtPayload").id)));
 
 	return c.json(res);
 };
@@ -18,7 +18,7 @@ const Get = async (c: Context<App, "/:uuid">) => {
 const GetAll = async (c: Context<App>) => {
 	const model = new Model(c.env.DB);
 
-	const res = await model.readAll(addresses, eq(addresses.user_id, c.get("jwtPayload").id));
+	const res = await model.all(addresses, eq(addresses.user_id, c.get("jwtPayload").id));
 
 	return c.json(res);
 };
@@ -53,7 +53,7 @@ const Edit = async (c: Context<App>) => {
 
 	const model = new Model(c.env.DB);
 
-	await model.read(addresses, eq(addresses.id, parse.id));
+	await model.get(addresses, eq(addresses.id, parse.id));
 
 	await model.update(addresses, parse, eq(addresses.id, parse.id));
 
@@ -67,7 +67,7 @@ const Delete = async (c: Context<App>) => {
 
 	const model = new Model(c.env.DB);
 
-	await model.read(addresses, eq(addresses.id, parse.id));
+	await model.get(addresses, eq(addresses.id, parse.id));
 
 	await model.delete(addresses, eq(addresses.id, parse.id));
 

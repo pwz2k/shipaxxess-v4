@@ -11,7 +11,7 @@ import { v4 } from "uuid";
 const Get = async (c: Context<App>) => {
 	const model = new Model(c.env.DB);
 
-	const pt = await model.readAll(payments, eq(payments.user_id, c.get("jwtPayload").id));
+	const pt = await model.all(payments, eq(payments.user_id, c.get("jwtPayload").id));
 
 	return c.json(pt);
 };
@@ -23,7 +23,7 @@ const Create = async (c: Context<App>) => {
 
 	const model = new Model(c.env.DB);
 
-	const user = await model.read(users, eq(users.id, c.get("jwtPayload").id));
+	const user = await model.get(users, eq(users.id, c.get("jwtPayload").id));
 
 	const payment_uuid = v4();
 

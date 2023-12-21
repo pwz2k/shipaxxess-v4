@@ -25,7 +25,7 @@ export class UspsService {
 	async checkBeforeGenerate() {
 		const model = new Model(this.context.DB);
 
-		const weight = await model.read(
+		const weight = await model.get(
 			weights,
 			and(
 				eq(weights.type, "usps"),
@@ -34,7 +34,7 @@ export class UspsService {
 			),
 		);
 
-		const user = await model.read(users, eq(users.id, this.userid));
+		const user = await model.get(users, eq(users.id, this.userid));
 
 		if (user.current_balance < weight.user_cost) {
 			throw exception({ message: "User balance is not enough", code: 97868 });
@@ -175,7 +175,7 @@ export class UspsBatchService {
 	async checkBeforeGenerate() {
 		const model = new Model(this.context.DB);
 
-		const weight = await model.read(
+		const weight = await model.get(
 			weights,
 			and(
 				eq(weights.type, "usps"),
@@ -184,7 +184,7 @@ export class UspsBatchService {
 			),
 		);
 
-		const user = await model.read(users, eq(users.id, this.userid));
+		const user = await model.get(users, eq(users.id, this.userid));
 
 		if (user.current_balance < weight.user_cost * this.data.recipient.length) {
 			throw exception({ message: "User balance is not enough", code: 97868 });

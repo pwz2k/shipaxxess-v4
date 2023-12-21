@@ -11,7 +11,7 @@ import { v4, validate } from "uuid";
 const Get = async (c: Context<App>) => {
 	const model = new Model(c.env.DB);
 
-	const tk = await model.readAll(tickets, eq(tickets.user_id, c.get("jwtPayload").id));
+	const tk = await model.all(tickets, eq(tickets.user_id, c.get("jwtPayload").id));
 
 	return c.json(tk);
 };
@@ -23,7 +23,7 @@ const Create = async (c: Context<App>) => {
 
 	const model = new Model(c.env.DB);
 
-	const user = await model.read(users, eq(users.id, c.get("jwtPayload").id));
+	const user = await model.get(users, eq(users.id, c.get("jwtPayload").id));
 
 	const ticket_uuid = v4();
 	await model.create(tickets, {
@@ -55,9 +55,9 @@ const Find = async (c: Context<App, "/:ticket_id">) => {
 
 	const model = new Model(c.env.DB);
 
-	const tk = await model.read(tickets, eq(tickets.uuid, ticket_id));
+	const tk = await model.get(tickets, eq(tickets.uuid, ticket_id));
 
-	const ct = await model.readAll(chats, eq(chats.ticket_uuid, ticket_id));
+	const ct = await model.all(chats, eq(chats.ticket_uuid, ticket_id));
 
 	return c.json({ ticket: tk, chats: ct });
 };
@@ -68,7 +68,7 @@ const PostMessage = async (c: Context<App, "/:ticket_id">) => {
 
 	const model = new Model(c.env.DB);
 
-	const user = await model.read(users, eq(users.id, c.get("jwtPayload").id));
+	const user = await model.get(users, eq(users.id, c.get("jwtPayload").id));
 
 	const chat_uuid = v4();
 	await model.create(chats, {
@@ -80,7 +80,7 @@ const PostMessage = async (c: Context<App, "/:ticket_id">) => {
 		uuid: chat_uuid,
 	});
 
-	const chat = await model.read(chats, eq(chats.uuid, chat_uuid));
+	const chat = await model.get(chats, eq(chats.uuid, chat_uuid));
 
 	return c.json(chat);
 };

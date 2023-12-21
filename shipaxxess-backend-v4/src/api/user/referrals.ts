@@ -6,7 +6,7 @@ import { Context } from "hono";
 const Get = async (c: Context<App>) => {
 	const model = new Model(c.env.DB);
 
-	const rf = await model.readAll(users, eq(users.refer_from, c.get("jwtPayload").uuid));
+	const rf = await model.all(users, eq(users.refer_from, c.get("jwtPayload").uuid));
 
 	return c.json(rf);
 };

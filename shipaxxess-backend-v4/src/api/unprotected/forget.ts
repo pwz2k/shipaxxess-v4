@@ -13,7 +13,7 @@ export const ForgetPassword = async (c: Context<App>) => {
 
 	const model = new Model(c.env.DB);
 
-	const user = await model.read(users, eq(users.email_address, parse.email_address));
+	const user = await model.get(users, eq(users.email_address, parse.email_address));
 
 	// Verification mail
 	c.executionCtx.waitUntil(

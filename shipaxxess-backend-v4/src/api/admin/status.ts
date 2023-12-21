@@ -6,7 +6,7 @@ import { Context } from "hono";
 export const StatusAdmin = async (c: Context<App>) => {
 	const model = new Model(c.env.DB);
 
-	const ad = await model.read(users, eq(users.id, c.get("jwtPayload").id));
+	const ad = await model.get(users, eq(users.id, c.get("jwtPayload").id));
 
 	return c.json(ad);
 };
