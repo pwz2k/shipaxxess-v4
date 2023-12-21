@@ -85,8 +85,8 @@ export class UspsBatchService {
 		const model = new Model(this.context.DB);
 
 		await model.insert(batchs, {
-			cost_reseller: params.reseller_cost,
-			cost_user: params.cost,
+			cost_reseller: params.reseller_cost * this.data.recipient.length,
+			cost_user: params.cost * this.data.recipient.length,
 			package_height: this.data.package.height,
 			package_length: this.data.package.length,
 			package_weight: this.data.package.weight,
