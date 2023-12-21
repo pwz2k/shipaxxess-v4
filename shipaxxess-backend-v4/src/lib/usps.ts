@@ -91,7 +91,7 @@ export class UspsBatchService {
 			package_length: this.data.package.length,
 			package_weight: this.data.package.weight,
 			package_width: this.data.package.width,
-			recipient: this.data.recipient,
+			recipients: this.data.recipient,
 			sender_city: this.data.sender.city,
 			sender_country: this.data.sender.country,
 			sender_full_name: this.data.sender.full_name,

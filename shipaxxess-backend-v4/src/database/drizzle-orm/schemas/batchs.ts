@@ -1,3 +1,4 @@
+import { Usps } from "@shipaxxess/shipaxxess-zod-v4";
 import { InferInsertModel, InferSelectModel, sql } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
@@ -25,8 +26,8 @@ export const batchs = sqliteTable("batchs", {
 	sender_state: text("sender_state").notNull(),
 	sender_country: text("sender_country").notNull(),
 
-	// Recipient
-	recipient: text("recipient", { mode: "json" }).notNull(),
+	// Recipients
+	recipients: text("recipient", { mode: "json" }).$type<Usps.RECIPIENTSCHEMAARRAY>().notNull(),
 
 	// Type
 	type: text("type").notNull(),

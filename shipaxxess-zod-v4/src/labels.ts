@@ -20,10 +20,14 @@ export const ZODSCHEMA = COMMONSCHEMA.merge(
 
 export type ZODSCHEMA = z.infer<typeof ZODSCHEMA>;
 
+export const RECIPIENTSCHEMAARRAY = z.array(Address.ZODSCHEMA.merge(z.object({ uuid: z.string().uuid() }))).min(1);
+
+export type RECIPIENTSCHEMAARRAY = z.infer<typeof RECIPIENTSCHEMAARRAY>;
+
 export const BATCHZODSCHEMA = COMMONSCHEMA.merge(
 	z.object({
 		batch_uuid: z.string().uuid(),
-		recipient: z.array(Address.ZODSCHEMA.merge(z.object({ uuid: z.string().uuid() }))).min(1),
+		recipient: RECIPIENTSCHEMAARRAY,
 	}),
 );
 
