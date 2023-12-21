@@ -7,6 +7,9 @@ export const batchs = sqliteTable("batchs", {
 	uuid: text("uuid").notNull(),
 	user_id: integer("user_id").notNull(),
 
+	total_labels: integer("total_labels").notNull(),
+	failed_labels: integer("failed_labels").default(0),
+
 	// Status
 	status_message: text("status_message"),
 	status_label: text("status_label").default("processing").notNull(),

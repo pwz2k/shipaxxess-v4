@@ -4,6 +4,7 @@ type Bindings = {
 	LABELS_BUCKET: R2Bucket;
 	BATCH_KV: KVNamespace;
 	BATCH_QUEUE: Queue;
+	BATCH_PDF_QUEUE: Queue;
 };
 
 type Variables = {

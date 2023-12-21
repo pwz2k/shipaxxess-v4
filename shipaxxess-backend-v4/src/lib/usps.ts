@@ -54,8 +54,11 @@ export class UspsBatchService {
 		}
 	}
 
-	async sendToQueue(batch_uuid: string) {
-		await this.context.BATCH_QUEUE.send({ batch_uuid }, { contentType: "json" });
+	async sendToQueue(params: { batch_uuid: string; user_cost: number; reseller_cost: number }) {
+		await this.context.BATCH_QUEUE.send(
+			{ batch_uuid: params.batch_uuid, user_cost: params.user_cost, reseller_cost: params.reseller_cost },
+			{ contentType: "json" },
+		);
 	}
 
 	async payforLabel(user: UsersSelectModel, weight: WeightsSelectModel) {
@@ -105,6 +108,7 @@ export class UspsBatchService {
 			type: "usps",
 			user_id: this.userid,
 			uuid: params.batch_uuid,
+			total_labels: this.data.recipient.length,
 		});
 	}
 }

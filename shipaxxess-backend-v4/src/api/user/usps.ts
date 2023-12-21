@@ -19,7 +19,11 @@ export const USPSBatchLabelUser = async (c: Context<App>) => {
 	});
 	await usps.payforLabel(checked.user, checked.weight);
 
-	await usps.sendToQueue(batch_uuid);
+	await usps.sendToQueue({
+		batch_uuid,
+		reseller_cost: checked.weight.reseller_cost,
+		user_cost: checked.weight.user_cost,
+	});
 
 	return c.json({ success: true, message: "We are processing your batch. Please check back later." });
 };

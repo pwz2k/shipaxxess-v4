@@ -1,5 +1,6 @@
 import { admin } from "@api/admin/routes";
 import { batchLabelQueue } from "@api/queue/labels";
+import { pdfDownloadBatchQueue } from "@api/queue/pdf";
 import { unprotected } from "@api/unprotected/routes";
 import { user } from "@api/user/routes";
 import { webhook } from "@api/webhook/routes";
@@ -94,6 +95,10 @@ export default {
 		switch (batch.queue) {
 			case "batch-labels": {
 				return batchLabelQueue(batch, env);
+			}
+
+			case "batch-pdf-downloads": {
+				return pdfDownloadBatchQueue(batch, env);
 			}
 
 			default: {

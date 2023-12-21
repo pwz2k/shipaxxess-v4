@@ -1,7 +1,7 @@
 import { config } from "@config";
 import { exception } from "./error";
 
-export const fetch_ = async <T>(path: string, payload?: {}) => {
+export const fetch_ = async <T>(path: string, payload?: object) => {
 	try {
 		const req = await fetch(`${config.label.url}${path}`, {
 			method: "POST",
