@@ -13,6 +13,7 @@
 		"@types/uuid": "^9.0.7",
 		"drizzle-orm": "^0.29.1",
 		"hono": "^3.11.2",
+		"pdf-merger-js": "^4.3.0",
 		"stripe": "^14.9.0",
 		"uuid": "^9.0.1",
 		"zod": "^3.22.4"
