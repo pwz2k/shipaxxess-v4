@@ -5,15 +5,15 @@ import NewAddressUserPage from "./pages/new";
 
 const Routes: RouteObject[] = [
 	{
-		path: "/addresses",
+		path: "addresses",
 		element: <AddressesUserPage />,
 	},
 	{
-		path: "/addresses/new",
+		path: "addresses/new",
 		element: <NewAddressUserPage />,
 	},
 	{
-		path: "/addresses/edit",
+		path: "addresses/edit",
 		element: <EditAddressPage />,
 	},
 ];

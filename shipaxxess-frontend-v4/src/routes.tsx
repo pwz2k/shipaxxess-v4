@@ -11,12 +11,14 @@ import SettingsRoutes from "@client/modules/settings_user/routes";
 import TickersRoutes from "@client/modules/tickets_user/routes";
 import StoresRoutes from "@client/modules/stores_user/routes";
 import BatchsRoutes from "@client/modules/batchs_user/routes";
+import LandingRoutes from "@client/modules/landing_page/routes";
 
 export const router = createBrowserRouter([
+	...LandingRoutes,
 	...SignupRoutes,
 	...SigninRoutes,
 	{
-		path: "/",
+		path: "/*",
 		element: <UserLayout />,
 		children: [
 			...AddressRoutes,

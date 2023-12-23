@@ -1,7 +1,7 @@
 export const app = {
 	name: "Demo",
 	host: "http://localhost:5173",
-	api: "https://shipaxxess-backend-v4.pwz2k.workers.dev/v1",
+	api: "http://localhost:8787/v1",
 	mode: "dev",
 	version: "v4.0-dev",
 	support: "support@gmail.com",
