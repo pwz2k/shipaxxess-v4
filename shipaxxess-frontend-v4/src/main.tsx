@@ -24,7 +24,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 				<RouterProvider router={router} />
 			</TimezoneProvider>
 			<Toaster richColors />
-			{app.mode === "dev" && <ReactQueryDevtools initialIsOpen={false} position="bottom" />}
+			{app.mode === "dev" && <ReactQueryDevtools initialIsOpen={false} position="left" />}
 		</QueryClientProvider>
 	</React.StrictMode>,
 );
