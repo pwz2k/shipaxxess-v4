@@ -7,9 +7,20 @@ import { app } from "@client/config/app";
 import { AlignVerticalSpaceBetweenIcon, Contact, DollarSign, ListTodo } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@client/components/ui/accordion";
+import { Link } from "react-router-dom";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const ZODSCHEMA = z.object({ weight: z.number() });
+
+type ZODSCHEMA = z.infer<typeof ZODSCHEMA>;
 
 const LandingPage = () => {
-	const form = useForm();
+	const form = useForm<ZODSCHEMA>({ resolver: zodResolver(ZODSCHEMA) });
+
+	const submit = async (values: ZODSCHEMA) => {
+		console.log(values);
+	};
 
 	return (
 		<>
@@ -23,8 +34,12 @@ const LandingPage = () => {
 					</div>
 
 					<div className="flex items-center gap-2">
-						<Button variant="outline">SignIn</Button>
-						<Button>SignUp</Button>
+						<Link to="/signin">
+							<Button variant="outline">SignIn</Button>
+						</Link>
+						<Link to="/signup">
+							<Button>SignUp</Button>
+						</Link>
 					</div>
 				</div>
 			</div>
@@ -37,7 +52,9 @@ const LandingPage = () => {
 							Shipping costs are one of the biggest expenses for many small businesses, and we are here to help reduce
 							the sting. Our label service will save you money and improve your margins for those large packages.
 						</p>
-						<Button>SignUp Now - It's 100% free</Button>
+						<Link to="/signup">
+							<Button>SignUp Now - It's 100% free</Button>
+						</Link>
 					</div>
 					<div>
 						<img src="/banner.png" alt="Banner" />
@@ -91,7 +108,7 @@ const LandingPage = () => {
 					</p>
 
 					<Form {...form}>
-						<form className="max-w-md pt-10 mx-auto">
+						<form className="max-w-md pt-10 mx-auto" onSubmit={form.handleSubmit(submit)}>
 							<FormField
 								control={form.control}
 								name="weight"
