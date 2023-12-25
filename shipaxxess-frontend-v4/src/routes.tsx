@@ -12,6 +12,7 @@ import TickersRoutes from "@client/modules/tickets_user/routes";
 import StoresRoutes from "@client/modules/stores_user/routes";
 import BatchsRoutes from "@client/modules/batchs_user/routes";
 import LandingRoutes from "@client/modules/landing_page/routes";
+import NewBatchRoutes from "@client/modules/new_batch_user/routes";
 
 export const router = createBrowserRouter([
 	...LandingRoutes,
@@ -30,6 +31,7 @@ export const router = createBrowserRouter([
 			...TickersRoutes,
 			...StoresRoutes,
 			...BatchsRoutes,
+			...NewBatchRoutes,
 		],
 	},
 ]);
