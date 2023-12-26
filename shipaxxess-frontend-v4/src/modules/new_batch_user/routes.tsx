@@ -3,7 +3,7 @@ import NewBatchUserPage from "./pages";
 
 const Routes: RouteObject[] = [
 	{
-		path: "new_batch",
+		path: "batchs/new_batch",
 		element: <NewBatchUserPage />,
 	},
 ];
