@@ -1,11 +1,11 @@
 import { UspsBatchService } from "@lib/usps";
-import { Usps } from "@shipaxxess/shipaxxess-zod-v4";
+import { Labels } from "@shipaxxess/shipaxxess-zod-v4";
 import { Context } from "hono";
 import { v4 } from "uuid";
 
 export const USPSBatchLabelUser = async (c: Context<App>) => {
 	const body = await c.req.json();
-	const parse = Usps.BATCHZODSCHEMA.parse(body);
+	const parse = Labels.BATCHZODSCHEMA.parse(body);
 
 	const usps = new UspsBatchService(c.env, parse, c.get("jwtPayload").id);
 

@@ -3,7 +3,7 @@ import * as Chats from "./chats";
 import * as Costs from "./costs";
 import * as Forget from "./forget";
 import * as Id from "./id";
-import * as Usps from "./labels";
+import * as Labels from "./labels";
 import * as Package from "./package";
 import * as Payment from "./payment";
 import * as Refund from "./refund";
@@ -20,6 +20,7 @@ export {
 	Costs,
 	Forget,
 	Id,
+	Labels,
 	Package,
 	Payment,
 	Refund,
@@ -28,6 +29,5 @@ export {
 	Signup,
 	Tickets,
 	Type,
-	Usps,
 	Weights,
 };

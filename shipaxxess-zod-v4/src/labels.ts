@@ -32,3 +32,13 @@ export const BATCHZODSCHEMA = COMMONSCHEMA.merge(
 );
 
 export type BATCHZODSCHEMA = z.infer<typeof BATCHZODSCHEMA>;
+
+export const SIMPLEZODSCHEMA = z.object({
+	recipient: Address.ZODSCHEMA,
+	sender: Address.ZODSCHEMA,
+	sender_select: z.string().optional(),
+	package: Package.ZODSCHEMA.merge(z.object({ id: z.number().optional() })),
+	package_select: z.string().optional(),
+});
+
+export type SIMPLEZODSCHEMA = z.infer<typeof SIMPLEZODSCHEMA>;
