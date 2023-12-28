@@ -1,13 +1,18 @@
 import Breadcrumb from "@client/components/common/breadcrumb";
 import Meta from "@client/components/common/meta";
 import Title from "@client/components/common/title";
-import { PlusCircle, Tags } from "lucide-react";
-import ShippingForm from "../components/form";
-import { Card } from "@client/components/ui/card";
-import { Button } from "@client/components/ui/button";
-import Types from "../components/types";
+import { useTypesQuery } from "@client/hooks/useTypes";
+import { useAddressesQuery } from "@client/modules/addresses_user/hooks/useAddressesQuery";
+import { usePackagesQuery } from "@client/modules/packages_user/hooks/usePackagesQuery";
+import { Tags } from "lucide-react";
 
 const NewBatchUserPage = () => {
+	const addressesQuery = useAddressesQuery();
+	const packagesQuery = usePackagesQuery();
+	const typesQuery = useTypesQuery();
+
+	console.log(addressesQuery.data, packagesQuery.data, typesQuery.data);
+
 	return (
 		<>
 			<Meta title="Create a Shipping Label" />
@@ -21,45 +26,6 @@ const NewBatchUserPage = () => {
 						{ title: "Create a Shipping Label", link: "batchs/new_batch" },
 					]}
 				/>
-
-				<Card className="p-8">
-					{/* <ShippingForm /> */}
-					<div className="mb-8">
-						<h1 className="text-xl font-semibold">Sakib Hasan</h1>
-						<p className="text-base">Street 1</p>
-						<p className="text-base">City, State, Country</p>
-					</div>
-
-					<div>
-						<Button variant="secondary" className="mb-2">
-							<PlusCircle className="pr-1" />
-							Shipment Details
-						</Button>
-						<div className="grid grid-cols-3 gap-20 p-4 border rounded-lg bg-primary/5">
-							<div>
-								<h1 className="text-base font-semibold">Ship From Address: City</h1>
-								<p className="text-sm">Sakib Hasan</p>
-								<p className="text-sm">Street 1</p>
-								<p className="text-sm">City, State, Country</p>
-							</div>
-							<div>
-								<h1 className="text-base font-semibold">Package Details: Earbuds</h1>
-								<p className="overflow-hidden text-sm text-ellipsis whitespace-nowrap">
-									Package Type: Envelope, Padded Envelope, Poly Bag, Soft Pack, or Box in a Bag
-								</p>
-								<p className="text-sm">Dimensions: 8x3"</p>
-								<p className="text-sm">Weight: 4 oz</p>
-							</div>
-							<div>
-								<h1 className="text-base font-semibold">Label Details</h1>
-								<p className="text-sm">Label Size: 4x6"</p>
-								<p className="text-sm">Label Filetype: PDF1</p>
-							</div>
-						</div>
-
-						<Types />
-					</div>
-				</Card>
 			</div>
 		</>
 	);

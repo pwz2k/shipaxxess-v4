@@ -7,7 +7,7 @@ export const useTicketQuery = (uuid: string | null) => {
 	return useQuery({
 		queryKey: ["tickets", uuid],
 		queryFn: async () => {
-			const req = await api.url(`/user/tickets/${uuid}`).get();
+			const req = await api.url(`/user/tickets/${uuid}`).useAuth().get();
 			return await req.json<{ chats: ChatsSelectModel[]; ticket: TicketsSelectModel }>();
 		},
 	});

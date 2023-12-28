@@ -6,7 +6,7 @@ export const usePackageQuery = (uuid: string | null) => {
 	return useQuery({
 		queryKey: ["packages", uuid],
 		queryFn: async () => {
-			const req = await api.url(`/user/packages/${uuid}`).get();
+			const req = await api.url(`/user/packages/${uuid}`).useAuth().get();
 			return await req.json<PackagesSelectModel>();
 		},
 	});

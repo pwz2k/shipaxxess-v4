@@ -6,7 +6,7 @@ export const usePackagesQuery = () => {
 	return useQuery({
 		queryKey: ["packages"],
 		queryFn: async () => {
-			const req = await api.url("/user/packages").get();
+			const req = await api.url("/user/packages").useAuth().get();
 			return await req.json<PackagesSelectModel[]>();
 		},
 	});

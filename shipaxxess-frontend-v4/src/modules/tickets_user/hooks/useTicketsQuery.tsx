@@ -6,7 +6,7 @@ export const useTicketsQuery = () => {
 	return useQuery({
 		queryKey: ["tickets"],
 		queryFn: async () => {
-			const req = await api.url("/user/tickets").get();
+			const req = await api.url("/user/tickets").useAuth().get();
 			return await req.json<TicketsSelectModel[]>();
 		},
 	});

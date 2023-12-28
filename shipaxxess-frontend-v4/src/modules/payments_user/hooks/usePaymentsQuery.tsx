@@ -6,7 +6,7 @@ export const usePaymentsQuery = () => {
 	return useQuery({
 		queryKey: ["payments"],
 		queryFn: async () => {
-			const req = await api.url("/user/payments").get();
+			const req = await api.url("/user/payments").useAuth().get();
 			return await req.json<PaymentsSelectModel[]>();
 		},
 	});

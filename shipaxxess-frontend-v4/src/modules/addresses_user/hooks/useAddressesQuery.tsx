@@ -6,7 +6,7 @@ export const useAddressesQuery = () => {
 	return useQuery({
 		queryKey: ["addresses"],
 		queryFn: async () => {
-			const req = await api.url("/user/addresses").get();
+			const req = await api.url("/user/addresses").useAuth().get();
 			return await req.json<AddressesSelectModel[]>();
 		},
 	});

@@ -63,7 +63,7 @@ export class APIManger {
 
 		this.headers = { ...this.headers, Authorization: `Bearer ${token}` };
 
-		return token;
+		return this;
 	}
 
 	/**

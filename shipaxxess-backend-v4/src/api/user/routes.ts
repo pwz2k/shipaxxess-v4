@@ -10,6 +10,7 @@ import { SettingsUser } from "./settings";
 import { StatusUser } from "./status";
 import { StoresUser } from "./stores";
 import { TicketsUser } from "./tickets";
+import { TypeUser } from "./types";
 import { UpsBatchLabelUser } from "./ups";
 import { USPSBatchLabelUser } from "./usps";
 import { WeightsUser } from "./weights";
@@ -63,5 +64,8 @@ user.post("/settings", SettingsUser.Edit);
 
 // Weights routes
 user.post("/weights", WeightsUser.Get);
+
+// Types routes
+user.get("/types", TypeUser.GetAll);
 
 export { user };

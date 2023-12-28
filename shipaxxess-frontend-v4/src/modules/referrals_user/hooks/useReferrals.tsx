@@ -6,7 +6,7 @@ export const useReferralsQuery = () => {
 	return useQuery({
 		queryKey: ["referrals"],
 		queryFn: async () => {
-			const req = await api.url("/user/referrals").get();
+			const req = await api.url("/user/referrals").useAuth().get();
 			return await req.json<UsersSelectModel[]>();
 		},
 	});
