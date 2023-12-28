@@ -2,7 +2,7 @@ import z from "zod";
 
 export const ZODSCHEMA = z.object({
 	email_address: z.string().email(),
-	code: z.coerce.number().min(6).max(6),
+	code: z.string(),
 	type: z.enum(["email_verification", "reset"]),
 });
 

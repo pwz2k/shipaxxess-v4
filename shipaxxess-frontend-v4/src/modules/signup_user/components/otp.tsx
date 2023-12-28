@@ -7,11 +7,7 @@ import { Verify } from "@shipaxxess/shipaxxess-zod-v4";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
-type OtpProps = {
-	email: string | null;
-};
-
-const Otp = ({ email }: OtpProps) => {
+const Otp = ({ query }: { query: URLSearchParams }) => {
 	const navigate = useNavigate();
 
 	const { button, setIsLoading } = useLoading({ label: "Submit & Verify", className: "w-full mt-8" });
@@ -19,7 +15,8 @@ const Otp = ({ email }: OtpProps) => {
 	const form = useForm<Verify.ZODSCHEMA>({
 		defaultValues: {
 			type: "email_verification",
-			email_address: email || "",
+			email_address: query.get("email_address") || "",
+			code: "",
 		},
 		resolver: zodResolver(Verify.ZODSCHEMA),
 	});

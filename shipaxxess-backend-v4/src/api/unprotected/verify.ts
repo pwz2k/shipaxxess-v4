@@ -19,7 +19,7 @@ export const VerifyUser = async (c: Context<App>) => {
 
 	const code = await model.get(
 		users,
-		and(eq(users.email_code, parse.code), eq(users.email_address, parse.email_address)),
+		and(eq(users.email_code, parseInt(parse.code)), eq(users.email_address, parse.email_address)),
 	);
 	if (!code) {
 		throw exception({ code: 1090, message: "Invalid code" });

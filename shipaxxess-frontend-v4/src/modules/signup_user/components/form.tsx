@@ -4,16 +4,17 @@ import { Input } from "@client/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLoading } from "@client/hooks/useLoading";
 import { api } from "@client/lib/api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Signup } from "@shipaxxess/shipaxxess-zod-v4";
 
 type SignUpFormProps = {
 	setInboxView: React.Dispatch<React.SetStateAction<boolean>>;
-	setEmail: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
-const SignUpFormComponent = ({ setInboxView, setEmail }: SignUpFormProps) => {
+const SignUpFormComponent = ({ setInboxView }: SignUpFormProps) => {
+	const navigate = useNavigate();
+
 	const { button, setIsLoading } = useLoading({
 		label: "SignUp",
 		className: "w-full",
@@ -44,7 +45,7 @@ const SignUpFormComponent = ({ setInboxView, setEmail }: SignUpFormProps) => {
 		if (data.code === 1004) {
 			api.showSuccessToast();
 			setInboxView(true);
-			setEmail(values.email_address);
+			navigate(`/signup?email_address=${values.email_address}`);
 			return;
 		}
 
