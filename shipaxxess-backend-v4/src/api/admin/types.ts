@@ -15,14 +15,14 @@ const Create = async (c: Context<App>) => {
 	const model = new Model(c.env.DB);
 
 	const insert = await model.insert(types, {
-		label: parse.label,
 		uuid: v4(),
+		label: parse.label,
 		value: parse.value,
 		unit: parse.unit,
 		type: parse.type,
 	});
 
-	return c.json({});
+	return c.json(insert);
 };
 
 const Edit = async (c: Context<App>) => {
