@@ -215,7 +215,7 @@ CREATE TABLE `types` (
 	`label` text NOT NULL,
 	`value` text NOT NULL,
 	`unit` text DEFAULT 'lb',
-	`max` integer,
+	`type` text DEFAULT 'usps',
 	`created_at` text DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` text DEFAULT CURRENT_TIMESTAMP
 );
@@ -254,11 +254,7 @@ CREATE TABLE `users` (
 CREATE TABLE `weights` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`uuid` text NOT NULL,
-	`type` text NOT NULL,
 	`type_id` integer NOT NULL,
-	`label` text NOT NULL,
-	`value` text NOT NULL,
-	`unit` text NOT NULL,
 	`weight` integer NOT NULL,
 	`user_cost` integer NOT NULL,
 	`reseller_cost` integer NOT NULL,
