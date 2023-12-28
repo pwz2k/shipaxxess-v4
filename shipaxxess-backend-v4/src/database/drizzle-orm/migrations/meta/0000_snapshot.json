@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "96d6fcb7-40a9-47e1-8f90-b40d8b7e945b",
+  "id": "e43b5868-729f-432e-8921-62f6d9631941",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "addresses": {
@@ -1542,12 +1542,20 @@
           "autoincrement": false,
           "default": false
         },
-        "email_token": {
-          "name": "email_token",
-          "type": "text",
+        "email_code": {
+          "name": "email_code",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "email_code_request": {
+          "name": "email_code_request",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": 0
         },
         "coupon_code": {
           "name": "coupon_code",
@@ -1563,6 +1571,13 @@
           "notNull": false,
           "autoincrement": false,
           "default": false
+        },
+        "current_ip": {
+          "name": "current_ip",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         },
         "remember_last_ip": {
           "name": "remember_last_ip",

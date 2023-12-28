@@ -17,10 +17,12 @@ export const users = sqliteTable("users", {
 	// Config
 	email_verified: integer("email_verified", { mode: "boolean" }).default(false),
 	isadmin: integer("isadmin", { mode: "boolean" }).notNull().default(false),
-	email_token: text("email_token").notNull(),
+	email_code: integer("email_code").notNull(),
+	email_code_request: integer("email_code_request").default(0),
 	coupon_code: text("coupon_code"),
 	delete_account: integer("delete_account", { mode: "boolean" }).default(false),
-	remember_last_ip: text("remember_last_ip"),
+	current_ip: text("current_ip"),
+	last_ip: text("remember_last_ip"),
 
 	// 2fa
 	two_fa: integer("two_fa", { mode: "boolean" }).default(false),
