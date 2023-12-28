@@ -6,6 +6,7 @@ import { Button } from "@client/components/ui/button";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { Calendar } from "@client/components/ui/calendar";
 import { format, startOfMonth, endOfMonth } from "date-fns";
+import { ControllerRenderProps, FieldValues, Path } from "react-hook-form";
 
 export const DateRangePicker = ({ className }: { className?: string }) => {
 	const [date, setDate] = useState<DateRange | undefined>({
@@ -24,7 +25,7 @@ export const DateRangePicker = ({ className }: { className?: string }) => {
 							"w-full lg:w-[300px] justify-start text-left font-normal bg-white",
 							!date && "text-muted-foreground",
 						)}>
-						<CalendarIcon className="mr-2 h-4 w-4" />
+						<CalendarIcon className="w-4 h-4 mr-2" />
 						{date?.from ? (
 							date.to ? (
 								<>
@@ -50,5 +51,28 @@ export const DateRangePicker = ({ className }: { className?: string }) => {
 				</PopoverContent>
 			</Popover>
 		</div>
+	);
+};
+
+export const DatePicker = <T extends FieldValues, R extends Path<T>>({
+	field,
+}: {
+	field: ControllerRenderProps<T, R>;
+}) => {
+	return (
+		<Popover>
+			<PopoverTrigger asChild>
+				<Button
+					id="shipping_date"
+					variant={"outline"}
+					className={cn("w-full justify-start", !field.value && "text-muted-foreground")}>
+					<CalendarIcon className="w-4 h-4 mr-2" />
+					{field.value ? format(new Date(field.value), "PPP") : <span>Choose the shipping date</span>}
+				</Button>
+			</PopoverTrigger>
+			<PopoverContent className="w-auto p-0">
+				<Calendar mode="single" selected={new Date(field.value)} onSelect={field.onChange} initialFocus />
+			</PopoverContent>
+		</Popover>
 	);
 };

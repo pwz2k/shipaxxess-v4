@@ -5,13 +5,12 @@ import { useTypesQuery } from "@client/hooks/useTypes";
 import { useAddressesQuery } from "@client/modules/addresses_user/hooks/useAddressesQuery";
 import { usePackagesQuery } from "@client/modules/packages_user/hooks/usePackagesQuery";
 import { Tags } from "lucide-react";
+import BatchNewForm from "../components/form";
 
 const NewBatchUserPage = () => {
 	const addressesQuery = useAddressesQuery();
 	const packagesQuery = usePackagesQuery();
 	const typesQuery = useTypesQuery();
-
-	console.log(addressesQuery.data, packagesQuery.data, typesQuery.data);
 
 	return (
 		<>
@@ -26,6 +25,8 @@ const NewBatchUserPage = () => {
 						{ title: "Create a Shipping Label", link: "batchs/new_batch" },
 					]}
 				/>
+
+				<BatchNewForm addresses={addressesQuery} packages={packagesQuery} types={typesQuery} />
 			</div>
 		</>
 	);

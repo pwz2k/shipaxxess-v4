@@ -3,11 +3,14 @@ import * as Address from "./address";
 import * as Package from "./package";
 import * as Type from "./type";
 
-const COMMONSCHEMA = z.object({
-	sender: Address.ZODSCHEMA,
+export const COMMONSCHEMA = z.object({
+	sender: Address.ZODSCHEMA.merge(z.object({ id: z.number().optional() })),
+	sender_select: z.string().optional(),
 	shippingdate: z.string().min(2),
 	package: Package.ZODSCHEMA.merge(z.object({ id: z.number().optional() })),
-	type: Type.ZODSCHEMA,
+	package_select: z.string().optional(),
+	type: Type.ZODSCHEMA.merge(z.object({ id: z.number().optional() })),
+	type_select: z.string().optional(),
 });
 
 export type COMMONSCHEMA = z.infer<typeof COMMONSCHEMA>;
@@ -32,13 +35,3 @@ export const BATCHZODSCHEMA = COMMONSCHEMA.merge(
 );
 
 export type BATCHZODSCHEMA = z.infer<typeof BATCHZODSCHEMA>;
-
-export const SIMPLEZODSCHEMA = z.object({
-	recipient: Address.ZODSCHEMA,
-	sender: Address.ZODSCHEMA,
-	sender_select: z.string().optional(),
-	package: Package.ZODSCHEMA.merge(z.object({ id: z.number().optional() })),
-	package_select: z.string().optional(),
-});
-
-export type SIMPLEZODSCHEMA = z.infer<typeof SIMPLEZODSCHEMA>;
