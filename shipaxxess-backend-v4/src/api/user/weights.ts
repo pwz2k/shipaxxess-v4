@@ -1,24 +1,29 @@
-import { Model } from "@lib/model";
+import schema from "@schemas/index";
+import { types } from "@schemas/types";
 import { weights } from "@schemas/weights";
 import { Weights } from "@shipaxxess/shipaxxess-zod-v4";
 import { and, eq } from "drizzle-orm";
+import { drizzle } from "drizzle-orm/d1";
 import { Context } from "hono";
 
-const Get = async (c: Context<App>) => {
-	// Validation
+const Post = async (c: Context<App>) => {
 	const body = await c.req.json();
-	const parse = Weights.ZODSCHEMA.parse(body);
+	const parse = Weights.FETCHSCHEMA.parse(body);
 
-	const model = new Model(c.env.DB);
+	const weight = await drizzle(c.env.DB, { schema }).query.weights.findFirst({
+		with: {
+			type: true,
+		},
+		where: and(eq(types.type, parse.type), eq(types.id, parse.type_id), eq(weights.weight, parse.weight)),
+	});
 
-	const wt = await model.get(
-		weights,
-		and(eq(weights.weight, parse.weight), eq(weights.type, parse.type), eq(weights.type_id, parse.id)),
-	);
-
-	return c.json(wt);
+	return c.json({});
 };
 
-const WeightsUser = { Get };
+const GetAll = async (c: Context<App>) => {
+	return c.json([]);
+};
+
+const WeightsUser = { Post, GetAll };
 
 export { WeightsUser };

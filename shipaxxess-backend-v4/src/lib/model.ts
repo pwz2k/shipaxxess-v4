@@ -6,12 +6,6 @@ import { SQLiteTable, TableConfig } from "drizzle-orm/sqlite-core";
 export class Model {
 	constructor(private db: D1Database) {}
 
-	async insert<T extends SQLiteTable<TableConfig>>(table: T, params: T["$inferInsert"]) {
-		const insert = await drizzle(this.db).insert(table).values(params);
-		if (!insert.success) throw exception({ message: "Failed to insert", code: 6901 });
-		return insert;
-	}
-
 	async get<T extends SQLiteTable<TableConfig>>(table: T, condition: SQL<unknown> | undefined) {
 		const data = await drizzle(this.db).select().from(table).where(condition).get();
 		if (!data) throw exception({ message: "Not found", code: 7667 });
@@ -25,19 +19,19 @@ export class Model {
 		return await drizzle(this.db).select().from(table).all();
 	}
 
+	async insert<T extends SQLiteTable<TableConfig>>(table: T, params: T["$inferInsert"]) {
+		return await drizzle(this.db).insert(table).values(params).returning();
+	}
+
 	async update<T extends SQLiteTable<TableConfig>>(
 		table: T,
 		params: Partial<T["$inferSelect"]>,
 		condition: SQL<unknown>,
 	) {
-		const update = await drizzle(this.db).update(table).set(params).where(condition);
-		if (!update.success) throw exception({ message: "Failed to update", code: 6902 });
-		return update;
+		return await drizzle(this.db).update(table).set(params).where(condition).returning();
 	}
 
 	async delete<T extends SQLiteTable<TableConfig>>(table: T, condition: SQL<unknown>) {
-		const dt = await drizzle(this.db).delete(table).where(condition);
-		if (!dt.success) throw exception({ message: "Failed to delete", code: 6903 });
-		return dt;
+		return await drizzle(this.db).delete(table).where(condition).returning();
 	}
 }

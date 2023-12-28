@@ -1,7 +1,6 @@
 import { UspsBatchService } from "@lib/usps";
 import { Labels } from "@shipaxxess/shipaxxess-zod-v4";
 import { Context } from "hono";
-import { v4 } from "uuid";
 
 export const USPSBatchLabelUser = async (c: Context<App>) => {
 	const body = await c.req.json();
@@ -11,16 +10,15 @@ export const USPSBatchLabelUser = async (c: Context<App>) => {
 
 	const checked = await usps.checkBeforeGenerate();
 
-	const batch_uuid = v4();
 	await usps.storeBatchData({
-		batch_uuid,
+		batch_uuid: parse.batch_uuid,
 		cost: checked.weight.user_cost,
 		reseller_cost: checked.weight.reseller_cost,
 	});
 	await usps.payforLabel(checked.user, checked.weight);
 
 	await usps.sendToQueue({
-		batch_uuid,
+		batch_uuid: parse.batch_uuid,
 		reseller_cost: checked.weight.reseller_cost,
 		user_cost: checked.weight.user_cost,
 	});

@@ -14,7 +14,7 @@ const Create = async (c: Context<App>) => {
 
 	const model = new Model(c.env.DB);
 
-	const insert = await model.insert(types, {
+	const [insert] = await model.insert(types, {
 		uuid: v4(),
 		label: parse.label,
 		value: parse.value,
