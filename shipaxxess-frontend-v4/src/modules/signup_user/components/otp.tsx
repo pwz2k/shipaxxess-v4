@@ -1,18 +1,43 @@
-import { Button } from "@client/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@client/components/ui/form";
 import { Input } from "@client/components/ui/input";
+import { useLoading } from "@client/hooks/useLoading";
+import { api } from "@client/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Verify } from "@shipaxxess/shipaxxess-zod-v4";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { useNavigate } from "react-router-dom";
 
-const SCHEMA = z.object({
-	code: z.string().min(6).max(6),
-});
+type OtpProps = {
+	email: string | null;
+};
 
-type SCHEMA = z.infer<typeof SCHEMA>;
+const Otp = ({ email }: OtpProps) => {
+	const navigate = useNavigate();
 
-const Otp = () => {
-	const form = useForm<SCHEMA>({ defaultValues: { code: "" }, resolver: zodResolver(SCHEMA) });
+	const { button, setIsLoading } = useLoading({ label: "Submit & Verify", className: "w-full mt-8" });
+
+	const form = useForm<Verify.ZODSCHEMA>({
+		defaultValues: {
+			type: "email_verification",
+			email_address: email || "",
+		},
+		resolver: zodResolver(Verify.ZODSCHEMA),
+	});
+
+	const onSubmit = async (values: Verify.ZODSCHEMA) => {
+		const req = await api.url("/verify_email").post(values);
+		const data = await req.json<{ success: boolean; token: string }>();
+
+		if (data.token) {
+			api.showSuccessToast();
+			localStorage.setItem("token", data.token);
+			navigate("/dashboard");
+			return;
+		}
+
+		api.showErrorToast();
+		setIsLoading(false);
+	};
 
 	return (
 		<div className="flex flex-col gap-6 py-28">
@@ -24,7 +49,7 @@ const Otp = () => {
 			</div>
 
 			<Form {...form}>
-				<form className="w-full">
+				<form className="w-full" onSubmit={form.handleSubmit(onSubmit)}>
 					<FormField
 						control={form.control}
 						name="code"
@@ -39,7 +64,33 @@ const Otp = () => {
 						)}
 					/>
 
-					<Button className="w-full mt-8">Submit & Verify</Button>
+					<FormField
+						control={form.control}
+						name="type"
+						render={({ field }) => (
+							<FormItem>
+								<FormControl>
+									<Input {...field} autoComplete="on" className="hidden" />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					<FormField
+						control={form.control}
+						name="email_address"
+						render={({ field }) => (
+							<FormItem>
+								<FormControl>
+									<Input {...field} autoComplete="on" className="hidden" />
+								</FormControl>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+
+					{button}
 				</form>
 			</Form>
 		</div>

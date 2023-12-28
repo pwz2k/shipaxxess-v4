@@ -9,6 +9,6 @@ const unprotected = new Hono<App>();
 unprotected.post("/signup_user", SignUpUser);
 unprotected.post("/signin_user", SignInUser);
 unprotected.get("/forget_password", ForgetPassword);
-unprotected.post("/verify", VerifyUser);
+unprotected.post("/verify_email", VerifyUser);
 
 export { unprotected };

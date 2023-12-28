@@ -12,6 +12,7 @@ import * as Signin from "./signin";
 import * as Signup from "./signup";
 import * as Tickets from "./tickets";
 import * as Type from "./type";
+import * as Verify from "./verify";
 import * as Weights from "./weights";
 
 export {
@@ -29,5 +30,6 @@ export {
 	Signup,
 	Tickets,
 	Type,
+	Verify,
 	Weights,
 };

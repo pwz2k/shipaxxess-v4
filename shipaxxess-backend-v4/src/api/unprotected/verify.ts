@@ -1,47 +1,45 @@
 import { config } from "@config";
 import { Model } from "@lib/model";
 import { users } from "@schemas/users";
-import { hash } from "@utils/hash";
-import { mail } from "@utils/mail";
-import { eq } from "drizzle-orm";
+import { Verify } from "@shipaxxess/shipaxxess-zod-v4";
+import { exception } from "@utils/error";
+import { and, eq } from "drizzle-orm";
 import { Context } from "hono";
-import { z } from "zod";
-
-const VerifyZodSchema = z.object({
-	token: z.string().uuid(),
-	type: z.enum(["email_verification", "reset"]),
-});
+import { sign } from "hono/jwt";
 
 export const VerifyUser = async (c: Context<App>) => {
-	// Validation
 	const body = await c.req.json();
-	const parse = VerifyZodSchema.parse(body);
+	const parse = Verify.ZODSCHEMA.parse(body);
+
+	if (parse.type !== "email_verification") {
+		throw exception({ code: 1089, message: "Invalid Method" });
+	}
 
 	const model = new Model(c.env.DB);
 
-	const us = await model.get(users, eq(users.email_token, parse.token));
-
-	if (parse.type === "email_verification") {
-		return c.json({ message: "Email verified. Please login" });
+	const code = await model.get(
+		users,
+		and(eq(users.email_code, parse.code), eq(users.email_address, parse.email_address)),
+	);
+	if (!code) {
+		throw exception({ code: 1090, message: "Invalid code" });
 	}
 
-	const pain_passwd = Math.floor(Math.random() * 1000000000).toString();
-	const passwd_hash = await hash(pain_passwd);
-	await model.update(users, { password: passwd_hash }, eq(users.id, us.id));
+	if (code.email_code_request! > 5) {
+		throw exception({ code: 1091, message: "Too many attempts, email address has been banned" });
+	}
 
-	// Verification mail
-	await mail({
-		to: [us.email_address],
-		subject: `Your new ${config.app.name} password`,
-		html: `
-		<p>Hi ${us.first_name}, We generated a new password for your account. you can use it to login in your account. But we recommed once you logged in please change the generated password for better privacy</p>
-		<p>Your username is:</p>
-		<p>${us.email_address}</p>
-		<p>Your password is:</p>
-		<p>${pain_passwd}</p>
-		<p>Thanks!</p>
-		<p>The ${config.app.name} Team</p>`,
-	});
+	const token = await sign(
+		{
+			id: code.id,
+			uuid: code.uuid,
+			email_address: code.email_address,
+			first_name: code.first_name,
+			last_name: code.last_name,
+		},
+		config.jwt.secret,
+		config.jwt.alg as "HS256",
+	);
 
-	return c.json({ message: "We just sent you a mail with new password. please check your inbox" });
+	return c.json({ token, success: true });
 };

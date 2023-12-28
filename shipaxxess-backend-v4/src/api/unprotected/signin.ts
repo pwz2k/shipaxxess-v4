@@ -68,7 +68,7 @@ export const SignInUser = async (c: Context<App>) => {
 	const request_ipv4 = c.req.header("cf-connecting-ip");
 
 	// If ip not match email notify
-	if (request_ipv4 && user.remember_last_ip !== request_ipv4) {
+	if (user.current_ip !== request_ipv4) {
 		c.executionCtx.waitUntil(
 			mail({
 				to: [parse.email_address],
@@ -89,7 +89,7 @@ export const SignInUser = async (c: Context<App>) => {
 	c.executionCtx.waitUntil(
 		drizzle(c.env.DB)
 			.update(users)
-			.set({ remember_last_ip: request_ipv4 ? request_ipv4 : null })
+			.set({ last_ip: user.current_ip, current_ip: request_ipv4 })
 			.where(eq(users.id, user.id)),
 	);
 

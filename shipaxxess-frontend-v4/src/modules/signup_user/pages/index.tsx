@@ -8,6 +8,7 @@ import Otp from "../components/otp";
 
 const SignUpUserPage = () => {
 	const [showInboxView, setInboxView] = React.useState<boolean>(false);
+	const [email, setEmail] = React.useState<string | null>(null);
 
 	return (
 		<AuthLayout>
@@ -21,11 +22,11 @@ const SignUpUserPage = () => {
 							<h1 className="text-2xl font-bold text-primary">Sign Up</h1>
 							<span className="text-base text-primary/70">Hey there, please signin to continue</span>
 						</div>
-						<SignUpFormComponent setInboxView={setInboxView} />
+						<SignUpFormComponent setInboxView={setInboxView} setEmail={setEmail} />
 					</>
 				)}
 
-				{showInboxView && <Otp />}
+				{showInboxView && <Otp email={email} />}
 			</div>
 		</AuthLayout>
 	);

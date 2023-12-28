@@ -8,7 +8,12 @@ import { Link } from "react-router-dom";
 
 import { Signup } from "@shipaxxess/shipaxxess-zod-v4";
 
-const SignUpFormComponent = ({ setInboxView }: { setInboxView: React.Dispatch<React.SetStateAction<boolean>> }) => {
+type SignUpFormProps = {
+	setInboxView: React.Dispatch<React.SetStateAction<boolean>>;
+	setEmail: React.Dispatch<React.SetStateAction<string | null>>;
+};
+
+const SignUpFormComponent = ({ setInboxView, setEmail }: SignUpFormProps) => {
 	const { button, setIsLoading } = useLoading({
 		label: "SignUp",
 		className: "w-full",
@@ -39,6 +44,7 @@ const SignUpFormComponent = ({ setInboxView }: { setInboxView: React.Dispatch<Re
 		if (data.code === 1004) {
 			api.showSuccessToast();
 			setInboxView(true);
+			setEmail(values.email_address);
 			return;
 		}
 
