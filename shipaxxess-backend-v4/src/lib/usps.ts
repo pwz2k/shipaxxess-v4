@@ -3,7 +3,7 @@ import { batchs } from "@schemas/batchs";
 import { payments } from "@schemas/payments";
 import { UsersSelectModel, users } from "@schemas/users";
 import { WeightsSelectModel, weights } from "@schemas/weights";
-import { Usps } from "@shipaxxess/shipaxxess-zod-v4";
+import { Labels } from "@shipaxxess/shipaxxess-zod-v4";
 import { cloudflare } from "@utils/cloudflare";
 import { exception } from "@utils/error";
 import { girth } from "@utils/girth";
@@ -12,7 +12,7 @@ import { v4 } from "uuid";
 import { Model } from "./model";
 
 export class UspsBatchService {
-	constructor(private context: Bindings, private data: Usps.BATCHZODSCHEMA, private userid: number) {
+	constructor(private context: Bindings, private data: Labels.BATCHZODSCHEMA, private userid: number) {
 		const isGirthOk = girth([this.data.package.height, this.data.package.length, this.data.package.width]);
 
 		if (isGirthOk > config.packages.max_girth) {

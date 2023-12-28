@@ -4,13 +4,13 @@ import * as Package from "./package";
 import * as Type from "./type";
 
 export const COMMONSCHEMA = z.object({
-	sender: Address.ZODSCHEMA.merge(z.object({ id: z.number().optional() })),
+	sender: Address.IDZODSCHEMA,
 	sender_select: z.string().optional(),
-	shippingdate: z.string().min(2),
-	package: Package.ZODSCHEMA.merge(z.object({ id: z.number().optional() })),
+	package: Package.IDZODSCHEMA,
 	package_select: z.string().optional(),
-	type: Type.ZODSCHEMA.merge(z.object({ id: z.number().optional() })),
+	type: Type.IDZODSCHEMA,
 	type_select: z.string().optional(),
+	shippingdate: z.string(),
 });
 
 export type COMMONSCHEMA = z.infer<typeof COMMONSCHEMA>;

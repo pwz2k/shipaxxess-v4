@@ -1,5 +1,5 @@
 import { labels } from "@schemas/labels";
-import { Usps } from "@shipaxxess/shipaxxess-zod-v4";
+import { Labels } from "@shipaxxess/shipaxxess-zod-v4";
 import { drizzle } from "drizzle-orm/d1";
 import { Context } from "hono";
 import { v4 } from "uuid";
@@ -15,7 +15,7 @@ type kv_parse = {
 	reseller_cost: number;
 	user_cost: number;
 	type: "usps" | "ups";
-	data: Usps.BATCHZODSCHEMA;
+	data: Labels.BATCHZODSCHEMA;
 };
 
 export const WebSocketUser = (c: Context<App>) => {
@@ -59,7 +59,6 @@ export const WebSocketUser = (c: Context<App>) => {
 									package_width: kv_parse.data.package.width,
 									package_id: kv_parse.data.package.id,
 									package_name: kv_parse.data.package.name,
-									package_uuid: kv_parse.data.package.uuid,
 									recipent_company_name: recipient.company_name,
 									recipent_street_two: recipient.street_two,
 									recipent_city: recipient.city,

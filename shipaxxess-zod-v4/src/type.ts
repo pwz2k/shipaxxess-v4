@@ -5,7 +5,10 @@ export const ZODSCHEMA = z.object({
 	value: z.string(),
 	unit: z.string(),
 	type: z.enum(["usps", "ups"]),
-	id: z.number(),
 });
 
 export type ZODSCHEMA = z.infer<typeof ZODSCHEMA>;
+
+export const IDZODSCHEMA = ZODSCHEMA.merge(z.object({ id: z.number() }));
+
+export type IDZODSCHEMA = z.infer<typeof IDZODSCHEMA>;
