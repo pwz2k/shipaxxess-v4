@@ -8,9 +8,7 @@ export const useStatusQuery = (url: string) => {
 		retry: 0,
 		queryKey: ["status"],
 		queryFn: async () => {
-			api.useAuth();
-
-			const req = await api.url(url).get();
+			const req = await api.url(url).useAuth().get();
 			const res = await req.json<UsersSelectModel>();
 
 			if (!res.id) {
