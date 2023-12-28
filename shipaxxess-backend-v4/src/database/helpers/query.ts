@@ -1,3 +1,4 @@
+import schema from "@schemas/index";
 import { users } from "@schemas/users";
 import { weights } from "@schemas/weights";
 import { exception } from "@utils/error";
@@ -30,4 +31,13 @@ export const findEmailToken = async (c: Context<App>, token: string) => {
 	if (!tk) throw exception({ message: "Email token not found", code: 4344 });
 
 	return tk;
+};
+
+export const demoInsert = async (c: Context<App>) => {
+	const da = await drizzle(c.env.DB, { schema }).query.weights.findFirst({
+		with: {
+			type: true,
+		},
+		where: eq(weights.id, 1),
+	});
 };

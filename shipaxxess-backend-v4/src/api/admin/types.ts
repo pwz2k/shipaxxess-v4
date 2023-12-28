@@ -1,10 +1,27 @@
+import { Model } from "@lib/model";
+import { types } from "@schemas/types";
+import { Type } from "@shipaxxess/shipaxxess-zod-v4";
 import { Context } from "hono";
+import { v4 } from "uuid";
 
 const Get = (c: Context<App>) => {
 	return c.json({});
 };
 
 const Create = async (c: Context<App>) => {
+	const body = await c.req.json();
+	const parse = Type.ZODSCHEMA.parse(body);
+
+	const model = new Model(c.env.DB);
+
+	const insert = await model.insert(types, {
+		label: parse.label,
+		uuid: v4(),
+		value: parse.value,
+		unit: parse.unit,
+		type: parse.type,
+	});
+
 	return c.json({});
 };
 

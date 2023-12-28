@@ -3,7 +3,7 @@ import { z } from "zod";
 export const ZODSCHEMA = z.object({
 	label: z.string(),
 	value: z.string(),
-	unit: z.string(),
+	unit: z.enum(["oz", "lb"]),
 	type: z.enum(["usps", "ups"]),
 });
 
