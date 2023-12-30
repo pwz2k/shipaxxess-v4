@@ -63,7 +63,8 @@ user.get("/stores", StoresUser);
 user.post("/settings", SettingsUser.Edit);
 
 // Weights routes
-user.post("/weights", WeightsUser.Get);
+user.get("/weights", WeightsUser.GetAll);
+user.post("/weights", WeightsUser.Post);
 
 // Types routes
 user.get("/types", TypeUser.GetAll);

@@ -13,7 +13,7 @@ import { types } from "./types";
 import { users } from "./users";
 import { weights } from "./weights";
 
-import { typesRelations, weightsRelations } from "./relations";
+import { weightsRelations } from "./relations";
 
 export default {
 	addresses,
@@ -28,7 +28,6 @@ export default {
 	stores,
 	tickets,
 	types,
-	typesRelations,
 	users,
 	weights,
 	weightsRelations,
