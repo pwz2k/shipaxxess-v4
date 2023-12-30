@@ -11,7 +11,7 @@
 	"dependencies": {
 		"@shipaxxess/shipaxxess-zod-v4": "*",
 		"@types/uuid": "^9.0.7",
-		"drizzle-orm": "^0.29.1",
+		"drizzle-orm": "^0.29.2",
 		"hono": "^3.11.2",
 		"pdf-merger-js": "^4.3.0",
 		"stripe": "^14.9.0",
