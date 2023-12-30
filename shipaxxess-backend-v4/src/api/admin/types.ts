@@ -10,7 +10,7 @@ const Get = (c: Context<App>) => {
 
 const Create = async (c: Context<App>) => {
 	const body = await c.req.json();
-	const parse = Type.ZODSCHEMA.parse(body);
+	const parse = Type.CREATESCHEMA.parse(body);
 
 	const model = new Model(c.env.DB);
 

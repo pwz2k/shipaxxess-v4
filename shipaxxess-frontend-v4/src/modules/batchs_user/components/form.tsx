@@ -8,7 +8,7 @@ import { Label } from "@client/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@client/components/ui/select";
 import { Separator } from "@client/components/ui/separator";
 import { app } from "@client/config/app";
-import { numberWithCommas } from "@client/lib/utils";
+import { findItemById, numberWithCommas } from "@client/lib/utils";
 import { AddressesSelectModel } from "@db/addresses";
 import { PackagesSelectModel } from "@db/packages";
 import { TypesSelectModel } from "@db/types";
@@ -19,6 +19,8 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import Autocomplete from "react-google-autocomplete";
 import { StateCombobox } from "@client/components/common/combobox";
+import { toast } from "sonner";
+import { v4 } from "uuid";
 
 type BatchNewFormProps = {
 	addresses: UseQueryResult<AddressesSelectModel[]>;
@@ -37,8 +39,28 @@ type onPlaceSelectedProps = {
 const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 	const form = useForm<Labels.BATCHZODSCHEMA>({
 		defaultValues: {
+			batch_uuid: v4(),
 			shippingdate: new Date().toISOString(),
-			sender_select: "default",
+			recipient: [
+				{
+					city: "",
+					country: "",
+					full_name: "",
+					street_one: "",
+					street_two: "",
+					state: "",
+					zip: "",
+					company_name: "",
+					uuid: v4(),
+				},
+			],
+			package: {
+				height: 0,
+				length: 0,
+				name: "",
+				weight: 0,
+				width: 0,
+			},
 		},
 		resolver: zodResolver(Labels.BATCHZODSCHEMA),
 	});
@@ -99,12 +121,42 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 						<div className="grid grid-cols-3 grid-rows-1 gap-6">
 							<FormField
 								control={form.control}
+								name="batch_uuid"
+								render={({ field }) => {
+									return (
+										<FormItem className="hidden">
+											<FormControl>
+												<Input {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									);
+								}}
+							/>
+
+							<FormField
+								control={form.control}
 								name="type_select"
 								render={({ field }) => {
 									return (
 										<FormItem>
 											<FormLabel>Delivery Type</FormLabel>
-											<Select defaultValue={field.value} onValueChange={field.onChange}>
+											<Select
+												defaultValue={field.value}
+												onValueChange={(id) => {
+													if (!types.data) return;
+
+													const item = findItemById(types.data, Number(id));
+													if (!item) return;
+
+													form.setValue("type.id", item.id);
+													form.setValue("type.label", item.label);
+													form.setValue("type.unit", item.unit as "oz");
+													form.setValue("type.value", item.value);
+													form.setValue("type.type", item.type as "usps");
+
+													field.onChange(id);
+												}}>
 												<FormControl>
 													<SelectTrigger>
 														<SelectValue placeholder="Choose a delivery type" />
@@ -112,13 +164,13 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 												</FormControl>
 												<SelectContent>
 													{types.data?.length === 0 && (
-														<SelectItem value="not_found" disabled>
+														<SelectItem value="0" disabled>
 															Not found
 														</SelectItem>
 													)}
 													{types.data?.map((nod) => {
 														return (
-															<SelectItem key={nod.id} value={nod.uuid}>
+															<SelectItem key={nod.id} value={nod.id.toString()}>
 																{nod.label}
 															</SelectItem>
 														);
@@ -152,7 +204,26 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 									return (
 										<FormItem>
 											<FormLabel>Sender</FormLabel>
-											<Select defaultValue={field.value} onValueChange={field.onChange}>
+											<Select
+												defaultValue={field.value}
+												onValueChange={(id) => {
+													if (!addresses.data) return;
+
+													const item = findItemById(addresses.data, Number(id));
+													if (!item) return;
+
+													form.setValue("sender.id", item.id);
+													form.setValue("sender.full_name", item.full_name);
+													form.setValue("sender.company_name", item.company_name || "");
+													form.setValue("sender.street_one", item.street_one);
+													form.setValue("sender.street_two", item.street_two || "");
+													form.setValue("sender.city", item.city);
+													form.setValue("sender.zip", item.zip);
+													form.setValue("sender.state", item.state);
+													form.setValue("sender.country", item.country);
+
+													field.onChange(id);
+												}}>
 												<FormControl>
 													<SelectTrigger>
 														<SelectValue placeholder="Choose a sender" />
@@ -160,13 +231,13 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 												</FormControl>
 												<SelectContent>
 													{addresses.data?.length === 0 && (
-														<SelectItem value="not_found" disabled>
+														<SelectItem value="0" disabled>
 															Not found
 														</SelectItem>
 													)}
 													{addresses.data?.map((nod) => {
 														return (
-															<SelectItem key={nod.id} value={nod.default ? "default" : nod.uuid}>
+															<SelectItem key={nod.id} value={nod.id.toString()}>
 																{`${nod.full_name}, ${nod.street_one}, ${nod.city}, ${nod.zip}, ${nod.state}`}
 															</SelectItem>
 														);
@@ -189,7 +260,21 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 											<FormLabel>Package</FormLabel>
 											<Select
 												defaultValue={field.value}
-												onValueChange={field.onChange}
+												onValueChange={(id) => {
+													if (!packages.data) return toast.error("No packages found");
+
+													const item = findItemById(packages.data, Number(id));
+													if (!item) return toast.error("No packages found");
+
+													form.setValue("package.id", item.id);
+													form.setValue("package.name", item.name);
+													form.setValue("package.weight", item.weight);
+													form.setValue("package.height", item.height);
+													form.setValue("package.width", item.width);
+													form.setValue("package.length", item.length);
+
+													field.onChange(id);
+												}}
 												disabled={form.watch("type.id") ? false : true}>
 												<FormControl>
 													<SelectTrigger>
@@ -198,13 +283,13 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 												</FormControl>
 												<SelectContent>
 													{packages.data?.length === 0 && (
-														<SelectItem value="not_found" disabled>
+														<SelectItem value="0" disabled>
 															Not found
 														</SelectItem>
 													)}
 													{packages.data?.map((nod) => {
 														return (
-															<SelectItem key={nod.id} value={nod.uuid}>
+															<SelectItem key={nod.id} value={nod.id.toString()}>
 																{nod.name}
 															</SelectItem>
 														);
@@ -294,6 +379,20 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 					<Card className="w-4/6 p-4 ">
 						<h1 className="mb-4">New Recipent</h1>
 						<div className="grid grid-cols-2 grid-rows-4 mb-4 gap-x-6 gap-y-2">
+							<FormField
+								control={form.control}
+								name="recipient.0.uuid"
+								render={({ field }) => {
+									return (
+										<FormItem className="hidden">
+											<FormControl>
+												<Input {...field} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									);
+								}}
+							/>
 							<FormField
 								control={form.control}
 								name="recipient.0.full_name"

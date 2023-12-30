@@ -22,3 +22,7 @@ export const getLocalcolumnVisibility = (token: string) => {
 
 	return JSON.parse(local) as { [x: string]: boolean };
 };
+
+export const findItemById = <T extends { id: number }>(items: T[], id: number) => {
+	return items.find((i) => i.id === id);
+};
