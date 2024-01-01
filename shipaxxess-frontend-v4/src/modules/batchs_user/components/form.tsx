@@ -21,6 +21,8 @@ import Autocomplete from "react-google-autocomplete";
 import { StateCombobox } from "@client/components/common/combobox";
 import { toast } from "sonner";
 import { v4 } from "uuid";
+import React from "react";
+import { api } from "@client/lib/api";
 
 type BatchNewFormProps = {
 	addresses: UseQueryResult<AddressesSelectModel[]>;
@@ -65,10 +67,6 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 		resolver: zodResolver(Labels.BATCHZODSCHEMA),
 	});
 
-	if (addresses.isLoading || packages.isLoading || types.isLoading) {
-		return <Loading />;
-	}
-
 	const onSubmit = (data: Labels.BATCHZODSCHEMA) => {
 		console.log(data);
 	};
@@ -108,7 +106,26 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 		});
 	};
 
+	React.useMemo(async () => {
+		const weight = form.watch("package.weight");
+		const type_id = form.watch("type.id");
+		const type = form.watch("type.type");
+
+		if (weight === 0) return;
+
+		const req = await api.url("/user/weights").useAuth().post({ weight, type_id, type });
+		const res = await req.json();
+
+		console.log(res);
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [form.watch("package.weight")]);
+
 	console.log(form.formState.errors);
+
+	if (addresses.isLoading || packages.isLoading || types.isLoading) {
+		return <Loading />;
+	}
 
 	return (
 		<Form {...form}>

@@ -14,7 +14,7 @@ const Post = async (c: Context<App>) => {
 	const weight = await drizzle(c.env.DB, { schema }).query.weights.findFirst({
 		with: {
 			type: {
-				// @ts-expect-error where is not defined in the type
+				// @ts-ignore
 				where: and(eq(types.type, parse.type), eq(types.id, parse.type_id)),
 			},
 		},
