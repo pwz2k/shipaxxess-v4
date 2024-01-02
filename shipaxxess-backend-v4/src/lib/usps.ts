@@ -1,17 +1,20 @@
 import { config } from "@config";
+import { getWeight } from "@helpers/query";
 import { batchs } from "@schemas/batchs";
 import { payments } from "@schemas/payments";
 import { UsersSelectModel, users } from "@schemas/users";
-import { WeightsSelectModel, weights } from "@schemas/weights";
+import { WeightsSelectModel } from "@schemas/weights";
 import { Labels } from "@shipaxxess/shipaxxess-zod-v4";
 import { cloudflare } from "@utils/cloudflare";
 import { exception } from "@utils/error";
 import { girth } from "@utils/girth";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { v4 } from "uuid";
 import { Model } from "./model";
 
-export class UspsBatchService {
+type BatchDataProps = { cost: number; batch_uuid: string; reseller_cost: number; type: "usps" | "ups" };
+
+export class LabelsService {
 	constructor(private context: Bindings, private data: Labels.BATCHZODSCHEMA, private userid: number) {
 		const isGirthOk = girth([this.data.package.height, this.data.package.length, this.data.package.width]);
 
@@ -23,22 +26,51 @@ export class UspsBatchService {
 	async checkBeforeGenerate() {
 		const model = new Model(this.context.DB);
 
-		const weight = await model.get(
-			weights,
-			and(
-				eq(weights.type, "usps"),
-				eq(weights.type_id, this.data.type.id),
-				eq(weights.weight, this.data.package.weight),
-			),
-		);
+		const weight = await getWeight(this.context.DB, {
+			type: this.data.type.type,
+			type_id: this.data.type.id,
+			weight: this.data.package.weight,
+		});
+		if (!weight) throw exception({ message: "Weight not found", code: 40405 });
 
 		const user = await model.get(users, eq(users.id, this.userid));
+		if (!user) throw exception({ message: "User not found", code: 40405 });
 
 		if (user.current_balance < weight.user_cost * this.data.recipient.length) {
 			throw exception({ message: "User balance is not enough", code: 97868 });
 		}
 
 		return { user, weight };
+	}
+
+	async storeBatchData(params: BatchDataProps) {
+		const model = new Model(this.context.DB);
+
+		const [batch] = await model.insert(batchs, {
+			cost_reseller: params.reseller_cost * this.data.recipient.length,
+			cost_user: params.cost * this.data.recipient.length,
+			package_height: this.data.package.height,
+			package_length: this.data.package.length,
+			package_weight: this.data.package.weight,
+			package_width: this.data.package.width,
+			recipients: this.data.recipient,
+			sender_city: this.data.sender.city,
+			sender_country: this.data.sender.country,
+			sender_full_name: this.data.sender.full_name,
+			sender_state: this.data.sender.state,
+			sender_street_one: this.data.sender.street_one,
+			sender_zip: this.data.sender.zip,
+			type_label: this.data.type.label,
+			type_unit: this.data.type.unit,
+			type_value: this.data.type.value,
+			shipping_date: this.data.shippingdate,
+			type: params.type,
+			user_id: this.userid,
+			uuid: params.batch_uuid,
+			total_labels: this.data.recipient.length,
+		});
+
+		return batch;
 	}
 
 	async bulkKVStore() {
@@ -81,34 +113,6 @@ export class UspsBatchService {
 			new_balance: user.current_balance - weight.user_cost * this.data.recipient.length,
 			user_id: this.userid,
 			uuid: v4(),
-		});
-	}
-
-	async storeBatchData(params: { cost: number; batch_uuid: string; reseller_cost: number }) {
-		const model = new Model(this.context.DB);
-
-		await model.insert(batchs, {
-			cost_reseller: params.reseller_cost * this.data.recipient.length,
-			cost_user: params.cost * this.data.recipient.length,
-			package_height: this.data.package.height,
-			package_length: this.data.package.length,
-			package_weight: this.data.package.weight,
-			package_width: this.data.package.width,
-			recipients: this.data.recipient,
-			sender_city: this.data.sender.city,
-			sender_country: this.data.sender.country,
-			sender_full_name: this.data.sender.full_name,
-			sender_state: this.data.sender.state,
-			sender_street_one: this.data.sender.street_one,
-			sender_zip: this.data.sender.zip,
-			type_label: this.data.type.label,
-			type_unit: this.data.type.unit,
-			type_value: this.data.type.value,
-			shipping_date: this.data.shippingdate,
-			type: "usps",
-			user_id: this.userid,
-			uuid: params.batch_uuid,
-			total_labels: this.data.recipient.length,
 		});
 	}
 }
