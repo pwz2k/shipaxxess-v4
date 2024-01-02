@@ -11,16 +11,17 @@ import { ScrollArea } from "@client/components/ui/scroll-area";
 interface StateComboboxProps<T extends FieldValues> {
 	form: UseFormReturn<T>;
 	name: Path<T>;
+	title: string;
 }
 
-export const StateCombobox = <T extends FieldValues>({ form, name }: StateComboboxProps<T>) => {
+export const StateCombobox = <T extends FieldValues>({ form, name, title }: StateComboboxProps<T>) => {
 	return (
 		<FormField
 			control={form.control}
 			name={name}
 			render={({ field }) => (
 				<FormItem className="flex flex-col" defaultValue={field.value} onChange={field.onChange} onBlur={field.onBlur}>
-					<FormLabel className="capitalize">{name}</FormLabel>
+					<FormLabel className="capitalize">{title}</FormLabel>
 					<Popover>
 						<PopoverTrigger asChild>
 							<FormControl>
@@ -29,7 +30,7 @@ export const StateCombobox = <T extends FieldValues>({ form, name }: StateCombob
 									role="combobox"
 									className={cn("w-full justify-between", !field.value && "text-muted-foreground")}>
 									{field.value ? states.find((state) => state.id === field.value)?.name : "Select State"}
-									<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+									<ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
 								</Button>
 							</FormControl>
 						</PopoverTrigger>

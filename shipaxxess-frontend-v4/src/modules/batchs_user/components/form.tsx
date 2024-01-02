@@ -49,7 +49,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 			recipient: [
 				{
 					city: "",
-					country: "",
+					country: "United States",
 					full_name: "",
 					street_one: "",
 					street_two: "",
@@ -512,7 +512,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 								)}
 							/>
 							<div className="mt-2.5">
-								<StateCombobox form={form} name="recipient.0.state" />
+								<StateCombobox form={form} name="recipient.0.state" title="State" />
 							</div>
 							<FormField
 								control={form.control}

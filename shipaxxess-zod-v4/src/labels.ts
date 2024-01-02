@@ -6,7 +6,7 @@ import * as Type from "./type";
 export const COMMONSCHEMA = z.object({
 	sender: Address.IDZODSCHEMA,
 	sender_select: z.string().optional(),
-	package: Package.IDZODSCHEMA,
+	package: Package.IDOPTIONAL,
 	package_select: z.string().optional(),
 	type: Type.IDZODSCHEMA,
 	type_select: z.string().optional(),
