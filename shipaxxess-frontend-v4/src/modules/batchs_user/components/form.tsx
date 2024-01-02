@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { v4 } from "uuid";
 import React from "react";
 import { api } from "@client/lib/api";
+import { WeightsSelectModel } from "@db/weights";
 
 type BatchNewFormProps = {
 	addresses: UseQueryResult<AddressesSelectModel[]>;
@@ -39,6 +40,8 @@ type onPlaceSelectedProps = {
 };
 
 const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
+	const [costs, setCosts] = React.useState(0);
+
 	const form = useForm<Labels.BATCHZODSCHEMA>({
 		defaultValues: {
 			batch_uuid: v4(),
@@ -114,14 +117,17 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 		if (weight === 0) return;
 
 		const req = await api.url("/user/weights").useAuth().post({ weight, type_id, type });
-		const res = await req.json();
+		const res = await req.json<WeightsSelectModel & { type: TypesSelectModel } & { message?: string }>();
 
-		console.log(res);
+		if (res.message) {
+			api.showErrorToast();
+			return;
+		}
+
+		setCosts(res.user_cost);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [form.watch("package.weight")]);
-
-	console.log(form.formState.errors);
 
 	if (addresses.isLoading || packages.isLoading || types.isLoading) {
 		return <Loading />;
@@ -534,20 +540,22 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 						<Card className="p-6 space-y-2">
 							<div className="grid items-center grid-cols-2">
 								<h1 className="text-sm text-left text-muted-foreground">Single Label Cost:</h1>
-								<p className="text-lg font-normal text-right">${0.0}</p>
+								<p className="text-lg font-normal text-right">${costs.toFixed(2)}</p>
 							</div>
 							<div className="grid items-center grid-cols-2">
 								<h1 className="text-sm text-left text-muted-foreground">Total Recipents :</h1>
-								<p className="text-lg font-normal text-right">{0}</p>
+								<p className="text-lg font-normal text-right">{form.watch("recipient").length}</p>
 							</div>
-							<div className="grid items-center grid-cols-2">
+							{/* <div className="grid items-center grid-cols-2">
 								<h1 className="text-sm text-left text-muted-foreground">Coupon :</h1>
 								<p className="text-lg font-normal text-right text-green-500">- ${10}</p>
-							</div>
+							</div> */}
 							<Separator />
 							<div className="grid items-center grid-cols-2">
 								<h1 className="text-sm text-left text-muted-foreground">You will pay in total :</h1>
-								<p className="text-3xl font-semibold text-right text-primary">${numberWithCommas(10)}</p>
+								<p className="text-3xl font-semibold text-right text-primary">
+									${numberWithCommas(costs * form.watch("recipient").length)}
+								</p>
 							</div>
 							<div className="flex items-center justify-end pt-4">
 								<Button type="submit" className="w-full">
