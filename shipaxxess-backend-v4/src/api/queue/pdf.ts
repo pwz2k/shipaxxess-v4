@@ -1,10 +1,12 @@
+import { config } from "@config";
 import { batchs } from "@schemas/batchs";
+import { mail } from "@utils/mail";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import PDFMerger from "pdf-merger-js";
 
 export const pdfDownloadBatchQueue = async (
-	batch: MessageBatch<{ batch_uuid: string; pdfs: string[] }>,
+	batch: MessageBatch<{ batch_uuid: string; pdfs: string[]; email: string; name: string }>,
 	env: Bindings,
 ) => {
 	for (const item of batch.messages) {
@@ -45,5 +47,17 @@ export const pdfDownloadBatchQueue = async (
 		if (!update) {
 			console.log("Update failed");
 		}
+
+		await mail({
+			to: [item.body.email],
+			subject: `Batch #${item.body.batch_uuid} is ready to download`,
+			html: `
+					<p>Hi ${item.body.name},</p>
+					<p>Your batch is ready to download.</p>
+					<br/>
+					<p>Thanks!</p>
+					<p>The ${config.app.name} Team</p>
+				`,
+		});
 	}
 };

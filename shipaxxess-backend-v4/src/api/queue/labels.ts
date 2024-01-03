@@ -1,6 +1,8 @@
 import { config } from "@config";
 import { batchs } from "@schemas/batchs";
 import { labels } from "@schemas/labels";
+import { users } from "@schemas/users";
+import { mail } from "@utils/mail";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 
@@ -11,6 +13,9 @@ export const batchLabelQueue = async (batch: MessageBatch<MessageProps>, env: Bi
 		try {
 			const batch = await drizzle(env.DB).select().from(batchs).where(eq(batchs.uuid, item.body.batch_uuid)).get();
 			if (!batch) throw new Error("Not found any batch on the database");
+
+			const user = await drizzle(env.DB).select().from(users).where(eq(users.id, batch.user_id)).get();
+			if (!user) throw new Error("Not found any user on the database");
 
 			const _labels: any = [];
 			const pdfs: string[] = [];
@@ -168,7 +173,22 @@ export const batchLabelQueue = async (batch: MessageBatch<MessageProps>, env: Bi
 
 			await drizzle(env.DB).batch(_labels);
 
-			await env.BATCH_PDF_QUEUE.send({ batch_uuid: batch.uuid, pdfs }, { contentType: "json" });
+			await env.BATCH_PDF_QUEUE.send(
+				{ batch_uuid: batch.uuid, pdfs, email: user.email_address, name: user.first_name },
+				{ contentType: "json" },
+			);
+
+			await mail({
+				to: [user.email_address],
+				subject: `Batch #${batch.uuid} is completed`,
+				html: `
+					<p>Hi ${user.first_name},</p>
+					<p>Your batch is completed, We are merging all the labels together in a single label. We will let you know, once it done</p>
+					<br/>
+					<p>Thanks!</p>
+					<p>The ${config.app.name} Team</p>
+				`,
+			});
 		} catch (error) {
 			console.log(error, "TRYCATAH_ERROR");
 		}
