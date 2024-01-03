@@ -23,15 +23,15 @@ export const DialogWrapperWithForm = <T extends FieldValues>({
 	setOpen,
 	className,
 	form,
-	submit,
-	action,
+	onsubmit,
+	confirm,
 }: DialogWrapperWithFormProps<T>) => {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>{trigger}</DialogTrigger>
 			<DialogContent className={cn("max-w-lg", className)}>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(submit)} className="space-y-4" autoComplete="off">
+					<form onSubmit={form.handleSubmit(onsubmit)} className="space-y-4" autoComplete="off">
 						<DialogHeader>
 							<DialogTitle>{title}</DialogTitle>
 							{description && <DialogDescription>{description}</DialogDescription>}
@@ -43,7 +43,7 @@ export const DialogWrapperWithForm = <T extends FieldValues>({
 									Cancel
 								</Button>
 							</DialogClose>
-							{action}
+							{confirm}
 						</DialogFooter>
 					</form>
 				</Form>

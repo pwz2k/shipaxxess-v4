@@ -1,7 +1,7 @@
 import { FieldValues, UseFormReturn } from "react-hook-form";
 
 export interface DialogWrapperWithFormProps<T extends FieldValues> {
-	trigger: React.JSX.Element;
+	trigger?: React.JSX.Element | null;
 	children?: React.JSX.Element | never[];
 	title: string;
 	description?: string;
@@ -9,6 +9,6 @@ export interface DialogWrapperWithFormProps<T extends FieldValues> {
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	className?: string;
 	form: UseFormReturn<T>;
-	submit: (values: T) => void;
-	action: React.JSX.Element;
+	onsubmit: (values: T) => void;
+	confirm?: React.JSX.Element | null;
 }
