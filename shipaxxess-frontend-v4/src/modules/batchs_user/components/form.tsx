@@ -91,8 +91,18 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 		resolver: zodResolver(Address.ZODSCHEMA),
 	});
 
-	const onSubmit = (data: Labels.BATCHZODSCHEMA) => {
-		console.log(data);
+	const onSubmit = async (data: Labels.BATCHZODSCHEMA) => {
+		const req = await api.url("/user/labels/batch").useAuth().post(data);
+		const res = await req.json<{ message?: string }>();
+
+		if (res.message) {
+			api.showErrorToast();
+			return;
+		}
+
+		api.showSuccessToast();
+
+		form.reset();
 	};
 
 	const onCSVUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

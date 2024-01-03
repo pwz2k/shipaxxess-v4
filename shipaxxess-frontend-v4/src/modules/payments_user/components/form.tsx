@@ -32,13 +32,12 @@ const NewPaymentForm = () => {
 
 		if (res.success) {
 			api.showSuccessToast();
+			navigate("/payments");
 			return;
 		}
 
 		api.showErrorToast();
 		setIsLoading(false);
-
-		navigate("/payments");
 	};
 
 	return (
