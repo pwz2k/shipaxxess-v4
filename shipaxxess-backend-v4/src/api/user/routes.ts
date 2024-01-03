@@ -24,6 +24,7 @@ user.get("/dashboard", DashboardUser);
 user.get("/labels/batch", LabelsUser.GetAll);
 user.post("/labels/batch", LabelsUser.Create);
 user.post("/labels/refund", LabelsUser.Refund);
+user.get("/labels/batch/:uuid", LabelsUser.Get);
 
 // Addresses routes
 user.get("/addresses", AddressesUser.GetAll);

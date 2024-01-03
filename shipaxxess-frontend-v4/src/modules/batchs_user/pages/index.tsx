@@ -9,6 +9,7 @@ import useTable from "@client/hooks/useTable";
 import React from "react";
 import { TimezoneContext } from "@client/contexts/timezone";
 import { batchColumns } from "../data/columns";
+import Search from "@client/components/common/search";
 
 const BatchsUserPage = () => {
 	const { timezone } = React.useContext(TimezoneContext);
@@ -32,6 +33,7 @@ const BatchsUserPage = () => {
 					title="Batches"
 					render={
 						<>
+							<Search />
 							<ToggleColumns />
 							<Link to="/batchs/new">
 								<Button>New Batch</Button>

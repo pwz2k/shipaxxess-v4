@@ -146,7 +146,7 @@ const AddressForm = ({
 						</FormItem>
 					)}
 				/>
-				<StateCombobox form={form} name="state" />
+				<StateCombobox form={form} name="state" title="State" />
 				<FormField
 					control={form.control}
 					name="country"

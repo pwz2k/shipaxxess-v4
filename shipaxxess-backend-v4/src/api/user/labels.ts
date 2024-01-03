@@ -2,6 +2,7 @@ import { config } from "@config";
 import { Model } from "@lib/model";
 import { LabelsService } from "@lib/usps";
 import { batchs } from "@schemas/batchs";
+import { labels } from "@schemas/labels";
 import { Labels, Refund as RF } from "@shipaxxess/shipaxxess-zod-v4";
 import { eq } from "drizzle-orm";
 import { Context } from "hono";
@@ -12,6 +13,16 @@ const GetAll = async (c: Context<App>) => {
 	const batches = await model.all(batchs, eq(batchs.user_id, c.get("jwtPayload").id));
 
 	return c.json(batches);
+};
+
+const Get = async (c: Context<App, "/:uuid">) => {
+	const batch_uuid = c.req.param("uuid");
+
+	const model = new Model(c.env.DB);
+
+	const batchLabels = await model.all(labels, eq(labels.batch_uuid, batch_uuid));
+
+	return c.json(batchLabels);
 };
 
 const Create = async (c: Context<App>) => {
@@ -55,4 +66,4 @@ const Refund = async (c: Context<App>) => {
 	return c.json({ success: true, body });
 };
 
-export const LabelsUser = { GetAll, Create, Refund };
+export const LabelsUser = { GetAll, Create, Refund, Get };

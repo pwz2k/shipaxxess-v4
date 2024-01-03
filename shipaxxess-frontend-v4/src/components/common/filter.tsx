@@ -16,7 +16,7 @@ const Filter = <TData,>({ table, token }: { table: Table<TData>; token: string }
 			<DropdownMenuTrigger asChild>
 				<Button variant="outline" size="sm" className="h-10 bg-white">
 					<TableProperties className="w-4 h-4 mr-2" />
-					Columns
+					Customize Columns
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="w-auto">
