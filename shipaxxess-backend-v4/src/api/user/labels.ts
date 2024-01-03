@@ -1,6 +1,6 @@
 import { config } from "@config";
+import { LabelsService } from "@lib/label";
 import { Model } from "@lib/model";
-import { LabelsService } from "@lib/usps";
 import { batchs } from "@schemas/batchs";
 import { labels } from "@schemas/labels";
 import { Labels, Refund as RF } from "@shipaxxess/shipaxxess-zod-v4";

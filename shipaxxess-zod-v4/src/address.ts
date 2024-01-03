@@ -8,7 +8,7 @@ export const ZODSCHEMA = z.object({
 	city: z.string().min(1),
 	zip: z.string().min(1),
 	state: z.string().min(1),
-	country: z.string().optional(),
+	country: z.string().default("United States"),
 });
 
 export type ZODSCHEMA = z.infer<typeof ZODSCHEMA>;
@@ -16,3 +16,7 @@ export type ZODSCHEMA = z.infer<typeof ZODSCHEMA>;
 export const IDZODSCHEMA = ZODSCHEMA.merge(z.object({ id: z.number() }));
 
 export type IDZODSCHEMA = z.infer<typeof IDZODSCHEMA>;
+
+export const UUIDSCHEMA = ZODSCHEMA.merge(z.object({ uuid: z.string() }));
+
+export type UUIDSCHEMA = z.infer<typeof UUIDSCHEMA>;

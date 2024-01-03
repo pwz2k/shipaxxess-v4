@@ -150,6 +150,10 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 				uuid: v4(),
 			})),
 		);
+
+		setCsvdialog(false);
+
+		csvform.reset();
 	};
 
 	const onPlaceSelected = (place: onPlaceSelectedProps) => {
