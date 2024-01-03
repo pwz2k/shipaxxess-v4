@@ -5,7 +5,6 @@ import { payments } from "@schemas/payments";
 import { UsersSelectModel, users } from "@schemas/users";
 import { WeightsSelectModel } from "@schemas/weights";
 import { Labels } from "@shipaxxess/shipaxxess-zod-v4";
-import { cloudflare } from "@utils/cloudflare";
 import { exception } from "@utils/error";
 import { girth } from "@utils/girth";
 import { eq } from "drizzle-orm";
@@ -55,7 +54,7 @@ export class LabelsService {
 			package_width: this.data.package.width,
 			recipients: this.data.recipient,
 			sender_city: this.data.sender.city,
-			sender_country: this.data.sender.country,
+			sender_country: this.data.sender.country || "United States",
 			sender_full_name: this.data.sender.full_name,
 			sender_state: this.data.sender.state,
 			sender_street_one: this.data.sender.street_one,
@@ -73,30 +72,10 @@ export class LabelsService {
 		return batch;
 	}
 
-	async bulkKVStore() {
-		const kv_data = this.data.recipient.map((v) => ({ key: v.uuid, value: "haven't been processed yet" }));
-
-		const req = await cloudflare(
-			`/accounts/${config.cloudflare.account_identifier}/storage/kv/namespaces/286cdb9ad9e14440a96b712afc625ecb/bulk`,
-			{ method: "PUT", body: kv_data },
-		);
-
-		if (!req.ok) {
-			throw exception({ message: "failed to store kv data", code: 9870 });
-		}
-	}
-
-	async sendToQueue(params: { batch_uuid: string; user_cost: number; reseller_cost: number }) {
-		await this.context.BATCH_QUEUE.send(
-			{ batch_uuid: params.batch_uuid, user_cost: params.user_cost, reseller_cost: params.reseller_cost },
-			{ contentType: "json" },
-		);
-	}
-
 	async payforLabel(user: UsersSelectModel, weight: WeightsSelectModel) {
 		const model = new Model(this.context.DB);
 
-		await model.update(
+		const [update] = await model.update(
 			users,
 			{
 				current_balance: user.current_balance - weight.user_cost * this.data.recipient.length,
@@ -106,7 +85,7 @@ export class LabelsService {
 			eq(users.id, this.userid),
 		);
 
-		await model.insert(payments, {
+		const [insert] = await model.insert(payments, {
 			credit: weight.user_cost * this.data.recipient.length,
 			current_balance: user.current_balance,
 			gateway: "Payment",
@@ -114,5 +93,27 @@ export class LabelsService {
 			user_id: this.userid,
 			uuid: v4(),
 		});
+
+		return { update, insert };
 	}
+
+	async sendToQueue(params: { batch_uuid: string; user_cost: number; reseller_cost: number }) {
+		await this.context.BATCH_QUEUE.send(
+			{ batch_uuid: params.batch_uuid, user_cost: params.user_cost, reseller_cost: params.reseller_cost },
+			{ contentType: "json" },
+		);
+	}
+
+	// async bulkKVStore() {
+	// 	const kv_data = this.data.recipient.map((v) => ({ key: v.uuid, value: "haven't been processed yet" }));
+
+	// 	const req = await cloudflare(
+	// 		`/accounts/${config.cloudflare.account_identifier}/storage/kv/namespaces/286cdb9ad9e14440a96b712afc625ecb/bulk`,
+	// 		{ method: "PUT", body: kv_data },
+	// 	);
+
+	// 	if (!req.ok) {
+	// 		throw exception({ message: "failed to store kv data", code: 9870 });
+	// 	}
+	// }
 }
