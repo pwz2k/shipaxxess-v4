@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "27bb9448-42ab-4ea3-bfb9-b6e6514bbec4",
+  "id": "b4329354-b40f-4d53-9cbd-75d554cdfa94",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "addresses": {
@@ -1766,7 +1766,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "weights_type_id_types_id_fk": {
+          "name": "weights_type_id_types_id_fk",
+          "tableFrom": "weights",
+          "tableTo": "types",
+          "columnsFrom": [
+            "type_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }

@@ -261,7 +261,8 @@ CREATE TABLE `weights` (
 	`user_cost` integer NOT NULL,
 	`reseller_cost` integer NOT NULL,
 	`created_at` text DEFAULT CURRENT_TIMESTAMP,
-	`updated_at` text DEFAULT CURRENT_TIMESTAMP
+	`updated_at` text DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (`type_id`) REFERENCES `types`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `uuidIndex` ON `labels` (`uuid`);--> statement-breakpoint
