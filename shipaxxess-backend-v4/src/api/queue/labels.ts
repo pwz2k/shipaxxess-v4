@@ -25,5 +25,6 @@ export const batchLabelQueue = async (batch: MessageBatch<MessageProps>, env: Bi
 		await generator.saveLabels();
 		await generator.sendToDownload(payload);
 		await generator.mailNotify("batch_completed", payload);
+		await generator.updateBatchStatus(batch.uuid, "completed");
 	}
 };

@@ -113,6 +113,7 @@ export class LabelsService {
 export class LabelGenerator {
 	private labels: LabelsInsertModel[] = [];
 	private pdfs: string[] = [];
+	private failed_labels: Error[] = [];
 
 	constructor(private env: Bindings) {}
 
@@ -239,7 +240,7 @@ export class LabelGenerator {
 
 			return payload;
 		} catch (err) {
-			console.log(err);
+			this.failed_labels.push(err as Error);
 		}
 	}
 
@@ -285,5 +286,13 @@ export class LabelGenerator {
 		} catch (err) {
 			console.log(err);
 		}
+	}
+
+	async updateBatchStatus(batch_uuid: string, status: string) {
+		return await drizzle(this.env.DB)
+			.update(batchs)
+			.set({ status_label: status, status_message: "Batch is completed", failed_labels: this.failed_labels.length })
+			.where(eq(batchs.uuid, batch_uuid))
+			.execute();
 	}
 }
