@@ -1,10 +1,17 @@
 import { config } from "@config";
+import { Model } from "@lib/model";
 import { LabelsService } from "@lib/usps";
+import { batchs } from "@schemas/batchs";
 import { Labels, Refund as RF } from "@shipaxxess/shipaxxess-zod-v4";
+import { eq } from "drizzle-orm";
 import { Context } from "hono";
 
-const GetAll = (c: Context<App>) => {
-	return c.json({});
+const GetAll = async (c: Context<App>) => {
+	const model = new Model(c.env.DB);
+
+	const batches = await model.all(batchs, eq(batchs.user_id, c.get("jwtPayload").id));
+
+	return c.json(batches);
 };
 
 const Create = async (c: Context<App>) => {
