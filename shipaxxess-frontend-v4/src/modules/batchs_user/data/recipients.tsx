@@ -24,6 +24,7 @@ import { ArrowUpDown } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@client/components/ui/button";
 import { Address } from "@shipaxxess/shipaxxess-zod-v4";
+import RecipientEditTableMenu from "../components/recipientEditTableMenu";
 
 export const recipentsColumns: ColumnDef<Address.ZODSCHEMA>[] = [
 	{
@@ -182,5 +183,6 @@ export const recipentsColumns: ColumnDef<Address.ZODSCHEMA>[] = [
 		id: "action",
 		enableSorting: false,
 		enableHiding: false,
+		cell: ({ row }) => <RecipientEditTableMenu row={row} />,
 	},
 ];
