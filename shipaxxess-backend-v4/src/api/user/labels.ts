@@ -1,5 +1,6 @@
+import { config } from "@config";
 import { LabelsService } from "@lib/usps";
-import { Labels } from "@shipaxxess/shipaxxess-zod-v4";
+import { Labels, Refund as RF } from "@shipaxxess/shipaxxess-zod-v4";
 import { Context } from "hono";
 
 const GetAll = (c: Context<App>) => {
@@ -32,6 +33,19 @@ const Create = async (c: Context<App>) => {
 	return c.json({ success: true, message: "We are processing your batch. Please check back later." });
 };
 
-const Refund = async (c: Context<App>) => {};
+const Refund = async (c: Context<App>) => {
+	const body = await c.req.json();
+	const parse = RF.ZODSCHEMA.parse(body);
+
+	for (const label of parse.batch) {
+		await fetch(`https://api.labelaxxess.com/api/admin/ex-recycle-label`, {
+			method: "POST",
+			headers: config.label.headers,
+			body: JSON.stringify({ id: label.id }),
+		});
+	}
+
+	return c.json({ success: true, body });
+};
 
 export const LabelsUser = { GetAll, Create, Refund };
