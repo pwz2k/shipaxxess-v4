@@ -150,6 +150,23 @@ export const batchColumns = (timezone: string) =>
 			enableHiding: true,
 		},
 		{
+			accessorKey: "is_downloaded",
+			header: ({ column }) => {
+				return (
+					<Button
+						className="px-0 whitespace-nowrap"
+						variant="ghost"
+						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+						Downloaded
+						<ArrowUpDown className="w-4 h-4 ml-2" />
+					</Button>
+				);
+			},
+			cell: ({ row }) => <span>{row.original.is_downloaded ? "Yes" : "No"}</span>,
+			enableSorting: true,
+			enableHiding: true,
+		},
+		{
 			accessorKey: "status_label",
 			header: ({ column }) => {
 				return (
