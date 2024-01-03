@@ -27,6 +27,7 @@ import { WeightsSelectModel } from "@db/weights";
 import { usePapaParse } from "react-papaparse";
 import CSVForm from "./csvform";
 import LabelsRecipentsTable from "./recipientsTable";
+import { useLoading } from "@client/hooks/useLoading";
 
 type BatchNewFormProps = {
 	addresses: UseQueryResult<AddressesSelectModel[]>;
@@ -49,6 +50,8 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 	const [csvheaders, setCsvheaders] = React.useState<string[]>([]);
 
 	const [costs, setCosts] = React.useState(0);
+
+	const { button: SubmitBatchButton, setIsLoading } = useLoading({ label: "Confirm & Pay", className: "w-full" });
 
 	const form = useForm<Labels.BATCHZODSCHEMA>({
 		defaultValues: {
@@ -92,17 +95,20 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 	});
 
 	const onSubmit = async (data: Labels.BATCHZODSCHEMA) => {
+		setIsLoading(true);
+
 		const req = await api.url("/user/labels/batch").useAuth().post(data);
 		const res = await req.json<{ message?: string }>();
 
 		if (res.message) {
-			api.showErrorToast();
+			api.showSuccessToast();
+			setIsLoading(false);
+			form.reset();
 			return;
 		}
 
-		api.showSuccessToast();
-
-		form.reset();
+		api.showErrorToast();
+		setIsLoading(false);
 	};
 
 	const onCSVUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -628,11 +634,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 										${numberWithCommas(costs * form.watch("recipient").length)}
 									</p>
 								</div>
-								<div className="flex items-center justify-end pt-4">
-									<Button type="submit" className="w-full">
-										Confirm & Pay
-									</Button>
-								</div>
+								<div className="flex items-center justify-end pt-4">{SubmitBatchButton}</div>
 							</Card>
 							<div className="py-4 mt-4 bg-white rounded-lg shadow">
 								<p className="px-4 text-xs text-justify text-muted-foreground">
