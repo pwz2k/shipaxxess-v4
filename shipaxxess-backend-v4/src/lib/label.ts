@@ -11,6 +11,7 @@ import { girth } from "@utils/girth";
 import { mail } from "@utils/mail";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
+import PDFMerger from "pdf-merger-js";
 import { v4 } from "uuid";
 import { Model } from "./model";
 
@@ -294,5 +295,52 @@ export class LabelGenerator {
 			.set({ status_label: status, status_message: "Batch is completed", failed_labels: this.failed_labels.length })
 			.where(eq(batchs.uuid, batch_uuid))
 			.execute();
+	}
+}
+
+export class LabelDownloader {
+	constructor(private env: Bindings, private merger: PDFMerger) {}
+
+	async downloadLabel(pdf: string) {
+		const req = await fetch(pdf);
+		const buffer = await req.arrayBuffer();
+
+		const r2 = await this.env.LABELS_BUCKET.put(pdf.split("/")[4], buffer);
+		if (r2 === null) throw new Error("buffer in null");
+
+		try {
+			await this.merger.add(buffer, "1-1");
+		} catch (error) {
+			await this.merger.add(buffer);
+		}
+	}
+
+	async saveMergedPdf(batch_uuid: string) {
+		const mergePdfBuffer = await this.merger.saveAsBuffer();
+
+		const r2batch = await this.env.LABELS_BUCKET.put(`${batch_uuid}.pdf`, mergePdfBuffer);
+		if (r2batch === null) throw new Error("something went wrong with batch pdf merger r2");
+	}
+
+	async updateBatchStatus(batch_uuid: string) {
+		return await drizzle(this.env.DB)
+			.update(batchs)
+			.set({ is_downloaded: true })
+			.where(eq(batchs.uuid, batch_uuid))
+			.execute();
+	}
+
+	async mailNotify(payload: { email: string; batch_uuid: string; name: string }) {
+		return await mail({
+			to: [payload.email],
+			subject: `Batch #${payload.batch_uuid} is ready to download`,
+			html: `
+						<p>Hi ${payload.name},</p>
+						<p>Your batch is ready to download.</p>
+						<br/>
+						<p>Thanks!</p>
+						<p>The ${config.app.name} Team</p>
+					`,
+		});
 	}
 }
