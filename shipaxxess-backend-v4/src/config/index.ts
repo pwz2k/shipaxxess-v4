@@ -11,7 +11,7 @@ export const config = {
 	mail: {
 		postalserver: {
 			sender: "support@xclusivelabels.com",
-			apiKey: "tmGguA24F3jDLs1RbhGD6FEX",
+			apiKey: "2bp9yCIDH8bz7Ct6OjrwajDF",
 			from: "support@xclusivelabels.com",
 			url: "https://smtp.sakibhasan.dev",
 		},
