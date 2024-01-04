@@ -33,6 +33,10 @@ const StoreEbayUserPage = () => {
 	React.useEffect(() => {
 		console.log(search);
 
+		const url = new URLSearchParams(search);
+
+		console.log(url.get("code")!);
+
 		// if (query.get("code")) {
 		// 	exchangeCode(query.get("code")!);
 		// }
