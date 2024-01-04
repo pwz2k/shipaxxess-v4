@@ -15,7 +15,7 @@ import PDFMerger from "pdf-merger-js";
 import { v4 } from "uuid";
 import { Model } from "./model";
 
-type BatchDataProps = { cost: number; batch_uuid: string; reseller_cost: number; type: "usps" | "ups" };
+type BatchDataProps = { cost: number; reseller_cost: number };
 
 type ApiResponseProps = { payload: { code: string; pdf: string; id: number }; message: string };
 
@@ -51,6 +51,39 @@ export class LabelsService {
 	async storeBatchData(params: BatchDataProps) {
 		const model = new Model(this.context.DB);
 
+		if (this.data.type.type === "usps") {
+			const [batch] = await model.insert(batchs, {
+				cost_reseller: params.reseller_cost * this.data.recipient.length,
+				cost_user: params.cost * this.data.recipient.length,
+				package_height: this.data.package.height,
+				package_length: this.data.package.length,
+				package_weight: this.data.package.weight,
+				package_width: this.data.package.width,
+				package_id: this.data.package.id,
+				package_name: this.data.package.name,
+				recipients: this.data.recipient,
+				sender_city: this.data.sender.city,
+				sender_country: this.data.sender.country || "United States",
+				sender_full_name: this.data.sender.full_name,
+				sender_state: this.data.sender.state,
+				sender_street_one: this.data.sender.street_one,
+				sender_zip: this.data.sender.zip,
+				sender_company_name: this.data.sender.company_name,
+				sender_phone: this.data.sender.phone,
+				sender_street_two: this.data.sender.street_two,
+				type_label: this.data.type.label,
+				type_unit: this.data.type.unit,
+				type_value: this.data.type.value,
+				shipping_date: this.data.shippingdate,
+				type: this.data.type.type,
+				user_id: this.userid,
+				uuid: this.data.batch_uuid,
+				total_labels: this.data.recipient.length,
+			});
+
+			return batch;
+		}
+
 		const [batch] = await model.insert(batchs, {
 			cost_reseller: params.reseller_cost * this.data.recipient.length,
 			cost_user: params.cost * this.data.recipient.length,
@@ -58,6 +91,8 @@ export class LabelsService {
 			package_length: this.data.package.length,
 			package_weight: this.data.package.weight,
 			package_width: this.data.package.width,
+			package_id: this.data.package.id,
+			package_name: this.data.package.name,
 			recipients: this.data.recipient,
 			sender_city: this.data.sender.city,
 			sender_country: this.data.sender.country || "United States",
@@ -65,14 +100,21 @@ export class LabelsService {
 			sender_state: this.data.sender.state,
 			sender_street_one: this.data.sender.street_one,
 			sender_zip: this.data.sender.zip,
+			sender_company_name: this.data.sender.company_name,
+			sender_phone: this.data.sender.phone,
+			sender_street_two: this.data.sender.street_two,
 			type_label: this.data.type.label,
 			type_unit: this.data.type.unit,
 			type_value: this.data.type.value,
 			shipping_date: this.data.shippingdate,
-			type: params.type,
+			type: this.data.type.type,
 			user_id: this.userid,
-			uuid: params.batch_uuid,
+			uuid: this.data.batch_uuid,
 			total_labels: this.data.recipient.length,
+			description: this.data.description,
+			reference1: this.data.reference1,
+			saturday: this.data.saturday,
+			signature: this.data.signature,
 		});
 
 		return batch;
@@ -142,7 +184,6 @@ export class LabelGenerator {
 			package_width: batch.package_width,
 			package_id: batch.package_id,
 			package_name: batch.package_name,
-			package_uuid: batch.package_uuid,
 
 			// Recipient
 			recipent_city: recipient.city,

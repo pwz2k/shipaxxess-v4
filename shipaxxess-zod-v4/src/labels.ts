@@ -11,6 +11,10 @@ export const COMMONSCHEMA = z.object({
 	type: Type.IDZODSCHEMA,
 	type_select: z.string().optional(),
 	shippingdate: z.string(),
+	reference1: z.string().optional(),
+	description: z.string().optional(),
+	saturday: z.boolean().optional(),
+	signature: z.boolean().optional(),
 });
 
 export type COMMONSCHEMA = z.infer<typeof COMMONSCHEMA>;

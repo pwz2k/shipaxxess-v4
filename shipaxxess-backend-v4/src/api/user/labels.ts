@@ -34,10 +34,8 @@ const Create = async (c: Context<App>) => {
 	const checked = await service.checkBeforeGenerate();
 
 	await service.storeBatchData({
-		batch_uuid: parse.batch_uuid,
 		cost: checked.weight.user_cost,
 		reseller_cost: checked.weight.reseller_cost,
-		type: parse.type.type,
 	});
 
 	await service.payforLabel(checked.user, checked.weight);

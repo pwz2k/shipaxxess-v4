@@ -28,6 +28,7 @@ export const batchs = sqliteTable("batchs", {
 	sender_zip: text("sender_zip").notNull(),
 	sender_state: text("sender_state").notNull(),
 	sender_country: text("sender_country").notNull(),
+	sender_phone: text("sender_phone"),
 
 	// Recipients
 	recipients: text("recipient", { mode: "json" }).$type<Labels.RECIPIENTSCHEMAARRAY>().notNull(),
@@ -40,7 +41,6 @@ export const batchs = sqliteTable("batchs", {
 
 	// Package
 	package_id: integer("package_id"),
-	package_uuid: text("package_uuid"),
 	package_name: text("package_name"),
 	package_width: integer("package_width").notNull(),
 	package_height: integer("package_height").notNull(),
@@ -55,6 +55,12 @@ export const batchs = sqliteTable("batchs", {
 	shipping_date: text("shipping_date").notNull(),
 	created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`),
 	updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
+
+	// Ups
+	reference1: text("reference1"),
+	description: text("description"),
+	saturday: integer("saturday", { mode: "boolean" }).default(false),
+	signature: integer("signature", { mode: "boolean" }).default(false),
 });
 
 export type BatchsSelectModel = InferSelectModel<typeof batchs>;
