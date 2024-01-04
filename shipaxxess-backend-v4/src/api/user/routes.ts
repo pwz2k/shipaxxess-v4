@@ -57,6 +57,7 @@ user.get("/referrals", ReferralsUser.Get);
 user.get("/stores", StoresUser);
 
 // Settings routes
+user.get("/settings", SettingsUser.Get);
 user.post("/settings", SettingsUser.Edit);
 
 // Weights routes
