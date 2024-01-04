@@ -1,16 +1,24 @@
 import { z } from "zod";
 
-export const ZODSCHEMA = z.object({
-	first_name: z.string().min(1),
-	last_name: z.string().min(1),
+export const PROFILETAB = z.object({
+	first_name: z.string(),
+	last_name: z.string(),
 	email_address: z.string().email(),
-	password: z.string().min(6),
-	timezone: z.string().min(1),
-	coupon: z.string().min(1),
+	password: z.string().optional(),
+	timezone: z.string(),
+});
+
+export type PROFILETAB = z.infer<typeof PROFILETAB>;
+
+export const NOTIFICATIONSTAB = z.object({
 	marketing_email_notify: z.boolean(),
 	labels_email_notify: z.boolean(),
 	topups_email_notify: z.boolean(),
 	tickets_email_notify: z.boolean(),
 });
 
-export type ZODSCHEMA = z.infer<typeof ZODSCHEMA>;
+export type NOTIFICATIONSTAB = z.infer<typeof NOTIFICATIONSTAB>;
+
+export const COUPONTAB = z.object({
+	coupon_code: z.string(),
+});

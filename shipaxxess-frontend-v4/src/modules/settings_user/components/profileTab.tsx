@@ -14,20 +14,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TabsContent } from "@client/components/ui/tabs";
 import { Separator } from "@client/components/ui/separator";
 import { ScrollArea } from "@client/components/ui/scroll-area";
-import { toast } from "sonner";
 import { UsersSelectModel } from "@db/users";
 import { useLoading } from "@client/hooks/useLoading";
 import timezones from "@client/data/timezones.json";
-import { User } from "@shipaxxess/shipaxxess-zod-v4";
+import { Settings } from "@shipaxxess/shipaxxess-zod-v4";
 import { UseQueryResult } from "@tanstack/react-query";
 import React from "react";
 import Loading from "@client/components/common/loading";
+import { api } from "@client/lib/api";
 
 const SettingsProfileTab = ({ query }: { query: UseQueryResult<UsersSelectModel> }) => {
 	const { button, setIsLoading } = useLoading({ label: "Update Profile" });
 
-	const form = useForm<User.ZODSCHEMA>({
-		resolver: zodResolver(User.ZODSCHEMA),
+	const form = useForm<Settings.PROFILETAB>({
+		resolver: zodResolver(Settings.PROFILETAB),
 		defaultValues: {
 			first_name: "",
 			last_name: "",
@@ -36,11 +36,21 @@ const SettingsProfileTab = ({ query }: { query: UseQueryResult<UsersSelectModel>
 		},
 	});
 
-	const submit = async (values: User.ZODSCHEMA) => {
+	const submit = async (values: Settings.PROFILETAB) => {
 		setIsLoading(true);
-		console.log(values);
+
+		const req = await api.url("/user/settings/profile").useAuth().post(values);
+		const res = await req.json<{ success: boolean }>();
+
+		if (!res.success) {
+			api.showErrorToast();
+			setIsLoading(false);
+			return;
+		}
+
+		api.showSuccessToast();
+
 		setIsLoading(false);
-		toast.success("Profile updated");
 	};
 
 	React.useEffect(() => {

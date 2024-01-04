@@ -12,10 +12,25 @@ const Get = async (c: Context<App>) => {
 	return c.json(user);
 };
 
-const Edit = async (c: Context<App>) => {
-	// Validation
+const Profile = async (c: Context<App>) => {
 	const body = await c.req.json();
-	const parse = Settings.ZODSCHEMA.parse(body);
+	const parse = Settings.PROFILETAB.parse(body);
+
+	const model = new Model(c.env.DB);
+
+	const user = await model.get(users, eq(users.id, c.get("jwtPayload").id));
+	if (!user) throw exception({ message: "User not found", code: 404 });
+
+	if (parse.password === "") delete parse.password;
+
+	await model.update(users, parse, eq(users.id, user.id));
+
+	return c.json({ success: true });
+};
+
+const Notifications = async (c: Context<App>) => {
+	const body = await c.req.json();
+	const parse = Settings.NOTIFICATIONSTAB.parse(body);
 
 	const model = new Model(c.env.DB);
 
@@ -27,4 +42,18 @@ const Edit = async (c: Context<App>) => {
 	return c.json({ success: true });
 };
 
-export const SettingsUser = { Edit, Get };
+const Coupon = async (c: Context<App>) => {
+	const body = await c.req.json();
+	const parse = Settings.COUPONTAB.parse(body);
+
+	const model = new Model(c.env.DB);
+
+	const user = await model.get(users, eq(users.id, c.get("jwtPayload").id));
+	if (!user) throw exception({ message: "User not found", code: 404 });
+
+	await model.update(users, parse, eq(users.id, user.id));
+
+	return c.json({ success: true });
+};
+
+export const SettingsUser = { Profile, Get, Notifications, Coupon };

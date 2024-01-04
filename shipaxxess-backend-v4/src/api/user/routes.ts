@@ -58,7 +58,9 @@ user.get("/stores", StoresUser);
 
 // Settings routes
 user.get("/settings", SettingsUser.Get);
-user.post("/settings", SettingsUser.Edit);
+user.post("/settings/profile", SettingsUser.Profile);
+user.post("/settings/notifications", SettingsUser.Notifications);
+user.post("/settings/coupon", SettingsUser.Coupon);
 
 // Weights routes
 user.get("/weights", WeightsUser.GetAll);
