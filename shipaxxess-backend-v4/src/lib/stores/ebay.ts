@@ -1,5 +1,6 @@
 import { config } from "@config";
 import { exception } from "@utils/error";
+import { bytes2hex } from "@utils/hex";
 
 export class Ebay {
 	constructor() {}
@@ -9,13 +10,13 @@ export class Ebay {
 	}
 
 	async exchangeCodeForToken(code: string) {
+		const bytes = new TextEncoder().encode(`${config.stores.ebay.client_id}:${config.stores.ebay.client_secret}`);
+
 		const req = await fetch(`${config.stores.ebay.baseurl}/identity/v1/oauth2/token`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded",
-				Authorization: `Basic ${Buffer.from(
-					`${config.stores.ebay.client_id}:${config.stores.ebay.client_secret}`,
-				).toString("base64")}`,
+				Authorization: `Basic ${bytes2hex(bytes)}`,
 			},
 			body: `grant_type=authorization_code&code=${code}&redirect_uri=${config.stores.ebay.redirect_uri}`,
 		});
