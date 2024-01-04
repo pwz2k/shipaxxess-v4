@@ -1,6 +1,5 @@
 import { config } from "@config";
 import { exception } from "@utils/error";
-import { bytes2hex } from "@utils/hex";
 
 export class Ebay {
 	constructor() {}
@@ -10,20 +9,25 @@ export class Ebay {
 	}
 
 	async exchangeCodeForToken(code: string) {
-		const bytes = new TextEncoder().encode(`${config.stores.ebay.client_id}:${config.stores.ebay.client_secret}`);
-
 		const req = await fetch(`${config.stores.ebay.baseurl}/identity/v1/oauth2/token`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded",
-				Authorization: `Basic ${bytes2hex(bytes)}`,
+				Authorization: `Basic ${config.stores.ebay.hex_code}`,
 			},
 			body: `grant_type=authorization_code&code=${code}&redirect_uri=${config.stores.ebay.redirect_uri}`,
 		});
 
-		if (!req.ok) throw exception({ message: "Failed to exchange code for token", code: req.status });
+		const res = (await req.json()) as {
+			error_description: string;
+			access_token: string;
+			refresh_token: string;
+			expires_in: number;
+		};
 
-		return (await req.json()) as { access_token: string; refresh_token: string; expires_in: number };
+		if (!req.ok) throw exception({ message: res.error_description, code: req.status });
+
+		return res;
 	}
 
 	async getOrders(token: string, limit: number) {
