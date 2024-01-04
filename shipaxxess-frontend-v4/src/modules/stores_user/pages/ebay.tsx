@@ -6,6 +6,8 @@ const StoreEbayUserPage = () => {
 	const query = useQuery();
 
 	const exchangeCode = async (code: string) => {
+		console.log(code);
+
 		const req = await api.url(`/user/stores/ebay/callback?code=${code}`).useAuth().get();
 		const res = await req.json<{ success: boolean; id: number }>();
 
