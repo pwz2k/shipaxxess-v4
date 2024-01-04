@@ -1,6 +1,9 @@
 {
 	"name": "shipaxxess",
 	"private": true,
+	"scripts": {
+		"clean": "npx lerna clean"
+	},
 	"dependencies": {},
 	"devDependencies": {
 		"lerna": "^8.0.1"
