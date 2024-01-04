@@ -1,13 +1,13 @@
 import { api } from "@client/lib/api";
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const StoreEbayUserPage = () => {
 	const { search } = useLocation();
 
-	const exchangeCode = async (code: string) => {
-		console.log(code);
+	const navigate = useNavigate();
 
+	const exchangeCode = async (code: string) => {
 		const req = await api.url(`/user/stores/ebay/callback?code=${code}`).useAuth().get();
 		const res = await req.json<{ success: boolean; id: number }>();
 
@@ -18,15 +18,7 @@ const StoreEbayUserPage = () => {
 
 		api.showSuccessToast("Successfully connected to eBay!");
 
-		const req1 = await api.url(`/user/stores/ebay/fetch?id=${res.id}`).useAuth().get();
-		const res1 = await req1.json<{ success: boolean }>();
-
-		if (!res1.success) {
-			api.showErrorToast();
-			return;
-		}
-
-		console.log(res1);
+		navigate(`/stores/ebay?import_id=${res.id}`);
 	};
 
 	React.useEffect(() => {
@@ -34,7 +26,7 @@ const StoreEbayUserPage = () => {
 		if (!code) return;
 
 		exchangeCode(code[1]);
-	}, [search]);
+	});
 
 	return <div>StoreEbayUserPage</div>;
 };

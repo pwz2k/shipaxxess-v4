@@ -48,6 +48,8 @@ const FetchOrders = async (c: Context<App>) => {
 
 	const orders = await api.getOrders(store.eb_access_token, 200);
 
+	console.log(orders);
+
 	return c.json(orders);
 };
 
