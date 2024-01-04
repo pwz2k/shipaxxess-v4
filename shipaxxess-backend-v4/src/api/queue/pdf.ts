@@ -1,7 +1,7 @@
 import { LabelDownloader } from "@lib/label";
 import PDFMerger from "pdf-merger-js";
 
-type QueueProps = { batch_uuid: string; pdfs: string[]; email: string; name: string };
+type QueueProps = { batch_uuid: string; pdfs: string[]; email: string; name: string; type: "usps" | "ups" };
 
 export const pdfDownloadBatchQueue = async (batch: MessageBatch<QueueProps>, env: Bindings) => {
 	for (const item of batch.messages) {
@@ -9,7 +9,7 @@ export const pdfDownloadBatchQueue = async (batch: MessageBatch<QueueProps>, env
 		const manager = new LabelDownloader(env, merger);
 
 		for (const pdf of item.body.pdfs) {
-			await manager.downloadLabel(pdf);
+			await manager.downloadLabel(pdf, item.body.type);
 		}
 
 		await manager.saveMergedPdf(item.body.batch_uuid);

@@ -19,6 +19,24 @@ type BatchDataProps = { cost: number; reseller_cost: number };
 
 type ApiResponseProps = { payload: { code: string; pdf: string; id: number }; message: string };
 
+type ApiUpsResponseProps = { payload: { tracking: string; pdf: string; id: number }; message: string };
+
+type CreateLabelProps =
+	| {
+			batch: BatchsSelectModel;
+			recipient: Address.UUIDSCHEMA;
+			cost: { user: number; reseller: number };
+			payload?: ApiResponseProps;
+			type: "usps";
+	  }
+	| {
+			batch: BatchsSelectModel;
+			recipient: Address.UUIDSCHEMA;
+			cost: { user: number; reseller: number };
+			payload?: ApiUpsResponseProps;
+			type: "ups";
+	  };
+
 export class LabelsService {
 	constructor(private context: Bindings, private data: Labels.BATCHZODSCHEMA, private userid: number) {
 		const isGirthOk = girth([this.data.package.height, this.data.package.length, this.data.package.width]);
@@ -160,17 +178,7 @@ export class LabelGenerator {
 
 	constructor(private env: Bindings) {}
 
-	async createLabel({
-		batch,
-		recipient,
-		payload,
-		cost,
-	}: {
-		batch: BatchsSelectModel;
-		recipient: Address.UUIDSCHEMA;
-		payload?: ApiResponseProps;
-		cost: { user: number; reseller: number };
-	}) {
+	async createLabel({ batch, recipient, payload, cost, type }: CreateLabelProps) {
 		this.labels.push({
 			shipping_date: batch.shipping_date,
 
@@ -213,9 +221,10 @@ export class LabelGenerator {
 
 			// Remote
 			remote_id: payload && payload.payload.id,
-			remote_tracking_number: payload && payload.payload.code,
+			remote_tracking_number: type === "usps" ? payload && payload.payload.code : payload && payload.payload.tracking,
 			remote_pdf_link: payload && payload.payload.pdf,
-			remote_pdf_r2_link: payload && payload.payload.pdf.split("/")[4],
+			remote_pdf_r2_link:
+				type === "usps" ? payload && payload.payload.pdf.split("/")[4] : payload && payload.payload.pdf.split("/")[5],
 
 			status_label: "awaiting",
 			status_message: payload && payload.message,
@@ -277,7 +286,7 @@ export class LabelGenerator {
 				throw new Error(payload.message);
 			}
 
-			this.createLabel({ batch, payload, cost, recipient });
+			this.createLabel({ batch, payload, cost, recipient, type: "usps" });
 			this.pdfs.push(payload.payload.pdf);
 
 			return payload;
@@ -286,9 +295,69 @@ export class LabelGenerator {
 		}
 	}
 
-	async sendToDownload(params: { batch_uuid: string; email: string; name: string }) {
+	async generateUPSLabel({
+		batch,
+		cost,
+		recipient,
+	}: {
+		batch: BatchsSelectModel;
+		recipient: Address.UUIDSCHEMA;
+		cost: { user: number; reseller: number };
+	}) {
+		const req = await fetch(`${config.label.url}/api/label/generate-ups`, {
+			method: "POST",
+			headers: config.label.headers,
+			body: JSON.stringify({
+				type: batch.type,
+				weight: batch.package_weight,
+				height: batch.package_height,
+				width: batch.package_width,
+				length: batch.package_length,
+				reference1: batch.reference1,
+				description: batch.description,
+				saturday: batch.saturday,
+				signature: batch.signature,
+				date: batch.shipping_date,
+				fromCountry: batch.sender_country,
+				fromName: batch.sender_full_name,
+				fromCompany: batch.sender_company_name,
+				fromPhone: batch.sender_phone,
+				fromStreetNumber: batch.sender_street_one,
+				fromStreetNumber2: batch.sender_street_two,
+				fromZip: batch.sender_zip,
+				fromCity: batch.sender_city,
+				fromState: batch.sender_state,
+				toCountry: recipient.country,
+				toName: recipient.full_name,
+				toCompany: recipient.company_name,
+				toPhone: recipient.phone,
+				toStreetNumber: recipient.street_one,
+				toStreetNumber2: recipient.street_two,
+				toZip: recipient.zip,
+				toCity: recipient.city,
+				toState: recipient.state,
+			}),
+		});
+
+		try {
+			const payload = (await req.json()) as ApiUpsResponseProps;
+
+			if (!req.ok) {
+				throw new Error(payload.message);
+			}
+
+			this.createLabel({ batch, payload, cost, recipient, type: "ups" });
+			this.pdfs.push(payload.payload.pdf);
+
+			return payload;
+		} catch (err) {
+			this.failed_labels.push(err as Error);
+		}
+	}
+
+	async sendToDownload(params: { batch_uuid: string; email: string; name: string; type: "usps" | "ups" }) {
 		return await this.env.BATCH_PDF_QUEUE.send(
-			{ batch_uuid: params.batch_uuid, pdfs: this.pdfs, email: params.email, name: params.name },
+			{ batch_uuid: params.batch_uuid, pdfs: this.pdfs, email: params.email, name: params.name, type: params.type },
 			{ contentType: "json" },
 		);
 	}
@@ -342,11 +411,11 @@ export class LabelGenerator {
 export class LabelDownloader {
 	constructor(private env: Bindings, private merger: PDFMerger) {}
 
-	async downloadLabel(pdf: string) {
+	async downloadLabel(pdf: string, type: "usps" | "ups") {
 		const req = await fetch(pdf);
 		const buffer = await req.arrayBuffer();
 
-		const r2 = await this.env.LABELS_BUCKET.put(pdf.split("/")[4], buffer);
+		const r2 = await this.env.LABELS_BUCKET.put(pdf.split("/")[type === "usps" ? 4 : 5], buffer);
 		if (r2 === null) throw new Error("buffer in null");
 
 		try {
@@ -366,7 +435,7 @@ export class LabelDownloader {
 	async updateBatchStatus(batch_uuid: string) {
 		return await drizzle(this.env.DB)
 			.update(batchs)
-			.set({ is_downloaded: true })
+			.set({ is_downloaded: true, merge_pdf_key: `${batch_uuid}.pdf` })
 			.where(eq(batchs.uuid, batch_uuid))
 			.execute();
 	}

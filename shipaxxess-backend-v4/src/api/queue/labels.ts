@@ -15,15 +15,23 @@ export const batchLabelQueue = async (batch: MessageBatch<MessageProps>, env: Bi
 		const payload = { batch_uuid: batch.uuid, email: user.email_address, name: user.first_name };
 
 		for (const recipient of batch.recipients) {
-			await generator.generateUSPSLabel({
-				batch,
-				recipient,
-				cost: { user: item.body.user_cost, reseller: item.body.reseller_cost },
-			});
+			if (batch.type === "usps") {
+				await generator.generateUSPSLabel({
+					batch,
+					recipient,
+					cost: { user: item.body.user_cost, reseller: item.body.reseller_cost },
+				});
+			} else {
+				await generator.generateUPSLabel({
+					batch,
+					recipient,
+					cost: { user: item.body.user_cost, reseller: item.body.reseller_cost },
+				});
+			}
 		}
 
 		await generator.saveLabels();
-		await generator.sendToDownload(payload);
+		await generator.sendToDownload({ ...payload, type: batch.type as "usps" });
 		await generator.mailNotify("batch_completed", payload);
 		await generator.updateBatchStatus(batch.uuid, "completed");
 	}
