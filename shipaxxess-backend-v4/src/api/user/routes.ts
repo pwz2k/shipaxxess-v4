@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { AddressesUser } from "./addresses";
 import { DashboardUser } from "./dashboard";
+import { EbayUser } from "./ebay";
 import { LabelsUser } from "./labels";
 import { PackagesUser } from "./packages";
 import { PaymentUser } from "./payment";
@@ -54,7 +55,11 @@ user.post("/tickets/:ticket_id", TicketsUser.PostMessage);
 user.get("/referrals", ReferralsUser.Get);
 
 // Stores routes
-user.get("/stores/ebay/init", StoreUser.EbayInit);
+user.get("/stores", StoreUser.GetAll);
+user.get("/stores/ebay/init", EbayUser.Init);
+user.get("/stores/ebay/callback", EbayUser.Callback);
+user.post("/stores/ebay/fetch", EbayUser.FetchOrders);
+user.post("/stores/ebay/batch", EbayUser.StoreAsBatch);
 
 // Settings routes
 user.get("/settings", SettingsUser.Get);

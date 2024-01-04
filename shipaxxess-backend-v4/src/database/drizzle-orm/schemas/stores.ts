@@ -5,8 +5,17 @@ export const stores = sqliteTable("stores", {
 	id: integer("id").primaryKey({ autoIncrement: true }),
 	uuid: text("uuid").notNull(),
 	user_id: integer("user_id").notNull(),
-	type: text("type").$type<"WooCommerce" | "Shopify" | "BigCommerce" | "Squarespace" | "Magento" | "Etsy">(),
+
+	type: text("type").$type<
+		"WooCommerce" | "Shopify" | "BigCommerce" | "Squarespace" | "Magento" | "Etsy" | "Ebay" | "Amazon"
+	>(),
+
 	store_name: text("store_name").notNull(),
+
+	// Ebay
+	eb_access_token: text("eb_access_token"),
+	eb_refresh_token: text("eb_refresh_token"),
+	eb_expires_in: integer("eb_expires_in"),
 
 	// WooCommerce
 	wc_store_url: text("store_url"),

@@ -44,7 +44,8 @@ export const config = {
 	},
 	stores: {
 		ebay: {
-			baseurl: "https://api.ebay.com",
+			baseurl: "https://api.sandbox.ebay.com",
+			authurl: "https://auth.sandbox.ebay.com",
 			client_id: "Corneliu-Saveneur-SBX-a94db0756-1ec480c7",
 			client_secret: "SBX-94e46b3523b1-8058-4c95-b68c-57af",
 			redirect_uri: "Cornelius_Wilso-Corneliu-Savene-byvqwbnes",
