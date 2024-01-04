@@ -184,6 +184,25 @@ export const batchColumns = (timezone: string) =>
 			enableHiding: true,
 		},
 		{
+			accessorKey: "shipping_date",
+			header: ({ column }) => {
+				return (
+					<Button
+						className="px-0 whitespace-nowrap"
+						variant="ghost"
+						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+						Shipping Date
+						<ArrowUpDown className="w-4 h-4 ml-2" />
+					</Button>
+				);
+			},
+			cell: ({ row }) => (
+				<span className="whitespace-nowrap">{moment(row.original.shipping_date).format("DD MMM, YYYY")}</span>
+			),
+			enableSorting: true,
+			enableHiding: true,
+		},
+		{
 			accessorKey: "created_at",
 			header: ({ column }) => {
 				return (

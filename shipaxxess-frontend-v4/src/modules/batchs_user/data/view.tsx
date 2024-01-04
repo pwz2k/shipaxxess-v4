@@ -24,32 +24,13 @@ import { ArrowUpDown, CopyIcon } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@client/components/ui/badge";
 import { Button } from "@client/components/ui/button";
-import { Checkbox } from "@client/components/ui/checkbox";
 import moment from "moment-timezone";
 import { LabelsSelectModel } from "@db/labels";
 import { app } from "@client/config/app";
+import ViewTableMenu from "../components/viewTableMenu";
 
 export const labelsColumns = (timezone: string) =>
 	[
-		{
-			id: "select",
-			header: ({ table }) => (
-				<Checkbox
-					checked={table.getIsAllPageRowsSelected()}
-					onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<Checkbox
-					checked={row.getIsSelected()}
-					onCheckedChange={(value) => row.toggleSelected(!!value)}
-					aria-label="Select row"
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
-		},
 		{
 			accessorKey: "id",
 			header: ({ column }) => {
@@ -268,5 +249,6 @@ export const labelsColumns = (timezone: string) =>
 			id: "action",
 			enableSorting: false,
 			enableHiding: false,
+			cell: ({ row }) => <ViewTableMenu row={row} />,
 		},
 	] as ColumnDef<LabelsSelectModel>[];
