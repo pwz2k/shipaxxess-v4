@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "e111e3d5-7e7a-4f25-9399-aeed3addead8",
+  "id": "5148a1ff-08f8-4d00-b0d6-c0fee882c0c8",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "addresses": {
@@ -1269,6 +1269,27 @@
           "notNull": true,
           "autoincrement": false
         },
+        "eb_access_token": {
+          "name": "eb_access_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "eb_refresh_token": {
+          "name": "eb_refresh_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "eb_expires_in": {
+          "name": "eb_expires_in",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "store_url": {
           "name": "store_url",
           "type": "text",
@@ -1591,7 +1612,7 @@
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false,
-          "default": "'EST'"
+          "default": "'US/Eastern'"
         },
         "refer_from": {
           "name": "refer_from",
