@@ -36,6 +36,6 @@ export class Ebay {
 
 		if (!req.ok) throw exception({ message: "Failed to get orders", code: req.status });
 
-		return (await req.json()) as { orders: any[] };
+		return (await req.json()) as EbayFulfillmentResponseProps;
 	}
 }

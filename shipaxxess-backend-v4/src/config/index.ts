@@ -48,7 +48,7 @@ export const config = {
 			authurl: "https://auth.sandbox.ebay.com",
 			client_id: "Corneliu-Saveneur-SBX-a94db0756-1ec480c7",
 			client_secret: "SBX-94e46b3523b1-8058-4c95-b68c-57af",
-			redirect_uri: "Cornelius_Wilso-Corneliu-Savene-byvqwbnes",
+			redirect_uri: "Cornelius_Wilso-Corneliu-Savene-votick",
 			scopes:
 				"https://api.ebay.com/oauth/api_scope https://api.ebay.com/oauth/api_scope/sell.marketing.readonly https://api.ebay.com/oauth/api_scope/sell.marketing https://api.ebay.com/oauth/api_scope/sell.inventory.readonly https://api.ebay.com/oauth/api_scope/sell.inventory https://api.ebay.com/oauth/api_scope/sell.account.readonly https://api.ebay.com/oauth/api_scope/sell.account https://api.ebay.com/oauth/api_scope/sell.fulfillment.readonly https://api.ebay.com/oauth/api_scope/sell.fulfillment https://api.ebay.com/oauth/api_scope/sell.analytics.readonly https://api.ebay.com/oauth/api_scope/sell.finances https://api.ebay.com/oauth/api_scope/sell.payment.dispute https://api.ebay.com/oauth/api_scope/commerce.identity.readonly https://api.ebay.com/oauth/api_scope/commerce.notification.subscription https://api.ebay.com/oauth/api_scope/commerce.notification.subscription.readonly",
 		},

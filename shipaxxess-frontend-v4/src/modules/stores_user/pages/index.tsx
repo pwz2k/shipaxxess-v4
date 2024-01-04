@@ -9,6 +9,7 @@ import useTable from "@client/hooks/useTable";
 import { storesColumns } from "../data/columns";
 import { DropdownWrapper } from "@client/components/common/dropdown";
 import { Button } from "@client/components/ui/button";
+import { api } from "@client/lib/api";
 
 const StoresUserPage = () => {
 	const { timezone } = React.useContext(TimezoneContext);
@@ -23,6 +24,18 @@ const StoresUserPage = () => {
 		sort: [{ id: "id", desc: true }],
 	});
 
+	const ebayOpen = async () => {
+		const req = await api.url("/user/stores/ebay/init").useAuth().get();
+		const res = await req.json<{ url: string }>();
+
+		if (!res.url) {
+			api.showErrorToast();
+			return;
+		}
+
+		window.open(res.url, "_blank");
+	};
+
 	return (
 		<>
 			<Meta title="Stores" />
@@ -33,7 +46,7 @@ const StoresUserPage = () => {
 					render={
 						<>
 							<ToggleColumns />
-							<DropdownWrapper items={[<a>Ebay</a>]} className="mr-3.5">
+							<DropdownWrapper items={[<a onClick={ebayOpen}>Ebay</a>]} className="mr-3.5">
 								<Button>Add Store's</Button>
 							</DropdownWrapper>
 						</>
