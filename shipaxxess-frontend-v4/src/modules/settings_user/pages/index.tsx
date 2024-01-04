@@ -7,6 +7,7 @@ import { Tabs } from "@client/components/ui/tabs";
 import useQuery from "@client/hooks/useQuery";
 import SettingsTabsList from "../components/tabsList";
 import SettingsProfileTab from "../components/profileTab";
+import SettingsCouponTab from "../components/settingsTab";
 
 const SettingsUserPage = () => {
 	const query = useQuery();
@@ -25,6 +26,7 @@ const SettingsUserPage = () => {
 					<SettingsTabsList />
 					<div className="w-4/5 p-8 bg-white rounded-lg shadow pr-96">
 						<SettingsProfileTab query={settingsQuery} />
+						<SettingsCouponTab query={settingsQuery} />
 					</div>
 				</Tabs>
 			</div>

@@ -22,3 +22,5 @@ export type NOTIFICATIONSTAB = z.infer<typeof NOTIFICATIONSTAB>;
 export const COUPONTAB = z.object({
 	coupon_code: z.string(),
 });
+
+export type COUPONTAB = z.infer<typeof COUPONTAB>;
