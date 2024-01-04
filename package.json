@@ -3,7 +3,7 @@
 	"private": true,
 	"scripts": {
 		"clean": "npx lerna clean",
-		"frontend:build": "cd ./shipaxxess-frontend && pnpm build"
+		"frontend:build": "cd ./shipaxxess-frontend-v4 && pnpm build"
 	},
 	"dependencies": {},
 	"devDependencies": {
