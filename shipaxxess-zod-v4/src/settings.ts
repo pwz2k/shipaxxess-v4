@@ -12,7 +12,7 @@ export type PROFILETAB = z.infer<typeof PROFILETAB>;
 
 export const NOTIFICATIONSTAB = z.object({
 	type: z.string(),
-	status: z.string(),
+	status: z.boolean(),
 });
 
 export type NOTIFICATIONSTAB = z.infer<typeof NOTIFICATIONSTAB>;

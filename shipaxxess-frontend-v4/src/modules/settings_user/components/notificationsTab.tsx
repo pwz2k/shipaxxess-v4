@@ -16,7 +16,7 @@ const SettingsNotificationsTab = ({ query }: { query: UseQueryResult<UsersSelect
 	const [ticket_notify, setTicketNotify] = React.useState(false);
 
 	const updateNotificationStatus = async (type: string, status: boolean) => {
-		const req = await api.url("/users/settings/notifications").post({ type, status });
+		const req = await api.url("/user/settings/notifications").post({ type, status });
 		const res = await req.json<{ success: boolean }>();
 
 		if (!res.success) {
