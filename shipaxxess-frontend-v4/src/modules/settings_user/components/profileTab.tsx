@@ -33,6 +33,7 @@ const SettingsProfileTab = ({ query }: { query: UseQueryResult<UsersSelectModel>
 			last_name: "",
 			email_address: "",
 			password: "",
+			timezone: "",
 		},
 	});
 
@@ -58,7 +59,7 @@ const SettingsProfileTab = ({ query }: { query: UseQueryResult<UsersSelectModel>
 			form.setValue("first_name", query.data.first_name);
 			form.setValue("last_name", query.data.last_name);
 			form.setValue("email_address", query.data.email_address);
-			form.setValue("timezone", query.data.timezone || "US/Eastern");
+			form.setValue("timezone", query.data.timezone || "");
 		}
 	}, [form, query.data]);
 
@@ -150,7 +151,7 @@ const SettingsProfileTab = ({ query }: { query: UseQueryResult<UsersSelectModel>
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Timezone</FormLabel>
-									<Select onValueChange={field.onChange} defaultValue={field.value}>
+									<Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
 										<FormControl>
 											<SelectTrigger>
 												<SelectValue placeholder="Select your timezone" />

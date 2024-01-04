@@ -10,7 +10,7 @@ const postalserver = async (payload: Payload) => {
 				from: config.mail.postalserver.from,
 				sender: config.mail.postalserver.sender,
 				to: payload.to,
-				custom_headers: {
+				headers: {
 					"List-Unsubscribe": `<mailto: ${config.app.support}?subject=unsubscribe>,  <${config.app.url}?unsubscribe=true>`,
 				},
 				subject: payload.subject,
