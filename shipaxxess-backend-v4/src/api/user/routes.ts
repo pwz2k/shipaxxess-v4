@@ -58,7 +58,7 @@ user.get("/referrals", ReferralsUser.Get);
 user.get("/stores", StoreUser.GetAll);
 user.get("/stores/ebay/init", EbayUser.Init);
 user.get("/stores/ebay/callback", EbayUser.Callback);
-user.post("/stores/ebay/fetch", EbayUser.FetchOrders);
+user.get("/stores/ebay/fetch", EbayUser.FetchOrders);
 user.post("/stores/ebay/batch", EbayUser.StoreAsBatch);
 
 // Settings routes
