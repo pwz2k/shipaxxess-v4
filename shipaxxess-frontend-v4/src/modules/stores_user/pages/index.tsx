@@ -7,6 +7,8 @@ import React from "react";
 import { useStoresQuery } from "../hooks/useStoresQuery";
 import useTable from "@client/hooks/useTable";
 import { storesColumns } from "../data/columns";
+import { DropdownWrapper } from "@client/components/common/dropdown";
+import { Button } from "@client/components/ui/button";
 
 const StoresUserPage = () => {
 	const { timezone } = React.useContext(TimezoneContext);
@@ -31,6 +33,9 @@ const StoresUserPage = () => {
 					render={
 						<>
 							<ToggleColumns />
+							<DropdownWrapper items={[<a>Ebay</a>]} className="mr-3.5">
+								<Button>Add Store's</Button>
+							</DropdownWrapper>
 						</>
 					}
 				/>

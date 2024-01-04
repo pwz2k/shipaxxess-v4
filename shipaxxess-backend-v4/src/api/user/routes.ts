@@ -7,7 +7,7 @@ import { PaymentUser } from "./payment";
 import { ReferralsUser } from "./referrals";
 import { SettingsUser } from "./settings";
 import { StatusUser } from "./status";
-import { StoresUser } from "./stores";
+import { StoreUser } from "./stores";
 import { TicketsUser } from "./tickets";
 import { TypeUser } from "./types";
 import { WeightsUser } from "./weights";
@@ -54,7 +54,7 @@ user.post("/tickets/:ticket_id", TicketsUser.PostMessage);
 user.get("/referrals", ReferralsUser.Get);
 
 // Stores routes
-user.get("/stores", StoresUser);
+user.get("/stores/ebay/init", StoreUser.EbayInit);
 
 // Settings routes
 user.get("/settings", SettingsUser.Get);
