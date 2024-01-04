@@ -11,7 +11,7 @@ export const users = sqliteTable("users", {
 	last_name: text("last_name").notNull(),
 	email_address: text("email_address").notNull(),
 	password: text("password").notNull(),
-	timezone: text("timezone").default("EST"),
+	timezone: text("timezone").default("US/Eastern"),
 	refer_from: text("refer_from"),
 
 	// Config

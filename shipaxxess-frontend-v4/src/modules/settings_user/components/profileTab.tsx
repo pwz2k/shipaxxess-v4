@@ -20,6 +20,8 @@ import { useLoading } from "@client/hooks/useLoading";
 import timezones from "@client/data/timezones.json";
 import { User } from "@shipaxxess/shipaxxess-zod-v4";
 import { UseQueryResult } from "@tanstack/react-query";
+import React from "react";
+import Loading from "@client/components/common/loading";
 
 const SettingsProfileTab = ({ query }: { query: UseQueryResult<UsersSelectModel> }) => {
 	const { button, setIsLoading } = useLoading({ label: "Update Profile" });
@@ -40,6 +42,19 @@ const SettingsProfileTab = ({ query }: { query: UseQueryResult<UsersSelectModel>
 		setIsLoading(false);
 		toast.success("Profile updated");
 	};
+
+	React.useEffect(() => {
+		if (query.data) {
+			form.setValue("first_name", query.data.first_name);
+			form.setValue("last_name", query.data.last_name);
+			form.setValue("email_address", query.data.email_address);
+			form.setValue("timezone", query.data.timezone || "US/Eastern");
+		}
+	}, [form, query.data]);
+
+	if (query.isLoading) {
+		return <Loading />;
+	}
 
 	return (
 		<TabsContent value="profile" className="space-y-8">
