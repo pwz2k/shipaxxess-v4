@@ -46,11 +46,25 @@ const FetchOrders = async (c: Context<App>) => {
 
 	const api = new Ebay();
 
-	const orders = await api.getOrders(store.eb_access_token, 200);
+	try {
+		const orders = await api.getOrders(store.eb_access_token, 200);
+		return c.json(orders);
+	} catch (err) {
+		const token = await api.refreshTokenToAccessToken(store.eb_refresh_token!);
 
-	console.log(orders);
+		await model.update(
+			stores,
+			{
+				eb_access_token: token.access_token,
+				eb_refresh_token: store.eb_refresh_token,
+				eb_expires_in: token.expires_in,
+			},
+			eq(stores.id, parseInt(store_id)),
+		);
 
-	return c.json(orders);
+		const orders = await api.getOrders(token.access_token, 200);
+		return c.json(orders);
+	}
 };
 
 const StoreAsBatch = async (c: Context<App>) => {

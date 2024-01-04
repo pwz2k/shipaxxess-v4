@@ -30,6 +30,27 @@ export class Ebay {
 		return res;
 	}
 
+	async refreshTokenToAccessToken(refresh_token: string) {
+		const req = await fetch(`${config.stores.ebay.baseurl}/identity/v1/oauth2/token`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded",
+				Authorization: `Basic ${config.stores.ebay.hex_code}`,
+			},
+			body: `grant_type=refresh_token&refresh_token=${refresh_token}&scope=${config.stores.ebay.scopes}`,
+		});
+
+		const res = (await req.json()) as {
+			error_description: string;
+			access_token: string;
+			expires_in: number;
+		};
+
+		if (!req.ok) throw exception({ message: res.error_description, code: req.status });
+
+		return res;
+	}
+
 	async getOrders(token: string, limit: number) {
 		const req = await fetch(`${config.stores.ebay.baseurl}/sell/fulfillment/v1/order?limit=${limit}`, {
 			method: "GET",
