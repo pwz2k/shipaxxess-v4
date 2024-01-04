@@ -25,6 +25,8 @@ const StoresUserPage = () => {
 	});
 
 	const ebayOpen = async () => {
+		console.log("ebayOpen");
+
 		const req = await api.url("/user/stores/ebay/init").useAuth().get();
 		const res = await req.json<{ url: string }>();
 
