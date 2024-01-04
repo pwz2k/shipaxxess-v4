@@ -9,6 +9,7 @@ import SettingsTabsList from "../components/tabsList";
 import SettingsProfileTab from "../components/profileTab";
 import SettingsCouponTab from "../components/settingsTab";
 import SettingsNotificationsTab from "../components/notificationsTab";
+import SettingsDeleteTab from "../components/deleteTab";
 
 const SettingsUserPage = () => {
 	const query = useQuery();
@@ -29,6 +30,7 @@ const SettingsUserPage = () => {
 						<SettingsProfileTab query={settingsQuery} />
 						<SettingsCouponTab query={settingsQuery} />
 						<SettingsNotificationsTab query={settingsQuery} />
+						<SettingsDeleteTab />
 					</div>
 				</Tabs>
 			</div>
