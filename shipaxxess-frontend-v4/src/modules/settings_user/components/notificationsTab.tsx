@@ -64,8 +64,12 @@ const SettingsNotificationsTab = ({ query }: { query: UseQueryResult<UsersSelect
 						<span className="text-sm text-muted-foreground">Receive emails about new products, features, and more</span>
 					</div>
 					<Switch
-						defaultChecked={marketing_notify}
-						onCheckedChange={(checked) => updateNotificationStatus("marketing_email_notify", checked)}
+						checked={marketing_notify}
+						onCheckedChange={(checked) => {
+							updateNotificationStatus("marketing_email_notify", checked);
+
+							setMarketingNotify(checked);
+						}}
 					/>
 				</div>
 
@@ -78,8 +82,11 @@ const SettingsNotificationsTab = ({ query }: { query: UseQueryResult<UsersSelect
 						</span>
 					</div>
 					<Switch
-						defaultChecked={label_notify}
-						onCheckedChange={(checked) => updateNotificationStatus("labels_email_notify", checked)}
+						checked={label_notify}
+						onCheckedChange={(checked) => {
+							updateNotificationStatus("labels_email_notify", checked);
+							setLabelNotify(checked);
+						}}
 					/>
 				</div>
 
@@ -92,8 +99,11 @@ const SettingsNotificationsTab = ({ query }: { query: UseQueryResult<UsersSelect
 						</span>
 					</div>
 					<Switch
-						defaultChecked={topup_notify}
-						onCheckedChange={(checked) => updateNotificationStatus("topups_email_notify", checked)}
+						checked={topup_notify}
+						onCheckedChange={(checked) => {
+							updateNotificationStatus("topups_email_notify", checked);
+							setTopupNotify(checked);
+						}}
 					/>
 				</div>
 
@@ -106,8 +116,11 @@ const SettingsNotificationsTab = ({ query }: { query: UseQueryResult<UsersSelect
 						</span>
 					</div>
 					<Switch
-						defaultChecked={ticket_notify}
-						onCheckedChange={(checked) => updateNotificationStatus("tickets_email_notify", checked)}
+						checked={ticket_notify}
+						onCheckedChange={(checked) => {
+							updateNotificationStatus("tickets_email_notify", checked);
+							setTicketNotify(checked);
+						}}
 					/>
 				</div>
 			</div>
