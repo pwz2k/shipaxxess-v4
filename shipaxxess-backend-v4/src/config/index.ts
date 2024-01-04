@@ -1,7 +1,8 @@
 export const config = {
 	app: {
-		name: "Shipaxxess",
-		support: "support@shipaxxess.com",
+		name: "Xclusivelabels",
+		support: "support@xclusivelabels.com",
+		url: "https://xclusivelabels.com",
 	},
 	jwt: {
 		secret: "KRqub7QWY8nczJ9rGNYYcte6IevIcu9m",
