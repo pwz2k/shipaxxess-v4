@@ -20,7 +20,7 @@ const StoreEbayUserPage = () => {
 	const query = useQuery();
 	const navigate = useNavigate();
 
-	const [isImporting, setIsImporting] = React.useState(false);
+	const [isImporting, setIsImporting] = React.useState(true);
 	const [orders, setOrder] = React.useState<OrderProps[]>([]);
 
 	const { CardTable, ToggleColumns } = useTable({
@@ -51,6 +51,7 @@ const StoreEbayUserPage = () => {
 
 		if (res.message) {
 			api.showErrorToast();
+			setIsImporting(false);
 			return;
 		}
 
@@ -84,7 +85,8 @@ const StoreEbayUserPage = () => {
 		if (query.get("import_id")) {
 			getOders(query.get("import_id")!);
 		}
-	});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [query, search]);
 
 	return (
 		<>
