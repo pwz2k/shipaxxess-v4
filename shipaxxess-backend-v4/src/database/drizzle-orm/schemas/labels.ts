@@ -66,6 +66,14 @@ export const labels = sqliteTable(
 		shipping_date: text("shipping_date").notNull(),
 		created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`),
 		updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
+
+		// Ups
+		reference1: text("reference1"),
+		description: text("description"),
+		saturday: integer("saturday", { mode: "boolean" }).default(false),
+		signature: integer("signature", { mode: "boolean" }).default(false),
+		fromPhone: text("fromPhone"),
+		toPhone: text("toPhone"),
 	},
 	(table) => ({
 		uuidIndex: uniqueIndex("uuidIndex").on(table.uuid),
