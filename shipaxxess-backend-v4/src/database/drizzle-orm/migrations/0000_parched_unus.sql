@@ -34,13 +34,13 @@ CREATE TABLE `batchs` (
 	`sender_zip` text NOT NULL,
 	`sender_state` text NOT NULL,
 	`sender_country` text NOT NULL,
+	`sender_phone` text,
 	`recipient` text NOT NULL,
 	`type` text NOT NULL,
 	`type_label` text NOT NULL,
 	`type_value` text NOT NULL,
 	`weight_unit` text NOT NULL,
 	`package_id` integer,
-	`package_uuid` text,
 	`package_name` text,
 	`package_width` integer NOT NULL,
 	`package_height` integer NOT NULL,
@@ -50,7 +50,11 @@ CREATE TABLE `batchs` (
 	`cost_reseller` integer NOT NULL,
 	`shipping_date` text NOT NULL,
 	`created_at` text DEFAULT CURRENT_TIMESTAMP,
-	`updated_at` text DEFAULT CURRENT_TIMESTAMP
+	`updated_at` text DEFAULT CURRENT_TIMESTAMP,
+	`reference1` text,
+	`description` text,
+	`saturday` integer DEFAULT false,
+	`signature` integer DEFAULT false
 );
 --> statement-breakpoint
 CREATE TABLE `chats` (
@@ -117,7 +121,13 @@ CREATE TABLE `labels` (
 	`cost_reseller` integer NOT NULL,
 	`shipping_date` text NOT NULL,
 	`created_at` text DEFAULT CURRENT_TIMESTAMP,
-	`updated_at` text DEFAULT CURRENT_TIMESTAMP
+	`updated_at` text DEFAULT CURRENT_TIMESTAMP,
+	`reference1` text,
+	`description` text,
+	`saturday` integer DEFAULT false,
+	`signature` integer DEFAULT false,
+	`fromPhone` text,
+	`toPhone` text
 );
 --> statement-breakpoint
 CREATE TABLE `notifications` (
