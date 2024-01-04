@@ -11,10 +11,8 @@ export const PROFILETAB = z.object({
 export type PROFILETAB = z.infer<typeof PROFILETAB>;
 
 export const NOTIFICATIONSTAB = z.object({
-	marketing_email_notify: z.boolean(),
-	labels_email_notify: z.boolean(),
-	topups_email_notify: z.boolean(),
-	tickets_email_notify: z.boolean(),
+	type: z.string(),
+	status: z.string(),
 });
 
 export type NOTIFICATIONSTAB = z.infer<typeof NOTIFICATIONSTAB>;

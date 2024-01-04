@@ -37,7 +37,13 @@ const Notifications = async (c: Context<App>) => {
 	const user = await model.get(users, eq(users.id, c.get("jwtPayload").id));
 	if (!user) throw exception({ message: "User not found", code: 404 });
 
-	await model.update(users, parse, eq(users.id, user.id));
+	await model.update(
+		users,
+		{
+			[parse.type]: parse.status,
+		},
+		eq(users.id, user.id),
+	);
 
 	return c.json({ success: true });
 };
