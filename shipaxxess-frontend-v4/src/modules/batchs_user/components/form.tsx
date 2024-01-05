@@ -98,9 +98,9 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 		setIsLoading(true);
 
 		const req = await api.url("/user/labels/batch").useAuth().post(data);
-		const res = await req.json<{ message?: string }>();
+		const res = await req.json<{ success?: string }>();
 
-		if (res.message) {
+		if (res.success) {
 			api.showSuccessToast();
 			setIsLoading(false);
 			form.reset();
