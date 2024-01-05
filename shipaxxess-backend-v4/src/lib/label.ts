@@ -1,7 +1,7 @@
 import { config } from "@config";
 import { getWeight } from "@helpers/query";
 import { BatchsSelectModel, batchs } from "@schemas/batchs";
-import { LabelsInsertModel, labels } from "@schemas/labels";
+import { LabelsInsertModel, LabelsSelectModel, labels } from "@schemas/labels";
 import { payments } from "@schemas/payments";
 import { UsersSelectModel, users } from "@schemas/users";
 import { WeightsSelectModel } from "@schemas/weights";
@@ -176,7 +176,15 @@ export class LabelGenerator {
 	private pdfs: string[] = [];
 	private failed_labels: Error[] = [];
 
-	constructor(private env: Bindings) {}
+	constructor(private env: Bindings, private settings: { [x: string]: string }) {
+		if (!this.settings["label_apikey"]) {
+			throw exception({ message: "label_apikey is not defined", code: 404 });
+		}
+
+		if (!this.settings["label_host"]) {
+			throw exception({ message: "label_host is not defined", code: 404 });
+		}
+	}
 
 	async createLabel({ batch, recipient, payload, cost, type }: CreateLabelProps) {
 		this.labels.push({
@@ -295,6 +303,46 @@ export class LabelGenerator {
 		}
 	}
 
+	async generateSimpleUSPSLabel(label: LabelsSelectModel) {
+		const req = await fetch(`${this.settings["label_host"]}/api/label/generate`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json", "x-api-key": this.settings["label_apikey"] },
+			body: JSON.stringify({
+				type: label.type_value,
+				weight: label.package_weight,
+				date: label.shipping_date,
+				fromCountry: label.sender_country,
+				fromName: label.sender_full_name,
+				fromRefNumber: label.sender_company_name,
+				fromStreetNumber: label.sender_street_one,
+				fromStreetNumber2: label.sender_street_two,
+				fromZip: label.sender_zip,
+				fromCity: label.sender_city,
+				fromState: label.sender_state,
+				toCountry: label.recipent_country,
+				toName: label.recipent_full_name,
+				toRefNumber: label.recipent_company_name,
+				toStreetNumber: label.recipent_street_one,
+				toStreetNumber2: label.recipent_street_two,
+				toZip: label.recipent_zip,
+				toCity: label.recipent_city,
+				toState: label.recipent_state,
+			}),
+		});
+
+		try {
+			const payload = (await req.json()) as ApiResponseProps;
+
+			if (!req.ok) {
+				throw new Error(payload.message);
+			}
+
+			return payload;
+		} catch (err) {
+			throw exception({ message: (err as Error).message, code: 404 });
+		}
+	}
+
 	async generateUPSLabel({
 		batch,
 		cost,
@@ -352,6 +400,55 @@ export class LabelGenerator {
 			return payload;
 		} catch (err) {
 			this.failed_labels.push(err as Error);
+		}
+	}
+
+	async generateSimpleUPSLabel(label: LabelsSelectModel) {
+		const req = await fetch(`${this.settings["label_host"]}/api/label/generate-ups`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json", "x-api-key": this.settings["label_apikey"] },
+			body: JSON.stringify({
+				type: label.type,
+				weight: label.package_weight,
+				height: label.package_height,
+				width: label.package_width,
+				length: label.package_length,
+				reference1: label.reference1,
+				description: label.description,
+				saturday: label.saturday,
+				signature: label.signature,
+				date: label.shipping_date,
+				fromCountry: label.sender_country,
+				fromName: label.sender_full_name,
+				fromCompany: label.sender_company_name,
+				fromPhone: label.fromPhone,
+				fromStreetNumber: label.sender_street_one,
+				fromStreetNumber2: label.sender_street_two,
+				fromZip: label.sender_zip,
+				fromCity: label.sender_city,
+				fromState: label.sender_state,
+				toCountry: label.recipent_country,
+				toName: label.recipent_full_name,
+				toCompany: label.recipent_company_name,
+				toPhone: label.toPhone,
+				toStreetNumber: label.recipent_street_one,
+				toStreetNumber2: label.recipent_street_two,
+				toZip: label.recipent_zip,
+				toCity: label.recipent_city,
+				toState: label.recipent_state,
+			}),
+		});
+
+		try {
+			const payload = (await req.json()) as ApiUpsResponseProps;
+
+			if (!req.ok) {
+				throw new Error(payload.message);
+			}
+
+			return payload;
+		} catch (err) {
+			throw exception({ message: (err as Error).message, code: 404 });
 		}
 	}
 

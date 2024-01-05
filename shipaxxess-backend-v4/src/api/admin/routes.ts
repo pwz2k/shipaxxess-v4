@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { CronsAdmin } from "./crons";
 import { PaymentsAdmin } from "./payments";
 import { AdminSettings } from "./settings";
 import { StatusAdmin } from "./status";
@@ -49,7 +50,7 @@ admin.post("/settings/email", AdminSettings.Email);
 admin.post("/settings/label", AdminSettings.Label);
 
 // Crons
-admin.get("/crons");
+admin.get("/crons", CronsAdmin.GetAll);
 admin.post("/crons");
 admin.delete("/crons");
 
