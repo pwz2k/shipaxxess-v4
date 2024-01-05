@@ -13,6 +13,9 @@ import {
 	BadgePercent,
 	BellDot,
 	User,
+	Type,
+	Weight,
+	CircleDotDashed,
 } from "lucide-react";
 
 // Sidebar items
@@ -68,6 +71,57 @@ export const sidebarItems: SidebarProps[] = [
 		icon: <Settings color="#fff" size={20} />,
 		label: "Settings",
 		slug: "/settings",
+	},
+];
+
+// Admin sidebar items
+export const adminSidebarItems: SidebarProps[] = [
+	{
+		icon: <Tags color="#fff" size={20} />,
+		label: "Labels",
+		slug: "/admin/labels",
+		badge: "new",
+	},
+	{
+		icon: <Type color="#fff" size={20} />,
+		label: "Types",
+		slug: "/admin/types",
+		badge: "new",
+	},
+	{
+		icon: <Weight color="#fff" size={20} />,
+		label: "Weights",
+		slug: "/admin/weights",
+		badge: "new",
+	},
+	{
+		icon: <CreditCard color="#fff" size={20} />,
+		label: "Topups",
+		slug: "/admin/topups",
+		badge: "new",
+	},
+	{
+		icon: <Ticket color="#fff" size={20} />,
+		label: "Tickets",
+		slug: "/admin/tickets",
+		badge: "new",
+	},
+	{
+		icon: <Users color="#fff" size={20} />,
+		label: "Users",
+		slug: "/admin/users",
+		badge: "new",
+	},
+	{
+		icon: <CircleDotDashed color="#fff" size={20} />,
+		label: "Crons",
+		slug: "/admin/crons",
+		badge: "new",
+	},
+	{
+		icon: <Settings color="#fff" size={20} />,
+		label: "Settings",
+		slug: "/admin/settings",
 	},
 ];
 
