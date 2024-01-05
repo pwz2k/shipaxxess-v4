@@ -14,6 +14,15 @@ import BatchsRoutes from "@client/modules/batchs_user/routes";
 import LandingRoutes from "@client/modules/landing_page/routes";
 import AdminLayout from "./components/layouts/admin";
 
+import SettingsAdminRoutes from "@client/modules/settings_admin/routes";
+import CronsAdminRoutes from "@client/modules/crons_admin/routes";
+import UsersAdminRoutes from "@client/modules/users_admin/routes";
+import TicketsAdminRoutes from "@client/modules/tickets_admin/routes";
+import PaymentsAdminRoutes from "@client/modules/payments_admin/routes";
+import WeightsAdminRoutes from "@client/modules/weights_admin/routes";
+import TypesAdminRoutes from "@client/modules/types_admin/routes";
+import BatchsAdminRoutes from "@client/modules/batchs_admin/routes";
+
 export const router = createBrowserRouter([
 	...LandingRoutes,
 	...SignupRoutes,
@@ -36,6 +45,15 @@ export const router = createBrowserRouter([
 	{
 		path: "/admin/*",
 		element: <AdminLayout />,
-		children: [],
+		children: [
+			...SettingsAdminRoutes,
+			...CronsAdminRoutes,
+			...UsersAdminRoutes,
+			...TicketsAdminRoutes,
+			...PaymentsAdminRoutes,
+			...WeightsAdminRoutes,
+			...TypesAdminRoutes,
+			...BatchsAdminRoutes,
+		],
 	},
 ]);

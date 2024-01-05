@@ -78,8 +78,8 @@ export const sidebarItems: SidebarProps[] = [
 export const adminSidebarItems: SidebarProps[] = [
 	{
 		icon: <Tags color="#fff" size={20} />,
-		label: "Labels",
-		slug: "/admin/labels",
+		label: "Batches",
+		slug: "/admin/batchs",
 		badge: "new",
 	},
 	{
@@ -96,8 +96,8 @@ export const adminSidebarItems: SidebarProps[] = [
 	},
 	{
 		icon: <CreditCard color="#fff" size={20} />,
-		label: "Topups",
-		slug: "/admin/topups",
+		label: "Payments",
+		slug: "/admin/payments",
 		badge: "new",
 	},
 	{
