@@ -43,6 +43,7 @@ admin.delete("/weights", WeightsAdmin.Delete);
 
 // Settings
 admin.get("/settings", AdminSettings.GetAll);
+admin.get("/settings/init", AdminSettings.Init);
 admin.post("/settings/payments", AdminSettings.Payment);
 admin.post("/settings/email", AdminSettings.Email);
 admin.post("/settings/label", AdminSettings.Label);

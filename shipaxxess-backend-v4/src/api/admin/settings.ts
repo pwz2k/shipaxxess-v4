@@ -1,9 +1,16 @@
+import { initSettings } from "@helpers/query";
 import { Model } from "@lib/model";
 import { adminSettings } from "@schemas/adminSettings";
 import { Settings } from "@shipaxxess/shipaxxess-zod-v4";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import { Context } from "hono";
+
+const Init = async (c: Context<App>) => {
+	await initSettings(c.env.DB);
+
+	return c.json({ success: true });
+};
 
 const GetAll = async (c: Context<App>) => {
 	const model = new Model(c.env.DB);
@@ -95,4 +102,4 @@ const Label = async (c: Context<App>) => {
 	return c.json({ success: true });
 };
 
-export const AdminSettings = { GetAll, Payment, Email, Label };
+export const AdminSettings = { GetAll, Payment, Email, Label, Init };
