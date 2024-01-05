@@ -5,6 +5,7 @@ import { Checkbox } from "@client/components/ui/checkbox";
 import moment from "moment-timezone";
 import { StoresSelectModel } from "@db/stores";
 import { app } from "@client/config/app";
+import { Link } from "react-router-dom";
 
 export const storesColumns = (timezone: string) =>
 	[
@@ -92,5 +93,10 @@ export const storesColumns = (timezone: string) =>
 			id: "action",
 			enableSorting: false,
 			enableHiding: false,
+			cell: ({ row }) => (
+				<Link to={`/stores/ebay?import_id=${row.original.id}`}>
+					<Button>View Orders</Button>
+				</Link>
+			),
 		},
 	] as ColumnDef<StoresSelectModel>[];
