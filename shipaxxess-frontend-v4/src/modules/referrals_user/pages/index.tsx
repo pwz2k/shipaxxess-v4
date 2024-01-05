@@ -30,7 +30,7 @@ const ReferralsUserPage = () => {
 	const copyLink = () => {
 		if (!statusQuery.data) return;
 
-		const link = `${app.host}/signup?ref=${statusQuery.data.uuid}`;
+		const link = `${app.mode === "dev" ? app.host : app.prod_host}/signup?ref=${statusQuery.data.uuid}`;
 
 		navigator.clipboard.writeText(link);
 		toast.success(`Copied: ${link}`);
