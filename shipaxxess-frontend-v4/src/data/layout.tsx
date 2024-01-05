@@ -142,6 +142,6 @@ export const adminHeaderItems: HeaderProps[] = [
 	{
 		icon: <User />,
 		label: "Admin Mode",
-		slug: "/admin/labels",
+		slug: "/admin/batchs",
 	},
 ];
