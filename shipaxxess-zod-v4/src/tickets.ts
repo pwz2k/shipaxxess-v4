@@ -4,7 +4,7 @@ export const ZODSCHEMA = z.object({
 	title: z.string().min(2),
 	type: z.string().min(1),
 	content: z.string().min(2),
-	data_id: z.number().optional(),
+	data_id: z.coerce.number().optional(),
 });
 
 export type ZODSCHEMA = z.infer<typeof ZODSCHEMA>;
