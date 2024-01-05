@@ -89,7 +89,7 @@ const Label = async (c: Context<App>) => {
 		drizzle(c.env.DB)
 			.update(adminSettings)
 			.set({ setting_value: parse.label_host })
-			.where(eq(adminSettings.setting_id, ".label_host")),
+			.where(eq(adminSettings.setting_id, "label_host")),
 	]);
 
 	return c.json({ success: true });
