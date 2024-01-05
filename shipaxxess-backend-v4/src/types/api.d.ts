@@ -1,0 +1,3 @@
+type ApiResponseProps = { payload: { code: string; pdf: string; id: number }; message: string };
+
+type ApiUpsResponseProps = { payload: { tracking: string; pdf: string; id: number }; message: string };
