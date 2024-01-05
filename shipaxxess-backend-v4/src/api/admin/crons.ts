@@ -1,4 +1,3 @@
-import { LabelGenerator } from "@lib/label";
 import { Model } from "@lib/model";
 import { crons } from "@schemas/crons";
 import { labels } from "@schemas/labels";
@@ -37,14 +36,6 @@ const Reprocess = async (c: Context<App, "/:id">) => {
 	if (!label) throw exception({ message: "Label not found", code: 404 });
 
 	const settings = await getSettings(c.env.DB);
-
-	const generator = new LabelGenerator(c.env, settings);
-
-	if (label.type === "usps") {
-		await generator.generateSimpleUSPSLabel(label);
-	} else {
-		await generator.generateSimpleUPSLabel(label);
-	}
 
 	return c.json({});
 };
