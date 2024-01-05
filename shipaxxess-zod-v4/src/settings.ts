@@ -29,9 +29,9 @@ export const PAYMENTTAB = z.object({
 	stripe_webhook_secret: z.string().optional(),
 	coinbase_key: z.string().optional(),
 	coinbase_webhook_secret: z.string().optional(),
-	venmo_email: z.string().email().optional(),
-	cashapp_email: z.string().email().optional(),
-	zelle_email: z.string().email().optional(),
+	venmo_email: z.string().optional(),
+	cashapp_email: z.string().optional(),
+	zelle_email: z.string().optional(),
 });
 
 export type PAYMENTTAB = z.infer<typeof PAYMENTTAB>;

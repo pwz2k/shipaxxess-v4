@@ -24,7 +24,7 @@ const SettingsPaymentTab = ({ query }: { query: UseQueryResult<AdminSettingsSele
 	const { button, setIsLoading } = useLoading({ label: "Update Payment Configuration" });
 
 	const form = useForm<Settings.PAYMENTTAB>({
-		resolver: zodResolver(Settings.PROFILETAB),
+		resolver: zodResolver(Settings.PAYMENTTAB),
 		defaultValues: {
 			stripe_key: "",
 			stripe_secret: "",
