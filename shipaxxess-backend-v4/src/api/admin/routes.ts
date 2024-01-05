@@ -43,6 +43,9 @@ admin.delete("/weights", WeightsAdmin.Delete);
 
 // Settings
 admin.get("/settings", AdminSettings.GetAll);
+admin.post("/settings/payments", AdminSettings.Payment);
+admin.post("/settings/email", AdminSettings.Email);
+admin.post("/settings/label", AdminSettings.Label);
 
 // Crons
 admin.get("/crons");

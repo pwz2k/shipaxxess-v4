@@ -34,7 +34,7 @@ const SettingsLabelTab = ({ query }: { query: UseQueryResult<AdminSettingsSelect
 	const submit = async (values: Settings.LABELTAB) => {
 		setIsLoading(true);
 
-		const req = await api.url("/user/settings/profile").useAuth().post(values);
+		const req = await api.url("/admin/settings/label").useAuth().post(values);
 		const res = await req.json<{ success: boolean }>();
 
 		if (!res.success) {

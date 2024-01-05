@@ -40,7 +40,7 @@ const SettingsPaymentTab = ({ query }: { query: UseQueryResult<AdminSettingsSele
 	const submit = async (values: Settings.PAYMENTTAB) => {
 		setIsLoading(true);
 
-		const req = await api.url("/user/settings/profile").useAuth().post(values);
+		const req = await api.url("/admin/settings/payments").useAuth().post(values);
 		const res = await req.json<{ success: boolean }>();
 
 		if (!res.success) {
