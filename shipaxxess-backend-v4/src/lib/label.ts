@@ -160,14 +160,14 @@ export class LabelManager {
 		try {
 			payload = (await req.json()) as ApiResponseProps;
 		} catch (err) {
-			payload = { message: (err as Error).message, payload: { code: "", id: 0, pdf: "" } };
+			payload = { message: (err as Error).message, payload: {} };
 		}
 		log("Parsed USPS label. Payload: " + JSON.stringify(payload));
 
 		this.pushLabelToPrivateArray(batch, recipient, {
-			code: payload.payload.code,
-			id: payload.payload.id,
-			pdf: payload.payload.pdf !== "" ? payload.payload.pdf.split("/")[4] : "",
+			code: req.ok && payload.payload.code ? payload.payload.code : "",
+			id: req.ok && payload.payload.id ? payload.payload.id : 0,
+			pdf: req.ok && payload.payload.pdf ? payload.payload.pdf.split("/")[4] : "",
 			status: req.ok ? "awaiting" : "pending",
 			message: payload.message,
 		});
@@ -222,9 +222,9 @@ export class LabelManager {
 		log("Parsed UPS label. Payload: " + JSON.stringify(payload));
 
 		this.pushLabelToPrivateArray(batch, recipient, {
-			code: payload.payload.tracking,
-			id: payload.payload.id,
-			pdf: payload.payload.pdf !== "" ? payload.payload.pdf.split("/")[5] : "",
+			code: req.ok && payload.payload.tracking ? payload.payload.tracking : "",
+			id: req.ok && payload.payload.id ? payload.payload.id : 0,
+			pdf: req.ok && payload.payload.pdf ? payload.payload.pdf.split("/")[5] : "",
 			status: req.ok ? "awaiting" : "pending",
 			message: payload.message,
 		});
