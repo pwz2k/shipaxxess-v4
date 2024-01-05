@@ -116,8 +116,8 @@ export class LabelManager {
 		return await this.env.BATCH_QUEUE.send({ batch_id }, { contentType: "json" });
 	}
 
-	async sendToBatchDownloadQueue() {
-		return await this.env.BATCH_PDF_QUEUE.send({ pdfs: this.pdfs }, { contentType: "json" });
+	async sendToBatchDownloadQueue(batch_uuid: string) {
+		return await this.env.BATCH_PDF_QUEUE.send({ pdfs: this.pdfs, batch_uuid }, { contentType: "json" });
 	}
 
 	async generateUSPSLabelFromBatch(batch: BatchsSelectModel, recipient: Address.UUIDSCHEMA) {
