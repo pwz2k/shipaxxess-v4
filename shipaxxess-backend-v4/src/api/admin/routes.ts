@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { PaymentsAdmin } from "./payments";
+import { AdminSettings } from "./settings";
 import { StatusAdmin } from "./status";
 import { TicketsAdmin } from "./tickets";
 import { TypesAdmin } from "./types";
@@ -39,6 +40,9 @@ admin.get("/weights", WeightsAdmin.Get);
 admin.post("/weights", WeightsAdmin.Create);
 admin.patch("/weights", WeightsAdmin.Edit);
 admin.delete("/weights", WeightsAdmin.Delete);
+
+// Settings
+admin.get("/settings", AdminSettings.GetAll);
 
 // Crons
 admin.get("/crons");
