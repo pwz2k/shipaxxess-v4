@@ -5,6 +5,7 @@ import { batchs } from "@schemas/batchs";
 import { labels } from "@schemas/labels";
 import { Labels, Refund as RF } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
+import { log } from "@utils/log";
 import { getSettings } from "@utils/settings";
 import { eq } from "drizzle-orm";
 import { Context } from "hono";
@@ -28,20 +29,26 @@ const Get = async (c: Context<App, "/:uuid">) => {
 };
 
 const Create = async (c: Context<App>) => {
+	log("Hit label batch endpoint.");
+
 	const body = await c.req.json();
 	const parse = Labels.BATCHZODSCHEMA.parse(body);
+	log("Parsed body.");
 
 	const settings = await getSettings(c.env.DB);
 	const manager = new LabelManager(c.env, settings);
+	log("Created label manager.");
 
 	if (!manager.haveGrithOk(parse.package.height, parse.package.width, parse.package.length)) {
 		throw exception({ message: "Package dimensions are too large.", code: 508 });
 	}
+	log("Package dimensions are ok.");
 
 	const weight = await manager.getWeightData(parse.type.type, parse.type.id, parse.package.weight);
 	if (!weight) {
 		throw exception({ message: "Weight not found.", code: 404 });
 	}
+	log("Weight is ok.");
 
 	const total_labels = parse.recipient.length;
 	const user_cost = weight.user_cost * total_labels;
@@ -51,15 +58,19 @@ const Create = async (c: Context<App>) => {
 	if (!user) {
 		throw exception({ message: "User not found.", code: 404 });
 	}
+	log("User is ok.");
 
 	if (user.current_balance < user_cost) {
 		throw exception({ message: "Insufficient funds.", code: 402 });
 	}
+	log("User has enough funds.");
 
 	const batch = await manager.saveIntoBatchTable(parse, user_cost, reseller_cost, user.id);
+	log("Batch saved.");
 
 	c.executionCtx.waitUntil(manager.chargeUserForBatch(user, user_cost, total_labels));
 	c.executionCtx.waitUntil(manager.sendToBatchProcessQueue(batch.id));
+	log("User charged and batch sent to queue.");
 
 	return c.json({ success: true, message: "We are processing your batch. Please check back later." });
 };

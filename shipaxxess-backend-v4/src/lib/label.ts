@@ -7,6 +7,7 @@ import { UsersSelectModel, users } from "@schemas/users";
 import { Address, Labels } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
 import { girth } from "@utils/girth";
+import { log } from "@utils/log";
 import { mail } from "@utils/mail";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
@@ -25,6 +26,8 @@ export class LabelManager {
 		if (!this.settings["label_host"]) {
 			throw exception({ message: "label_host is not defined", code: 404 });
 		}
+
+		log("Label manager is ready.");
 	}
 
 	haveGrithOk(height: number, length: number, width: number) {
@@ -86,22 +89,25 @@ export class LabelManager {
 			})
 			.returning({ id: batchs.id });
 
+		log("Saved into batch table.");
+
 		return insert;
 	}
 
 	async saveIntoLabelTable() {}
 
 	async saveIntoLabelTableWithDrizzleBatch() {
-		return await drizzle(this.env.DB).batch(
+		await drizzle(this.env.DB).batch(
 			// @ts-expect-error type error
 			this.labels.map((label) => drizzle(this.env.DB).insert(labels).values(label)),
 		);
+		log("Saved into label table.");
 	}
 
 	async chargeUserForLabel() {}
 
 	async chargeUserForBatch(user: UsersSelectModel, user_cost: number, total_labels: number) {
-		return await drizzle(this.env.DB)
+		await drizzle(this.env.DB)
 			.update(users)
 			.set({
 				current_balance: user.current_balance - user_cost,
@@ -110,6 +116,7 @@ export class LabelManager {
 			})
 			.where(eq(users.id, user.id))
 			.execute();
+		log("Charged user for batch.");
 	}
 
 	async sendToBatchProcessQueue(batch_id: number) {
@@ -146,6 +153,7 @@ export class LabelManager {
 				toState: recipient.state,
 			}),
 		});
+		log("Generated USPS label.");
 
 		var payload: ApiResponseProps;
 
@@ -154,6 +162,7 @@ export class LabelManager {
 		} catch (err) {
 			payload = { message: (err as Error).message, payload: { code: "", id: 0, pdf: "" } };
 		}
+		log("Parsed USPS label. Payload: " + JSON.stringify(payload));
 
 		this.pushLabelToPrivateArray(batch, recipient, {
 			code: payload.payload.code,
@@ -162,6 +171,8 @@ export class LabelManager {
 			status: req.ok ? "awaiting" : "pending",
 			message: payload.message,
 		});
+
+		log("Pushed label to private array.");
 	}
 
 	async generateUPSLabelFromBatch(batch: BatchsSelectModel, recipient: Address.UUIDSCHEMA) {
@@ -199,6 +210,7 @@ export class LabelManager {
 				toState: recipient.state,
 			}),
 		});
+		log("Generated UPS label.");
 
 		var payload: ApiUpsResponseProps;
 
@@ -207,6 +219,7 @@ export class LabelManager {
 		} catch (err) {
 			payload = { message: (err as Error).message, payload: { tracking: "", id: 0, pdf: "" } };
 		}
+		log("Parsed UPS label. Payload: " + JSON.stringify(payload));
 
 		this.pushLabelToPrivateArray(batch, recipient, {
 			code: payload.payload.tracking,
@@ -215,13 +228,16 @@ export class LabelManager {
 			status: req.ok ? "awaiting" : "pending",
 			message: payload.message,
 		});
+		log("Pushed label to private array.");
 	}
 
 	async downloadUSPSLabel(pdfkey: string) {
 		const req = await fetch(`${this.settings["label_host"]}/labels/${pdfkey}`);
 		const buffer = await req.arrayBuffer();
+		log("Downloaded USPS label.");
 
 		await this.env.LABELS_BUCKET.put(pdfkey, buffer);
+		log("Uploaded USPS label to R2.");
 
 		return buffer;
 	}
@@ -229,8 +245,10 @@ export class LabelManager {
 	async downloadUPSLabel(pdfkey: string) {
 		const req = await fetch(`${this.settings["label_host"]}/labels/ups/${pdfkey}`);
 		const buffer = await req.arrayBuffer();
+		log("Downloaded UPS label.");
 
 		await this.env.LABELS_BUCKET.put(pdfkey, buffer);
+		log("Uploaded UPS label to R2.");
 
 		return buffer;
 	}
@@ -239,6 +257,7 @@ export class LabelManager {
 		const buffer = await merger.saveAsBuffer();
 
 		await this.env.LABELS_BUCKET.put(filename, buffer);
+		log("Uploaded merged pdf to R2.");
 
 		return buffer;
 	}
@@ -246,9 +265,11 @@ export class LabelManager {
 	async notifyBatchDownloadCompleteEvent(batch_uuid: string) {
 		const batch = await drizzle(this.env.DB).select().from(batchs).where(eq(batchs.uuid, batch_uuid)).get();
 		if (!batch) throw exception({ message: "Batch not found.", code: 404 });
+		log("Batch found.");
 
 		const user = await this.getUserData(batch.user_id);
 		if (!user) throw exception({ message: "User not found.", code: 404 });
+		log("User found.");
 
 		const subject = `Batch #${batch.id} is ready to download`;
 		const body = `Hi ${user.first_name}, Your batch #${batch.id} is ready to download. please check the batch page to download the labels.`;
@@ -259,6 +280,7 @@ export class LabelManager {
 			user_id: batch.user_id,
 			uuid: v4(),
 		});
+		log("Notification saved.");
 
 		if (!user.labels_email_notify) return;
 
@@ -268,14 +290,16 @@ export class LabelManager {
 			subject,
 			html: body,
 		});
+		log("Email sent.");
 	}
 
 	async updateLabelBatchStatus(batch_uuid: string) {
-		return await drizzle(this.env.DB)
+		await drizzle(this.env.DB)
 			.update(batchs)
 			.set({ status_label: "completed", status_message: "Batch is completed", merge_pdf_key: `${batch_uuid}.pdf` })
 			.where(eq(batchs.uuid, batch_uuid))
 			.execute();
+		log("Updated batch status.");
 	}
 
 	private pushLabelToPrivateArray(
