@@ -7,7 +7,7 @@ export const useSettingsQuery = () => {
 		queryKey: ["admin", "settings"],
 		queryFn: async () => {
 			const req = await api.url("/admin/settings").useAuth().get();
-			return await req.json<AdminSettingsSelectModel>();
+			return await req.json<AdminSettingsSelectModel[]>();
 		},
 	});
 };

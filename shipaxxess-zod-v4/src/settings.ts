@@ -22,3 +22,31 @@ export const COUPONTAB = z.object({
 });
 
 export type COUPONTAB = z.infer<typeof COUPONTAB>;
+
+export const PAYMENTTAB = z.object({
+	stripe_key: z.string().optional(),
+	stripe_secret: z.string().optional(),
+	stripe_webhook_secret: z.string().optional(),
+	coinbase_key: z.string().optional(),
+	coinbase_webhook_secret: z.string().optional(),
+	venmo_email: z.string().email().optional(),
+	cashapp_email: z.string().email().optional(),
+	zelle_email: z.string().email().optional(),
+});
+
+export type PAYMENTTAB = z.infer<typeof PAYMENTTAB>;
+
+export const EMAILTAB = z.object({
+	postalserver_apikey: z.string(),
+	postalserver_host: z.string(),
+	postalserver_address: z.string(),
+});
+
+export type EMAILTAB = z.infer<typeof EMAILTAB>;
+
+export const LABELTAB = z.object({
+	label_apikey: z.string(),
+	label_host: z.string(),
+});
+
+export type LABELTAB = z.infer<typeof LABELTAB>;

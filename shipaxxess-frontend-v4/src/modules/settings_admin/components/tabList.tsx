@@ -21,7 +21,7 @@
  */
 
 import { TabsList, TabsTrigger } from "@client/components/ui/tabs";
-import { BadgePercent, BellRing, Trash, User } from "lucide-react";
+import { DollarSign, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const SettingsTabsList = () => {
@@ -30,31 +30,25 @@ const SettingsTabsList = () => {
 	return (
 		<TabsList className="flex flex-col justify-start w-1/5 h-auto p-0 bg-transparent">
 			<TabsTrigger
-				onClick={() => navigate("?tab=profile")}
-				value="profile"
-				className="flex items-center justify-start w-full gap-2 py-4 rounded-lg shadow-none ring-0">
-				<User size={16} /> Profile
-			</TabsTrigger>
-			<TabsTrigger
-				onClick={() => navigate("?tab=coupons")}
-				value="coupons"
+				onClick={() => navigate("?tab=payment_configuration")}
+				value="payment_c"
 				className="flex items-center justify-start w-full gap-2 py-4 rounded-lg shadow-none">
-				<BadgePercent size={16} />
-				Coupons
+				<DollarSign size={16} />
+				Payments Configuration
 			</TabsTrigger>
 			<TabsTrigger
-				onClick={() => navigate("?tab=notifications")}
-				value="notifications"
+				onClick={() => navigate("?tab=email_configuration")}
+				value="email_"
 				className="flex items-center justify-start w-full gap-2 py-4 rounded-lg">
-				<BellRing size={16} />
-				Notifications
+				<Mail size={16} />
+				Email Configuration
 			</TabsTrigger>
 			<TabsTrigger
-				onClick={() => navigate("?tab=delete")}
-				value="delete"
+				onClick={() => navigate("?tab=label_api_configuration")}
+				value="label_api_configuration"
 				className="flex items-center justify-start w-full gap-2 py-4 rounded-lg">
-				<Trash size={16} />
-				Delete Account
+				<Mail size={16} />
+				Label API Configuration
 			</TabsTrigger>
 		</TabsList>
 	);
