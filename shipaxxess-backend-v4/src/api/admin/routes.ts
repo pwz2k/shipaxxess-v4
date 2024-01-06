@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { CronsAdmin } from "./crons";
+import { LabelsAdmin } from "./labels";
 import { PaymentsAdmin } from "./payments";
 import { AdminSettings } from "./settings";
 import { StatusAdmin } from "./status";
@@ -12,6 +13,9 @@ const admin = new Hono<App>();
 
 // Status routes
 admin.get("/status", StatusAdmin);
+
+// Batches routes
+admin.get("/labels/batch", LabelsAdmin.GetAll);
 
 // Payments routes
 admin.get("/payments", PaymentsAdmin.Get);
