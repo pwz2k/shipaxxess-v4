@@ -15,6 +15,14 @@ CREATE TABLE `addresses` (
 	`updated_at` text DEFAULT CURRENT_TIMESTAMP
 );
 --> statement-breakpoint
+CREATE TABLE `adminSettings` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`setting_id` text NOT NULL,
+	`setting_value` text NOT NULL,
+	`created_at` text DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` text DEFAULT CURRENT_TIMESTAMP
+);
+--> statement-breakpoint
 CREATE TABLE `batchs` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`uuid` text NOT NULL,
@@ -22,9 +30,9 @@ CREATE TABLE `batchs` (
 	`total_labels` integer NOT NULL,
 	`failed_labels` integer DEFAULT 0,
 	`status_message` text,
-	`status_label` text DEFAULT 'processing' NOT NULL,
-	`status_refund` integer DEFAULT false NOT NULL,
-	`is_downloaded` integer DEFAULT false NOT NULL,
+	`status_label` text DEFAULT 'processing',
+	`status_refund` integer DEFAULT false,
+	`is_downloaded` integer DEFAULT false,
 	`pdf_r2_link` text,
 	`sender_full_name` text NOT NULL,
 	`sender_company_name` text,
@@ -83,9 +91,9 @@ CREATE TABLE `labels` (
 	`user_id` integer NOT NULL,
 	`batch_uuid` text,
 	`status_message` text,
-	`status_label` text DEFAULT 'inqueue' NOT NULL,
-	`status_refund` integer DEFAULT false NOT NULL,
-	`is_downloaded` integer DEFAULT false NOT NULL,
+	`status_label` text DEFAULT 'inqueue',
+	`status_refund` integer DEFAULT false,
+	`is_downloaded` integer DEFAULT false,
 	`pdf_r2_link` text,
 	`remote_id` integer,
 	`remote_pdf_link` text,
@@ -162,8 +170,10 @@ CREATE TABLE `payments` (
 	`credit` integer NOT NULL,
 	`current_balance` integer NOT NULL,
 	`new_balance` integer NOT NULL,
-	`status` text DEFAULT 'pending' NOT NULL,
+	`status` text DEFAULT 'pending',
 	`data_id` integer,
+	`user_email` text NOT NULL,
+	`user_name` text NOT NULL,
 	`created_at` text DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` text DEFAULT CURRENT_TIMESTAMP
 );
@@ -217,7 +227,7 @@ CREATE TABLE `tickets` (
 	`type` text NOT NULL,
 	`data_id` integer,
 	`content` text NOT NULL,
-	`status` text DEFAULT 'active' NOT NULL,
+	`status` text DEFAULT 'active',
 	`created_at` text DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` text DEFAULT CURRENT_TIMESTAMP
 );

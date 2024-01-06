@@ -13,9 +13,9 @@ export const labels = sqliteTable(
 
 		// Status
 		status_message: text("status_message"),
-		status_label: text("status_label").default("inqueue").notNull(),
-		status_refund: integer("status_refund", { mode: "boolean" }).default(false).notNull(),
-		is_downloaded: integer("is_downloaded", { mode: "boolean" }).notNull().default(false),
+		status_label: text("status_label").default("inqueue"),
+		status_refund: integer("status_refund", { mode: "boolean" }).default(false),
+		is_downloaded: integer("is_downloaded", { mode: "boolean" }).default(false),
 
 		// Remote data
 		remote_pdf_r2_link: text("pdf_r2_link"),

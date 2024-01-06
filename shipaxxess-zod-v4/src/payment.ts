@@ -12,3 +12,9 @@ export const ACCEPTSCHEMA = z.object({
 });
 
 export type ACCEPTSCHEMA = z.infer<typeof ACCEPTSCHEMA>;
+
+export const REJECTSCHEMA = z.object({
+	payment_id: z.number(),
+});
+
+export type REJECTSCHEMA = z.infer<typeof REJECTSCHEMA>;

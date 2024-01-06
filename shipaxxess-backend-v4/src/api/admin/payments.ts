@@ -3,11 +3,15 @@ import { payments } from "@schemas/payments";
 import { users } from "@schemas/users";
 import { Payment } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
-import { eq } from "drizzle-orm";
+import { eq, ne } from "drizzle-orm";
 import { Context } from "hono";
 
-const Get = (c: Context<App>) => {
-	return c.json({});
+const GetAll = async (c: Context<App>) => {
+	const model = new Model(c.env.DB);
+
+	const pt = await model.all(payments, ne(payments.gateway, "payment"));
+
+	return c.json(pt);
 };
 
 const Accept = async (c: Context<App>) => {
@@ -39,9 +43,25 @@ const Accept = async (c: Context<App>) => {
 };
 
 const Reject = async (c: Context<App>) => {
-	return c.json({});
+	const body = await c.req.json();
+	const parse = Payment.REJECTSCHEMA.parse(body);
+
+	const model = new Model(c.env.DB);
+
+	const payment = await model.get(payments, eq(payments.id, parse.payment_id));
+	if (!payment) throw exception({ message: "Payment not found", code: 404 });
+
+	await model.update(
+		payments,
+		{
+			status: "rejected",
+		},
+		eq(payments.id, parse.payment_id),
+	);
+
+	return c.json({ success: true });
 };
 
-const PaymentsAdmin = { Get, Accept, Reject };
+const PaymentsAdmin = { GetAll, Accept, Reject };
 
 export { PaymentsAdmin };

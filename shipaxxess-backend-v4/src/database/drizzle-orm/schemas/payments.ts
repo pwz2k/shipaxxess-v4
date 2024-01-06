@@ -9,8 +9,10 @@ export const payments = sqliteTable("payments", {
 	credit: integer("credit").notNull(),
 	current_balance: integer("current_balance").notNull(),
 	new_balance: integer("new_balance").notNull(),
-	status: text("status").notNull().default("pending"),
+	status: text("status").default("pending"),
 	data_id: integer("data_id"),
+	user_email: text("user_email").notNull(),
+	user_name: text("user_name").notNull(),
 	created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`),
 	updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
 });

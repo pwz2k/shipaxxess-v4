@@ -18,7 +18,7 @@ admin.get("/status", StatusAdmin);
 admin.get("/labels/batch", LabelsAdmin.GetAll);
 
 // Payments routes
-admin.get("/payments", PaymentsAdmin.Get);
+admin.get("/payments", PaymentsAdmin.GetAll);
 admin.post("/payments", PaymentsAdmin.Accept);
 admin.delete("/payments", PaymentsAdmin.Reject);
 

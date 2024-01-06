@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "5148a1ff-08f8-4d00-b0d6-c0fee882c0c8",
+  "id": "3961a433-649a-48c2-8f3f-fe757d49ef1d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "addresses": {
@@ -114,6 +114,52 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+    "adminSettings": {
+      "name": "adminSettings",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "setting_id": {
+          "name": "setting_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "setting_value": {
+          "name": "setting_value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "batchs": {
       "name": "batchs",
       "columns": {
@@ -164,7 +210,7 @@
           "name": "status_label",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false,
           "default": "'processing'"
         },
@@ -172,7 +218,7 @@
           "name": "status_refund",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false,
           "default": false
         },
@@ -180,7 +226,7 @@
           "name": "is_downloaded",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false,
           "default": false
         },
@@ -566,7 +612,7 @@
           "name": "status_label",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false,
           "default": "'inqueue'"
         },
@@ -574,7 +620,7 @@
           "name": "status_refund",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false,
           "default": false
         },
@@ -582,7 +628,7 @@
           "name": "is_downloaded",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false,
           "default": false
         },
@@ -1110,7 +1156,7 @@
           "name": "status",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false,
           "default": "'pending'"
         },
@@ -1119,6 +1165,20 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false,
+          "autoincrement": false
+        },
+        "user_email": {
+          "name": "user_email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_name": {
+          "name": "user_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
           "autoincrement": false
         },
         "created_at": {
@@ -1466,7 +1526,7 @@
           "name": "status",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false,
           "default": "'active'"
         },

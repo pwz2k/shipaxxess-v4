@@ -12,9 +12,9 @@ export const batchs = sqliteTable("batchs", {
 
 	// Status
 	status_message: text("status_message"),
-	status_label: text("status_label").default("processing").notNull(),
-	status_refund: integer("status_refund", { mode: "boolean" }).default(false).notNull(),
-	is_downloaded: integer("is_downloaded", { mode: "boolean" }).notNull().default(false),
+	status_label: text("status_label").default("processing"),
+	status_refund: integer("status_refund", { mode: "boolean" }).default(false),
+	is_downloaded: integer("is_downloaded", { mode: "boolean" }).default(false),
 
 	// Remote data
 	merge_pdf_key: text("pdf_r2_link"),

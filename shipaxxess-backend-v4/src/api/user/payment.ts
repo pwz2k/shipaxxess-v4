@@ -3,6 +3,7 @@ import { payments } from "@schemas/payments";
 import { users } from "@schemas/users";
 import { Payment } from "@shipaxxess/shipaxxess-zod-v4";
 import { coinbaseCharge } from "@utils/coinbase";
+import { exception } from "@utils/error";
 import { stripeCheckout } from "@utils/stripe";
 import { eq } from "drizzle-orm";
 import { Context } from "hono";
@@ -24,6 +25,7 @@ const Create = async (c: Context<App>) => {
 	const model = new Model(c.env.DB);
 
 	const user = await model.get(users, eq(users.id, c.get("jwtPayload").id));
+	if (!user) throw exception({ message: "User not found", code: 404 });
 
 	const payment_uuid = v4();
 
@@ -34,6 +36,8 @@ const Create = async (c: Context<App>) => {
 		new_balance: user.current_balance + parse.credit,
 		user_id: user.id,
 		uuid: payment_uuid,
+		user_email: user.email_address,
+		user_name: `${user.first_name} ${user.last_name}`,
 	});
 
 	// Handle card payment

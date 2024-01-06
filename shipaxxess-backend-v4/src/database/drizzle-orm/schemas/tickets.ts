@@ -9,7 +9,7 @@ export const tickets = sqliteTable("tickets", {
 	type: text("type").notNull(),
 	data_id: integer("data_id"),
 	content: text("content").notNull(),
-	status: text("status").notNull().default("active"),
+	status: text("status").default("active"),
 	created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`),
 	updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
 });
