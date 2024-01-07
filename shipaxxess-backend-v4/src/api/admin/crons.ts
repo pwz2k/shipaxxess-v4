@@ -25,8 +25,6 @@ const Remove = async (c: Context<App>) => {
 
 	const [cron] = await model.delete(crons, eq(crons.id, parse.id));
 
-	console.log(cron, "cron -----------------------------");
-
 	await model.update(
 		labels,
 		{
