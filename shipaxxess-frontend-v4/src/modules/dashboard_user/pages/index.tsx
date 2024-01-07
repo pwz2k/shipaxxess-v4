@@ -1,9 +1,5 @@
 const DashboardUserPage = () => {
-	return (
-		<>
-			<p>Hello</p>
-		</>
-	);
+	return <></>;
 };
 
 export default DashboardUserPage;
