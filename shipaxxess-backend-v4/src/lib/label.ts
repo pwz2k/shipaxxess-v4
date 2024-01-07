@@ -179,9 +179,12 @@ export class LabelManager {
 			payload = (await req.json()) as ApiResponseProps;
 		} catch (err) {
 			payload = { message: (err as Error).message, payload: {} };
-			this.crons.push({ uuid: label.uuid, message: payload.message });
 		}
 		log("Parsed USPS label. Payload: " + JSON.stringify(payload));
+
+		if (!req.ok) {
+			this.crons.push({ uuid: label.uuid, message: payload.message });
+		}
 
 		return payload;
 	}
@@ -220,9 +223,12 @@ export class LabelManager {
 			payload = (await req.json()) as ApiResponseProps;
 		} catch (err) {
 			payload = { message: (err as Error).message, payload: {} };
-			this.crons.push({ uuid: recipient.uuid, message: payload.message });
 		}
 		log(`Parsed USPS label. Payload: ${payload.message}`);
+
+		if (!req.ok) {
+			this.crons.push({ uuid: recipient.uuid, message: payload.message });
+		}
 
 		this.pushLabelToPrivateArray(batch, recipient, {
 			code: req.ok && payload.payload.code ? payload.payload.code : null,
@@ -278,9 +284,12 @@ export class LabelManager {
 			payload = (await req.json()) as ApiUpsResponseProps;
 		} catch (err) {
 			payload = { message: (err as Error).message, payload: {} };
-			this.crons.push({ uuid: label.uuid, message: payload.message });
 		}
 		log(`Parsed UPS label. Payload: ${payload.message}`);
+
+		if (!req.ok) {
+			this.crons.push({ uuid: label.uuid, message: payload.message });
+		}
 
 		return payload;
 	}
@@ -328,9 +337,12 @@ export class LabelManager {
 			payload = (await req.json()) as ApiUpsResponseProps;
 		} catch (err) {
 			payload = { message: (err as Error).message, payload: {} };
-			this.crons.push({ uuid: recipient.uuid, message: payload.message });
 		}
 		log("Parsed UPS label. Payload: " + JSON.stringify(payload));
+
+		if (!req.ok) {
+			this.crons.push({ uuid: recipient.uuid, message: payload.message });
+		}
 
 		this.pushLabelToPrivateArray(batch, recipient, {
 			code: req.ok && payload.payload.tracking ? payload.payload.tracking : null,
