@@ -120,7 +120,9 @@ export const paymentsColumns = (timezone: string) =>
 					</Button>
 				);
 			},
-			cell: ({ row }) => <Badge>{row.getValue("status")}</Badge>,
+			cell: ({ row }) => (
+				<Badge variant={row.original.status == "rejected" ? "destructive" : "default"}>{row.original.status}</Badge>
+			),
 			enableSorting: true,
 			enableHiding: true,
 		},

@@ -5,7 +5,7 @@ import { api } from "@client/lib/api";
 import { useQueryClient } from "@tanstack/react-query";
 import React from "react";
 
-const TableMenu = ({ id, status }: { id: number; status: string }) => {
+const TableMenu = ({ id, status }: { id: number; status: string | null }) => {
 	const [accept, setAccept] = React.useState(false);
 	const [reject, setReject] = React.useState(false);
 
@@ -34,8 +34,23 @@ const TableMenu = ({ id, status }: { id: number; status: string }) => {
 	});
 	const { button: rejectButton, setIsLoading: rejectButtonLoading } = useLoading({
 		label: "Reject Payment",
-		click() {
+		async click() {
 			rejectButtonLoading(true);
+
+			const req = await api.url("/admin/payments").useAuth().delete({ payment_id: id });
+			const res = await req.json<{ success: boolean }>();
+
+			queryClient.invalidateQueries({ queryKey: ["admin", "payments"] });
+
+			if (res.success) {
+				setAccept(false);
+				rejectButtonLoading(false);
+				api.showSuccessToast("Payment rejected successfully");
+				return;
+			}
+
+			rejectButtonLoading(false);
+			api.showErrorToast("Payment could not be accepted");
 		},
 	});
 
