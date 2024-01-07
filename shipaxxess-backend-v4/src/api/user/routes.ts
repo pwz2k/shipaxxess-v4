@@ -68,7 +68,6 @@ user.post("/settings/notifications", SettingsUser.Notifications);
 user.post("/settings/coupon", SettingsUser.Coupon);
 
 // Weights routes
-user.get("/weights", WeightsUser.GetAll);
 user.post("/weights", WeightsUser.Post);
 
 // Types routes
