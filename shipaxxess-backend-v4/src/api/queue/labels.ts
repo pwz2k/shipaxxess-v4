@@ -1,5 +1,6 @@
 import { LabelManager } from "@lib/label";
 import { exception } from "@utils/error";
+import { log } from "@utils/log";
 import { getSettings } from "@utils/settings";
 
 type MessageProps = { batch_id: number };
@@ -16,6 +17,8 @@ export const batchLabelQueue = async (batch: MessageBatch<MessageProps>, env: Bi
 		const user = await manager.getUserData(batch.user_id);
 		if (!user) throw exception({ message: "User not found.", code: 404 });
 
+		console.log("Batch recipents length", batch.recipients.length);
+
 		if (batch.type === "usps") {
 			for (const recipient of batch.recipients) {
 				await manager.generateUSPSLabelFromBatch(batch, recipient);
@@ -29,7 +32,9 @@ export const batchLabelQueue = async (batch: MessageBatch<MessageProps>, env: Bi
 		await manager.saveIntoLabelTableWithDrizzleBatch();
 		await manager.sendToBatchDownloadQueue(batch.uuid);
 
-		await manager.saveIntoCronTable();
+		// await manager.saveIntoCronTable();
+
+		log("label queue");
 
 		item.ack();
 	}

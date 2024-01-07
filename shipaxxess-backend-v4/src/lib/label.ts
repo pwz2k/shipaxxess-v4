@@ -97,12 +97,16 @@ export class LabelManager {
 	}
 
 	async saveIntoCronTable() {
-		return await drizzle(this.env.DB).batch(
+		await drizzle(this.env.DB).batch(
 			// @ts-expect-error type error
 			this.crons.map((nod) =>
 				drizzle(this.env.DB).insert(crons).values({ label_uuid: nod.uuid, uuid: v4(), meta_data: nod.message }),
 			),
 		);
+
+		console.log(this.crons);
+
+		log("Saved into cron table.");
 	}
 
 	async saveIntoLabelTable() {}
@@ -215,7 +219,7 @@ export class LabelManager {
 			payload = { message: (err as Error).message, payload: {} };
 			this.crons.push({ uuid: recipient.uuid, message: payload.message });
 		}
-		log("Parsed USPS label. Payload: " + JSON.stringify(payload));
+		log(`Parsed USPS label. Payload: ${payload.message}`);
 
 		this.pushLabelToPrivateArray(batch, recipient, {
 			code: req.ok && payload.payload.code ? payload.payload.code : null,
@@ -273,7 +277,7 @@ export class LabelManager {
 			payload = { message: (err as Error).message, payload: {} };
 			this.crons.push({ uuid: label.uuid, message: payload.message });
 		}
-		log("Parsed UPS label. Payload: " + JSON.stringify(payload));
+		log(`Parsed UPS label. Payload: ${payload.message}`);
 
 		return payload;
 	}
