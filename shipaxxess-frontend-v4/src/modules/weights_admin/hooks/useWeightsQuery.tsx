@@ -1,5 +1,5 @@
 import { api } from "@client/lib/api";
-import { AddressesSelectModel } from "@db/addresses";
+import { AdminWeightsSelectModel } from "@db/adminWeights";
 import { useQuery } from "@tanstack/react-query";
 
 export const useWeightsQuery = () => {
@@ -7,7 +7,7 @@ export const useWeightsQuery = () => {
 		queryKey: ["admin", "weights"],
 		queryFn: async () => {
 			const req = await api.url("/admin/weights").useAuth().get();
-			return await req.json<AddressesSelectModel[]>();
+			return await req.json<AdminWeightsSelectModel[]>();
 		},
 	});
 };

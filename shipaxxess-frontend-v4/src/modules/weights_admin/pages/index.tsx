@@ -1,5 +1,5 @@
 const WeightsAdminPage = () => {
-	return <div>WeightsAdminPage</div>;
+	return <></>;
 };
 
 export default WeightsAdminPage;

@@ -3,11 +3,10 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@client/components/ui/button";
 import { Checkbox } from "@client/components/ui/checkbox";
 import moment from "moment-timezone";
-import { TypesSelectModel } from "@db/types";
+import { AdminWeightsSelectModel } from "@db/adminWeights";
 import { app } from "@client/config/app";
-import TableMenu from "../components/tableMenu";
 
-export const typesColumns = (timezone: string) =>
+export const weightsColumns = (timezone: string) =>
 	[
 		{
 			id: "select",
@@ -56,11 +55,11 @@ export const typesColumns = (timezone: string) =>
 			enableHiding: true,
 		},
 		{
-			accessorKey: "type",
+			accessorKey: "from_weight",
 			header: ({ column }) => {
 				return (
 					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Type
+						From Weight
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
@@ -69,30 +68,43 @@ export const typesColumns = (timezone: string) =>
 			enableHiding: true,
 		},
 		{
-			accessorKey: "unit",
+			accessorKey: "to_weight",
 			header: ({ column }) => {
 				return (
 					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Unit
+						To Weight
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
 			},
-			cell: ({ row }) => <span>{row.getValue("unit")}</span>,
 			enableSorting: true,
 			enableHiding: true,
 		},
 		{
-			accessorKey: "value",
+			accessorKey: "user_cost",
 			header: ({ column }) => {
 				return (
 					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Value
+						User Cost
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
 			},
-			cell: ({ row }) => <span>{row.getValue("value")}</span>,
+			cell: ({ row }) => <span>${row.original.user_cost.toFixed(2)}</span>,
+			enableSorting: true,
+			enableHiding: true,
+		},
+		{
+			accessorKey: "reseller_cost",
+			header: ({ column }) => {
+				return (
+					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+						Reseller Cost
+						<ArrowUpDown className="w-4 h-4 ml-2" />
+					</Button>
+				);
+			},
+			cell: ({ row }) => <span>${row.original.reseller_cost.toFixed(2)}</span>,
 			enableSorting: true,
 			enableHiding: true,
 		},
@@ -110,10 +122,5 @@ export const typesColumns = (timezone: string) =>
 			enableSorting: true,
 			enableHiding: true,
 		},
-		{
-			id: "action",
-			cell: ({ row }) => <TableMenu id={row.original.id} uuid={row.original.uuid} />,
-			enableSorting: false,
-			enableHiding: false,
-		},
-	] as ColumnDef<TypesSelectModel>[];
+		{ id: "action" },
+	] as ColumnDef<AdminWeightsSelectModel>[];
