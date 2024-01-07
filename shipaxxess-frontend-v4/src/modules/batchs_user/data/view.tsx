@@ -131,20 +131,7 @@ export const labelsColumns = (timezone: string) =>
 					</Button>
 				);
 			},
-			cell: ({ row }) => (
-				<>
-					{row.original.status_label === "refunded" && (
-						<Badge className="capitalize" variant="destructive">
-							{row.getValue("status_label")}
-						</Badge>
-					)}
-					{row.original.status_label === "awaiting" && (
-						<Badge className="capitalize" variant="outline">
-							{row.getValue("status_label")}
-						</Badge>
-					)}
-				</>
-			),
+			cell: ({ row }) => <Badge>{row.original.status_label}</Badge>,
 			enableSorting: true,
 			enableHiding: true,
 		},
