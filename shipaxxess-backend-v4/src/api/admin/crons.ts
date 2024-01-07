@@ -23,7 +23,18 @@ const Remove = async (c: Context<App>) => {
 
 	const model = new Model(c.env.DB);
 
-	await model.delete(crons, eq(crons.id, parse.id));
+	const [cron] = await model.delete(crons, eq(crons.id, parse.id));
+
+	console.log(cron, "cron -----------------------------");
+
+	await model.update(
+		labels,
+		{
+			status_label: "cancelled",
+			status_message: "admin removed from cron",
+		},
+		eq(labels.uuid, cron.label_uuid),
+	);
 
 	return c.json({ success: true });
 };
