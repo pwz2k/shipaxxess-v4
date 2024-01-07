@@ -42,7 +42,7 @@ admin.patch("/users", UsersAdmin.Edit);
 admin.delete("/users", UsersAdmin.Delete);
 
 // Weights
-admin.get("/weights", WeightsAdmin.Get);
+admin.get("/weights", WeightsAdmin.GetAll);
 admin.post("/weights", WeightsAdmin.Create);
 admin.patch("/weights", WeightsAdmin.Edit);
 admin.delete("/weights", WeightsAdmin.Delete);

@@ -4,9 +4,15 @@ import { Weights } from "@shipaxxess/shipaxxess-zod-v4";
 import { Context } from "hono";
 import { v4 } from "uuid";
 
-const Get = (c: Context<App>) => {
-	return c.json({});
+const GetAll = async (c: Context<App>) => {
+	const model = new Model(c.env.DB);
+
+	const wt = await model.all(weights);
+
+	return c.json(wt);
 };
+
+const Get = async (c: Context<App>) => {};
 
 const Create = async (c: Context<App>) => {
 	const body = await c.req.json();
@@ -14,7 +20,7 @@ const Create = async (c: Context<App>) => {
 
 	const model = new Model(c.env.DB);
 
-	const [insert] = await model.insert(weights, {
+	await model.insert(weights, {
 		reseller_cost: parse.reseller_cost,
 		user_cost: parse.user_cost,
 		weight: parse.weight,
@@ -22,7 +28,7 @@ const Create = async (c: Context<App>) => {
 		uuid: v4(),
 	});
 
-	return c.json(insert);
+	return c.json({ success: true });
 };
 
 const Edit = async (c: Context<App>) => {
@@ -33,6 +39,6 @@ const Delete = async (c: Context<App>) => {
 	return c.json({});
 };
 
-const WeightsAdmin = { Get, Create, Edit, Delete };
+const WeightsAdmin = { GetAll, Create, Edit, Delete };
 
 export { WeightsAdmin };

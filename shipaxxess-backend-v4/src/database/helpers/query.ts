@@ -35,3 +35,7 @@ export const initSettings = async (db: D1Database) => {
 		drizzle(db).insert(adminSettings).values({ setting_id: "label_host", setting_value: "" }),
 	]);
 };
+
+export const getAdminWeights = async (db: D1Database) => {
+	return await drizzle(db, { schema }).query.adminWeights.findMany({});
+};

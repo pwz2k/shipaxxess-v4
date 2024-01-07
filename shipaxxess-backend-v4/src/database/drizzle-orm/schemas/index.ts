@@ -1,4 +1,5 @@
 import { addresses } from "./addresses";
+import { adminWeights } from "./adminWeights";
 import { batchs } from "./batchs";
 import { chats } from "./chats";
 import { crons } from "./crons";
@@ -31,4 +32,5 @@ export default {
 	users,
 	weights,
 	weightsRelations,
+	adminWeights,
 };
