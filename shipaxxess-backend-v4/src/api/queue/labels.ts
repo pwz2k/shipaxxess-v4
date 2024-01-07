@@ -17,8 +17,6 @@ export const batchLabelQueue = async (batch: MessageBatch<MessageProps>, env: Bi
 		const user = await manager.getUserData(batch.user_id);
 		if (!user) throw exception({ message: "User not found.", code: 404 });
 
-		console.log("Batch recipents length", batch.recipients.length);
-
 		if (batch.type === "usps") {
 			for (const recipient of batch.recipients) {
 				await manager.generateUSPSLabelFromBatch(batch, recipient);
