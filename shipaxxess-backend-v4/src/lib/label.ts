@@ -1,6 +1,7 @@
 import { config } from "@config";
 import { getWeight } from "@helpers/query";
 import { BatchsSelectModel, batchs } from "@schemas/batchs";
+import { crons } from "@schemas/crons";
 import { LabelsInsertModel, labels } from "@schemas/labels";
 import { notifications } from "@schemas/notifications";
 import { UsersSelectModel, users } from "@schemas/users";
@@ -17,6 +18,7 @@ import { v4 } from "uuid";
 export class LabelManager {
 	private labels: LabelsInsertModel[] = [];
 	private pdfs: PDFInsertModel[] = [];
+	private crons: string[] = [];
 
 	constructor(private env: Bindings, private settings: { [x: string]: string }) {
 		if (!this.settings["label_apikey"]) {
@@ -94,6 +96,15 @@ export class LabelManager {
 		return insert;
 	}
 
+	async saveIntoCronTable() {
+		return await drizzle(this.env.DB).batch(
+			// @ts-expect-error type error
+			this.crons.map((uuid) =>
+				drizzle(this.env.DB).insert(crons).values({ label_uuid: uuid, uuid: v4(), meta_data: "store into cron" }),
+			),
+		);
+	}
+
 	async saveIntoLabelTable() {}
 
 	async saveIntoLabelTableWithDrizzleBatch() {
@@ -161,6 +172,7 @@ export class LabelManager {
 			payload = (await req.json()) as ApiResponseProps;
 		} catch (err) {
 			payload = { message: (err as Error).message, payload: {} };
+			this.crons.push(recipient.uuid);
 		}
 		log("Parsed USPS label. Payload: " + JSON.stringify(payload));
 
@@ -218,6 +230,7 @@ export class LabelManager {
 			payload = (await req.json()) as ApiUpsResponseProps;
 		} catch (err) {
 			payload = { message: (err as Error).message, payload: {} };
+			this.crons.push(recipient.uuid);
 		}
 		log("Parsed UPS label. Payload: " + JSON.stringify(payload));
 
@@ -305,7 +318,7 @@ export class LabelManager {
 	private pushLabelToPrivateArray(
 		batch: BatchsSelectModel,
 		recipient: Address.UUIDSCHEMA,
-		payload: { code: string | null; id: number | null; pdf: string; status: string; message: string },
+		payload: { code?: string | null; id?: number | null; pdf?: string; status: string; message: string },
 	) {
 		this.labels.push({
 			shipping_date: batch.shipping_date,
@@ -361,6 +374,8 @@ export class LabelManager {
 			uuid: recipient.uuid,
 			batch_uuid: batch.uuid,
 		});
+
+		if (!payload.pdf || payload.pdf === null || payload.pdf === "") return;
 
 		this.pdfs.push({ type: batch.type, pdf: payload.pdf });
 	}
