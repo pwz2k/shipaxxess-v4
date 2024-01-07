@@ -2,7 +2,7 @@ import { config } from "@config";
 import { getWeight } from "@helpers/query";
 import { BatchsSelectModel, batchs } from "@schemas/batchs";
 import { crons } from "@schemas/crons";
-import { LabelsInsertModel, labels } from "@schemas/labels";
+import { LabelsInsertModel, LabelsSelectModel, labels } from "@schemas/labels";
 import { notifications } from "@schemas/notifications";
 import { UsersSelectModel, users } from "@schemas/users";
 import { Address, Labels } from "@shipaxxess/shipaxxess-zod-v4";
@@ -138,6 +138,47 @@ export class LabelManager {
 		return await this.env.BATCH_PDF_QUEUE.send({ pdfs: this.pdfs, batch_uuid }, { contentType: "json" });
 	}
 
+	async generateUSPSLabel(label: LabelsSelectModel) {
+		const req = await fetch(`${this.settings["label_host"]}/api/label/generate`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json", "x-api-key": this.settings["label_apikey"] },
+			body: JSON.stringify({
+				type: label.type_value,
+				weight: label.package_weight,
+				date: label.shipping_date,
+				fromCountry: label.sender_country,
+				fromName: label.sender_full_name,
+				fromRefNumber: label.sender_company_name,
+				fromStreetNumber: label.sender_street_one,
+				fromStreetNumber2: label.sender_street_two,
+				fromZip: label.sender_zip,
+				fromCity: label.sender_city,
+				fromState: label.sender_state,
+				toCountry: label.recipent_country,
+				toName: label.recipent_full_name,
+				toRefNumber: label.recipent_company_name,
+				toStreetNumber: label.recipent_street_one,
+				toStreetNumber2: label.recipent_street_two,
+				toZip: label.recipent_zip,
+				toCity: label.recipent_city,
+				toState: label.recipent_state,
+			}),
+		});
+		log("Generated USPS label.");
+
+		var payload: ApiResponseProps;
+
+		try {
+			payload = (await req.json()) as ApiResponseProps;
+		} catch (err) {
+			payload = { message: (err as Error).message, payload: {} };
+			this.crons.push({ uuid: label.uuid, message: payload.message });
+		}
+		log("Parsed USPS label. Payload: " + JSON.stringify(payload));
+
+		return payload;
+	}
+
 	async generateUSPSLabelFromBatch(batch: BatchsSelectModel, recipient: Address.UUIDSCHEMA) {
 		const req = await fetch(`${this.settings["label_host"]}/api/label/generate`, {
 			method: "POST",
@@ -185,6 +226,56 @@ export class LabelManager {
 		});
 
 		log("Pushed label to private array.");
+	}
+
+	async generateUPSLabel(label: LabelsSelectModel) {
+		const req = await fetch(`${this.settings["label_host"]}/api/label/generate-ups`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json", "x-api-key": this.settings["label_apikey"] },
+			body: JSON.stringify({
+				type: label.type,
+				weight: label.package_weight,
+				height: label.package_height,
+				width: label.package_width,
+				length: label.package_length,
+				reference1: label.reference1,
+				description: label.description,
+				saturday: label.saturday,
+				signature: label.signature,
+				date: label.shipping_date,
+				fromCountry: label.sender_country,
+				fromName: label.sender_full_name,
+				fromCompany: label.sender_company_name,
+				fromPhone: label.fromPhone,
+				fromStreetNumber: label.sender_street_one,
+				fromStreetNumber2: label.sender_street_two,
+				fromZip: label.sender_zip,
+				fromCity: label.sender_city,
+				fromState: label.sender_state,
+				toCountry: label.recipent_country,
+				toName: label.recipent_full_name,
+				toCompany: label.recipent_company_name,
+				toPhone: label.toPhone,
+				toStreetNumber: label.recipent_street_one,
+				toStreetNumber2: label.recipent_street_two,
+				toZip: label.recipent_zip,
+				toCity: label.recipent_city,
+				toState: label.recipent_state,
+			}),
+		});
+		log("Generated UPS label.");
+
+		var payload: ApiUpsResponseProps;
+
+		try {
+			payload = (await req.json()) as ApiUpsResponseProps;
+		} catch (err) {
+			payload = { message: (err as Error).message, payload: {} };
+			this.crons.push({ uuid: label.uuid, message: payload.message });
+		}
+		log("Parsed UPS label. Payload: " + JSON.stringify(payload));
+
+		return payload;
 	}
 
 	async generateUPSLabelFromBatch(batch: BatchsSelectModel, recipient: Address.UUIDSCHEMA) {
@@ -313,6 +404,34 @@ export class LabelManager {
 			.where(eq(batchs.uuid, batch_uuid))
 			.execute();
 		log("Updated batch status.");
+	}
+
+	async updateUSPSLabelStatus({ payload, id }: { payload: ApiResponseProps; id: number }) {
+		return await drizzle(this.env.DB)
+			.update(labels)
+			.set({
+				remote_tracking_number: payload.payload.code,
+				remote_pdf_link: payload.payload.pdf!.split("/")[4] || "",
+				remote_pdf_r2_link: payload.payload.pdf!.split("/")[4] || "",
+				status_label: "awaiting",
+				status_message: payload.message,
+			})
+			.where(eq(labels.id, id))
+			.execute();
+	}
+
+	async updateUPSLabelStatus({ payload, id }: { payload: ApiUpsResponseProps; id: number }) {
+		return await drizzle(this.env.DB)
+			.update(labels)
+			.set({
+				remote_tracking_number: payload.payload.tracking,
+				remote_pdf_link: payload.payload.pdf!.split("/")[5] || "",
+				remote_pdf_r2_link: payload.payload.pdf!.split("/")[5] || "",
+				status_label: "awaiting",
+				status_message: payload.message,
+			})
+			.where(eq(labels.id, id))
+			.execute();
 	}
 
 	private pushLabelToPrivateArray(

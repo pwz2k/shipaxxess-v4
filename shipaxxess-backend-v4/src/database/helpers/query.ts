@@ -1,20 +1,24 @@
 import { adminSettings } from "@schemas/adminSettings";
+import { adminWeights } from "@schemas/adminWeights";
 import schema from "@schemas/index";
 import { types } from "@schemas/types";
-import { weights } from "@schemas/weights";
 import { Weights } from "@shipaxxess/shipaxxess-zod-v4";
-import { and, eq } from "drizzle-orm";
+import { and, eq, gte, lte } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 
 export const getWeight = async (db: D1Database, parse: Weights.FETCHSCHEMA) => {
-	return await drizzle(db, { schema }).query.weights.findFirst({
+	return await drizzle(db, { schema }).query.adminWeights.findFirst({
 		with: {
 			type: {
 				// @ts-ignore
-				where: and(eq(types.type, parse.type), eq(types.id, parse.type_id)),
+				where: eq(types.type, parse.type),
 			},
 		},
-		where: and(eq(weights.type_id, parse.type_id), eq(weights.weight, parse.weight)),
+		where: and(
+			eq(adminWeights.type_id, Number(parse.type_id)),
+			lte(adminWeights.from_weight, parse.weight),
+			gte(adminWeights.to_weight, parse.weight),
+		),
 	});
 };
 

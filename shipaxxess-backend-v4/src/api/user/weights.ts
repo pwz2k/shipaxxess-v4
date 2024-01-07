@@ -11,8 +11,6 @@ const Post = async (c: Context<App>) => {
 	const body = await c.req.json();
 	const parse = Weights.FETCHSCHEMA.parse(body);
 
-	//const weight = await getWeight(c.env.DB, parse);
-
 	const weight = await drizzle(c.env.DB, { schema }).query.adminWeights.findFirst({
 		with: {
 			type: {

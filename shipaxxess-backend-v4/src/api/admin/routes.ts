@@ -57,7 +57,7 @@ admin.post("/settings/label", AdminSettings.Label);
 
 // Crons
 admin.get("/crons", CronsAdmin.GetAll);
-admin.post("/crons");
-admin.delete("/crons");
+admin.post("/crons", CronsAdmin.Reprocess);
+admin.delete("/crons", CronsAdmin.Remove);
 
 export { admin };
