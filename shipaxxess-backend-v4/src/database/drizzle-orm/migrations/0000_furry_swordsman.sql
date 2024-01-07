@@ -92,6 +92,7 @@ CREATE TABLE `chats` (
 CREATE TABLE `crons` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`uuid` text NOT NULL,
+	`label_uuid` text NOT NULL,
 	`meta_data` text NOT NULL,
 	`created_at` text DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` text DEFAULT CURRENT_TIMESTAMP

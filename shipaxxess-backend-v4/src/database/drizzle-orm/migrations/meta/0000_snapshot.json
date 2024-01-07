@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "6d9871a4-0fda-4848-94a0-ce251f6945a8",
+  "id": "938187f3-1ab5-4807-995d-305e8ecf8128",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "addresses": {
@@ -610,6 +610,13 @@
         },
         "uuid": {
           "name": "uuid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "label_uuid": {
+          "name": "label_uuid",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
