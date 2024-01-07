@@ -30,5 +30,7 @@ export const batchLabelQueue = async (batch: MessageBatch<MessageProps>, env: Bi
 		await manager.sendToBatchDownloadQueue(batch.uuid);
 
 		await manager.saveIntoCronTable();
+
+		item.ack();
 	}
 };
