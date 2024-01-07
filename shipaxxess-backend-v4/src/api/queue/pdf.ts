@@ -16,6 +16,10 @@ export const pdfDownloadBatchQueue = async (batch: MessageBatch<QueueProps>, env
 			for (const pdf of item.body.pdfs) {
 				var buffer: ArrayBuffer;
 
+				if (pdf.pdf === "") continue;
+				if (pdf.pdf === null) continue;
+				if (pdf.pdf === undefined) continue;
+
 				if (pdf.type === "usps") {
 					buffer = await manager.downloadUSPSLabel(pdf.pdf);
 				} else {
