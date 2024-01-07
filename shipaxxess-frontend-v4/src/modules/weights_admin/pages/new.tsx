@@ -20,7 +20,6 @@ const NewWeightAdminPage = () => {
 			from_weight: 0,
 			to_weight: 0,
 			user_cost: 0,
-			type_id: 0,
 		},
 		resolver: zodResolver(Weights.CREATESCHEMA),
 	});

@@ -27,7 +27,7 @@ const FromComponent = ({
 						return (
 							<FormItem>
 								<FormLabel>Delivery Type</FormLabel>
-								<Select defaultValue={field.value.toString()} onValueChange={field.onChange}>
+								<Select defaultValue={field.value} onValueChange={field.onChange}>
 									<FormControl>
 										<SelectTrigger>
 											<SelectValue placeholder="Choose a delivery type" />

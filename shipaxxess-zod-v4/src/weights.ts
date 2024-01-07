@@ -13,7 +13,11 @@ export const CREATESCHEMA = z.object({
 	from_weight: z.coerce.number().min(1),
 	user_cost: z.coerce.number().min(1),
 	reseller_cost: z.coerce.number().min(1),
-	type_id: z.coerce.number().min(1),
+	type_id: z.string().min(1),
 });
 
 export type CREATESCHEMA = z.infer<typeof CREATESCHEMA>;
+
+export const EDITSCHEMA = CREATESCHEMA.merge(z.object({ id: z.number() }));
+
+export type EDITSCHEMA = z.infer<typeof EDITSCHEMA>;

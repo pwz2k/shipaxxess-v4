@@ -46,6 +46,7 @@ admin.get("/weights", WeightsAdmin.GetAll);
 admin.post("/weights", WeightsAdmin.Create);
 admin.patch("/weights", WeightsAdmin.Edit);
 admin.delete("/weights", WeightsAdmin.Delete);
+admin.get("/weights/:uuid", WeightsAdmin.Get);
 
 // Settings
 admin.get("/settings", AdminSettings.GetAll);
