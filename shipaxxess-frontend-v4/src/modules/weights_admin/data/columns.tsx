@@ -5,6 +5,8 @@ import { Checkbox } from "@client/components/ui/checkbox";
 import moment from "moment-timezone";
 import { AdminWeightsSelectModel } from "@db/adminWeights";
 import { app } from "@client/config/app";
+import { TypesSelectModel } from "@db/types";
+import TableMenu from "../components/tableMenu";
 
 export const weightsColumns = (timezone: string) =>
 	[
@@ -42,7 +44,7 @@ export const weightsColumns = (timezone: string) =>
 			enableHiding: true,
 		},
 		{
-			accessorKey: "label",
+			accessorKey: "type.label",
 			header: ({ column }) => {
 				return (
 					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
@@ -64,6 +66,11 @@ export const weightsColumns = (timezone: string) =>
 					</Button>
 				);
 			},
+			cell: ({ row }) => (
+				<span>
+					{row.original.from_weight} {row.original.type.unit}
+				</span>
+			),
 			enableSorting: true,
 			enableHiding: true,
 		},
@@ -77,6 +84,11 @@ export const weightsColumns = (timezone: string) =>
 					</Button>
 				);
 			},
+			cell: ({ row }) => (
+				<span>
+					{row.original.to_weight} {row.original.type.unit}
+				</span>
+			),
 			enableSorting: true,
 			enableHiding: true,
 		},
@@ -122,5 +134,5 @@ export const weightsColumns = (timezone: string) =>
 			enableSorting: true,
 			enableHiding: true,
 		},
-		{ id: "action" },
-	] as ColumnDef<AdminWeightsSelectModel>[];
+		{ id: "action", cell: ({ row }) => <TableMenu id={row.original.id} uuid={row.original.uuid} /> },
+	] as ColumnDef<AdminWeightsSelectModel & { type: TypesSelectModel }>[];

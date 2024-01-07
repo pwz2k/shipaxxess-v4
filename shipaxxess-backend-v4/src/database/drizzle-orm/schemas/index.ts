@@ -14,7 +14,7 @@ import { types } from "./types";
 import { users } from "./users";
 import { weights } from "./weights";
 
-import { weightsRelations } from "./relations";
+import { adminWeightsRelations, weightsRelations } from "./relations";
 
 export default {
 	addresses,
@@ -33,4 +33,5 @@ export default {
 	weights,
 	weightsRelations,
 	adminWeights,
+	adminWeightsRelations,
 };

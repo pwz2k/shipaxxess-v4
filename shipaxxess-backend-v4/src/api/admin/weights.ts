@@ -1,3 +1,4 @@
+import { getAdminWeights } from "@helpers/query";
 import { Model } from "@lib/model";
 import { adminWeights } from "@schemas/adminWeights";
 import { Weights } from "@shipaxxess/shipaxxess-zod-v4";
@@ -5,9 +6,7 @@ import { Context } from "hono";
 import { v4 } from "uuid";
 
 const GetAll = async (c: Context<App>) => {
-	const model = new Model(c.env.DB);
-
-	const wt = await model.all(adminWeights);
+	const wt = await getAdminWeights(c.env.DB);
 
 	return c.json(wt);
 };

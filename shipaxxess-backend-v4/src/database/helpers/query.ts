@@ -37,5 +37,5 @@ export const initSettings = async (db: D1Database) => {
 };
 
 export const getAdminWeights = async (db: D1Database) => {
-	return await drizzle(db, { schema }).query.adminWeights.findMany({});
+	return await drizzle(db, { schema }).query.adminWeights.findMany({ with: { type: true } });
 };

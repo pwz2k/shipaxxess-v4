@@ -1,13 +1,10 @@
 import { InferInsertModel, InferSelectModel, sql } from "drizzle-orm";
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { types } from "./types";
 
 export const adminWeights = sqliteTable("adminWeights", {
 	id: integer("id").primaryKey({ autoIncrement: true }),
 	uuid: text("uuid").notNull(),
-	type_id: integer("type_id")
-		.notNull()
-		.references(() => types.id),
+	type_id: integer("type_id").notNull(),
 	from_weight: integer("from_weight").notNull(),
 	to_weight: integer("to_weight").notNull(),
 	user_cost: integer("user_cost").notNull(),
