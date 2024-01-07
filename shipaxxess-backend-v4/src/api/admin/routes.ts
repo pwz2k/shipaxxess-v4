@@ -23,10 +23,10 @@ admin.post("/payments", PaymentsAdmin.Accept);
 admin.delete("/payments", PaymentsAdmin.Reject);
 
 // Tickets routes
-admin.get("/tickets", TicketsAdmin.Get);
+admin.get("/tickets", TicketsAdmin.GetAll);
 admin.delete("/tickets", TicketsAdmin.Close);
-admin.get("/tickets/:ticket_id", TicketsAdmin.Find);
-admin.post("/tickets/:ticket_id", TicketsAdmin.PostMessage);
+admin.post("/tickets", TicketsAdmin.PostMessage);
+admin.get("/tickets/:uuid", TicketsAdmin.Get);
 
 // Types routes
 admin.get("/types", TypesAdmin.GetAll);

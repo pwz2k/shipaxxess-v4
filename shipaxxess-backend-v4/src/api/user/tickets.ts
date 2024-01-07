@@ -17,13 +17,13 @@ const Get = async (c: Context<App>) => {
 };
 
 const Create = async (c: Context<App>) => {
-	// Validation
 	const body = await c.req.json();
 	const parse = Tickets.ZODSCHEMA.parse(body);
 
 	const model = new Model(c.env.DB);
 
 	const user = await model.get(users, eq(users.id, c.get("jwtPayload").id));
+	if (!user) throw exception({ message: "User not found", code: 5564 });
 
 	const ticket_uuid = v4();
 	await model.insert(tickets, {
@@ -48,7 +48,6 @@ const Create = async (c: Context<App>) => {
 };
 
 const Find = async (c: Context<App, "/:ticket_id">) => {
-	// Validation
 	const ticket_id = c.req.param("ticket_id");
 
 	if (!validate(ticket_id)) throw exception({ message: "Invalid ticket id", code: 5564 });
@@ -69,6 +68,7 @@ const PostMessage = async (c: Context<App, "/:ticket_id">) => {
 	const model = new Model(c.env.DB);
 
 	const user = await model.get(users, eq(users.id, c.get("jwtPayload").id));
+	if (!user) throw exception({ message: "User not found", code: 5564 });
 
 	const chat_uuid = v4();
 	await model.insert(chats, {

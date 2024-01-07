@@ -5,7 +5,7 @@ import { api } from "@client/lib/api";
 import { ChatsSelectModel } from "@db/chats";
 import { TicketsSelectModel } from "@db/tickets";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Chats } from "@shipaxxess/shipaxxess-zod-v4";
+import { Chats, Tickets } from "@shipaxxess/shipaxxess-zod-v4";
 import { useForm } from "react-hook-form";
 
 type SendChatFormProps = {
@@ -18,14 +18,20 @@ const SendChatForm = ({ chats, ticket, setChat }: SendChatFormProps) => {
 	const { button, setIsLoading } = useLoading({
 		label: "Send",
 	});
-	const form = useForm<Chats.ZODSCHEMA>({ defaultValues: { message: "" }, resolver: zodResolver(Chats.ZODSCHEMA) });
+	const form = useForm<Tickets.POSTMESSAGE>({
+		defaultValues: { message: "" },
+		resolver: zodResolver(Chats.ZODSCHEMA),
+	});
 
 	const submit = async (values: Chats.ZODSCHEMA) => {
 		setIsLoading(true);
 
 		if (!ticket) return;
 
-		const req = await api.url(`/user/tickets/${ticket.uuid}`).useAuth().post(values);
+		const req = await api
+			.url(`/admin/tickets`)
+			.useAuth()
+			.post({ ...values, id: ticket.id });
 		const res = await req.json<ChatsSelectModel>();
 
 		if (res.id) {

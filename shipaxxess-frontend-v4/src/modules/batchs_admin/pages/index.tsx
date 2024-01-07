@@ -14,7 +14,7 @@ const BatchsAdminPage = () => {
 	const batchesQuery = useBatchesQuery();
 
 	const { CardTable, ToggleColumns } = useTable({
-		key: "addresses",
+		key: "admin_batches",
 		columns: batchColumns(timezone),
 		data: batchesQuery.data,
 		loading: batchesQuery.isLoading,
