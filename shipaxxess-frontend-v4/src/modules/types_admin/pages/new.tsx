@@ -8,9 +8,13 @@ import { useForm } from "react-hook-form";
 import { TypeForm } from "../components/form";
 import { useLoading } from "@client/hooks/useLoading";
 import { api } from "@client/lib/api";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const NewTypeAdminPage = () => {
-	const form = useForm<Type.CREATESCHEMA>({ defaultValues: { label: "", type: "usps", unit: "lb", value: "" } });
+	const form = useForm<Type.CREATESCHEMA>({
+		defaultValues: { label: "", type: "usps", unit: "lb", value: "" },
+		resolver: zodResolver(Type.CREATESCHEMA),
+	});
 
 	const { button, setIsLoading } = useLoading({ label: "Submit" });
 

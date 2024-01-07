@@ -30,6 +30,7 @@ admin.post("/tickets/:ticket_id", TicketsAdmin.PostMessage);
 
 // Types routes
 admin.get("/types", TypesAdmin.GetAll);
+admin.get("/types/:uuid", TypesAdmin.Get);
 admin.post("/types", TypesAdmin.Create);
 admin.patch("/types", TypesAdmin.Edit);
 admin.delete("/types/:id", TypesAdmin.Delete);

@@ -14,6 +14,16 @@ const GetAll = async (c: Context<App>) => {
 	return c.json(tp);
 };
 
+const Get = async (c: Context<App, "/:uuid">) => {
+	const type_uuid = c.req.param("uuid");
+
+	const model = new Model(c.env.DB);
+
+	const tp = await model.get(types, eq(types.uuid, type_uuid));
+
+	return c.json(tp);
+};
+
 const Create = async (c: Context<App>) => {
 	const body = await c.req.json();
 	const parse = Type.CREATESCHEMA.parse(body);
@@ -40,7 +50,7 @@ const Edit = async (c: Context<App>) => {
 	const check = await model.get(types, eq(types.id, parse.id));
 	if (!check) throw exception({ message: "Type not found", code: 404 });
 
-	const [update] = await model.update(
+	await model.update(
 		types,
 		{
 			label: parse.label,
@@ -67,6 +77,6 @@ const Delete = async (c: Context<App, "/:id">) => {
 	return c.json({ success: true });
 };
 
-const TypesAdmin = { GetAll, Create, Edit, Delete };
+const TypesAdmin = { GetAll, Create, Edit, Delete, Get };
 
 export { TypesAdmin };
