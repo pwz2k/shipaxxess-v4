@@ -29,10 +29,10 @@ admin.get("/tickets/:ticket_id", TicketsAdmin.Find);
 admin.post("/tickets/:ticket_id", TicketsAdmin.PostMessage);
 
 // Types routes
-admin.get("/types", TypesAdmin.Get);
+admin.get("/types", TypesAdmin.GetAll);
 admin.post("/types", TypesAdmin.Create);
 admin.patch("/types", TypesAdmin.Edit);
-admin.delete("/types", TypesAdmin.Delete);
+admin.delete("/types/:id", TypesAdmin.Delete);
 
 // Users routes
 admin.get("/users", UsersAdmin.Get);

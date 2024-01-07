@@ -21,3 +21,7 @@ export const CREATESCHEMA = z.object({
 });
 
 export type CREATESCHEMA = z.infer<typeof CREATESCHEMA>;
+
+export const EDITSCHEMA = CREATESCHEMA.merge(z.object({ id: z.number() }));
+
+export type EDITSCHEMA = z.infer<typeof EDITSCHEMA>;
