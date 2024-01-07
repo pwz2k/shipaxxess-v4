@@ -18,7 +18,7 @@ import { v4 } from "uuid";
 export class LabelManager {
 	private labels: LabelsInsertModel[] = [];
 	private pdfs: PDFInsertModel[] = [];
-	private crons: string[] = [];
+	private crons: { uuid: string; message: string }[] = [];
 
 	constructor(private env: Bindings, private settings: { [x: string]: string }) {
 		if (!this.settings["label_apikey"]) {
@@ -99,8 +99,8 @@ export class LabelManager {
 	async saveIntoCronTable() {
 		return await drizzle(this.env.DB).batch(
 			// @ts-expect-error type error
-			this.crons.map((uuid) =>
-				drizzle(this.env.DB).insert(crons).values({ label_uuid: uuid, uuid: v4(), meta_data: "store into cron" }),
+			this.crons.map((nod) =>
+				drizzle(this.env.DB).insert(crons).values({ label_uuid: nod.uuid, uuid: v4(), meta_data: nod.message }),
 			),
 		);
 	}
@@ -172,7 +172,7 @@ export class LabelManager {
 			payload = (await req.json()) as ApiResponseProps;
 		} catch (err) {
 			payload = { message: (err as Error).message, payload: {} };
-			this.crons.push(recipient.uuid);
+			this.crons.push({ uuid: recipient.uuid, message: payload.message });
 		}
 		log("Parsed USPS label. Payload: " + JSON.stringify(payload));
 
@@ -230,7 +230,7 @@ export class LabelManager {
 			payload = (await req.json()) as ApiUpsResponseProps;
 		} catch (err) {
 			payload = { message: (err as Error).message, payload: {} };
-			this.crons.push(recipient.uuid);
+			this.crons.push({ uuid: recipient.uuid, message: payload.message });
 		}
 		log("Parsed UPS label. Payload: " + JSON.stringify(payload));
 
