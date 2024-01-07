@@ -45,7 +45,7 @@ const TableMenu = ({ uuid, id }: { id: number; uuid: string }) => {
 				trigger={<Button variant="destructive">Delete</Button>}
 				action={deleteButton}
 				title="Delete type"
-				description="Are you sure you want to delete this type?"
+				description="Are you sure you want to delete this type and it's weights as well?"
 			/>
 		</div>
 	);

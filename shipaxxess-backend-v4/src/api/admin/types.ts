@@ -1,4 +1,5 @@
 import { Model } from "@lib/model";
+import { adminWeights } from "@schemas/adminWeights";
 import { types } from "@schemas/types";
 import { Id, Type } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
@@ -72,6 +73,8 @@ const Delete = async (c: Context<App>) => {
 
 	const check = await model.get(types, eq(types.id, parse.id));
 	if (!check) throw exception({ message: "Type not found", code: 404 });
+
+	await model.delete(adminWeights, eq(adminWeights.type_id, parse.id));
 
 	await model.delete(types, eq(types.id, parse.id));
 
