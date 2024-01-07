@@ -31,7 +31,7 @@ const Get = async (c: Context<App, "/:uuid">) => {
 
 const PostMessage = async (c: Context<App>) => {
 	const body = await c.req.json();
-	const parse = Chats.ZODSCHEMA.parse(body);
+	const parse = Chats.IDZODSCHEMA.parse(body);
 
 	const model = new Model(c.env.DB);
 
@@ -45,7 +45,7 @@ const PostMessage = async (c: Context<App>) => {
 		message: parse.message,
 		message_author: `${user.first_name} ${user.last_name}`,
 		ticket_uuid: tk.uuid,
-		message_profile: `${user.first_name.charAt(1)}${user.last_name.charAt(1)}`,
+		message_profile: `${user.first_name.charAt(0)}${user.last_name.charAt(0)}`,
 		user_id: c.get("jwtPayload").id,
 		uuid: v4(),
 	});

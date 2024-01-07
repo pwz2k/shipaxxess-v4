@@ -74,7 +74,7 @@ const PostMessage = async (c: Context<App, "/:ticket_id">) => {
 	await model.insert(chats, {
 		message: parse.message,
 		message_author: `${user.first_name} ${user.last_name}`,
-		message_profile: `${user.first_name.charAt(1)}${user.last_name.charAt(1)}`,
+		message_profile: `${user.first_name.charAt(0)}${user.last_name.charAt(0)}`,
 		ticket_uuid: c.req.param("ticket_id"),
 		user_id: user.id,
 		uuid: chat_uuid,

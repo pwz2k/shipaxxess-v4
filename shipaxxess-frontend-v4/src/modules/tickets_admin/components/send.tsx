@@ -5,7 +5,7 @@ import { api } from "@client/lib/api";
 import { ChatsSelectModel } from "@db/chats";
 import { TicketsSelectModel } from "@db/tickets";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Chats, Tickets } from "@shipaxxess/shipaxxess-zod-v4";
+import { Chats } from "@shipaxxess/shipaxxess-zod-v4";
 import { useForm } from "react-hook-form";
 
 type SendChatFormProps = {
@@ -18,7 +18,7 @@ const SendChatForm = ({ chats, ticket, setChat }: SendChatFormProps) => {
 	const { button, setIsLoading } = useLoading({
 		label: "Send",
 	});
-	const form = useForm<Tickets.POSTMESSAGE>({
+	const form = useForm<Chats.ZODSCHEMA>({
 		defaultValues: { message: "" },
 		resolver: zodResolver(Chats.ZODSCHEMA),
 	});
@@ -45,7 +45,7 @@ const SendChatForm = ({ chats, ticket, setChat }: SendChatFormProps) => {
 		setIsLoading(false);
 	};
 
-	if (ticket && ticket.status === "close") return <></>;
+	if (ticket && ticket.status === "closed") return <></>;
 
 	return (
 		<Form {...form}>

@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@client/components/ui/badge";
 import { Button } from "@client/components/ui/button";
 import { Checkbox } from "@client/components/ui/checkbox";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, MessagesSquare } from "lucide-react";
 import { TicketsSelectModel } from "@db/tickets";
 import { app } from "@client/config/app";
 import { Link } from "react-router-dom";
@@ -124,7 +124,9 @@ export const ticketsColumns = (timezone: string) =>
 			cell: ({ row }) => (
 				<div className="flex justify-end pr-12">
 					<Link to={`/tickets/view?uuid=${row.original.uuid}`}>
-						<Button variant="outline">View</Button>
+						<Button size="icon" variant="outline">
+							<MessagesSquare size={16} />
+						</Button>
 					</Link>
 				</div>
 			),

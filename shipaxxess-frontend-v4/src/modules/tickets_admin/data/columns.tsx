@@ -7,6 +7,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MessagesSquare } from "lucide-react";
 import moment from "moment-timezone";
 import { Link } from "react-router-dom";
+import TableMenu from "../components/tableMenu";
 
 export const ticketsColumns = (timezone: string) =>
 	[
@@ -102,12 +103,14 @@ export const ticketsColumns = (timezone: string) =>
 			enableSorting: false,
 			enableHiding: false,
 			cell: ({ row }) => (
-				<div className="flex justify-end pr-12">
+				<div className="flex justify-end gap-4 pr-12">
 					<Link to={`/admin/tickets/chat?uuid=${row.original.uuid}`}>
 						<Button size="icon" variant="outline">
 							<MessagesSquare size={16} />
 						</Button>
 					</Link>
+
+					<TableMenu id={row.original.id} status={row.original.status} />
 				</div>
 			),
 		},

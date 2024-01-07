@@ -22,11 +22,11 @@ const TicketsAdminPage = () => {
 	});
 	return (
 		<>
-			<Meta title="Addresses" />
+			<Meta title="Tickets" />
 
 			<div className="px-4 py-8 space-y-8">
 				<Title
-					title="Addresses"
+					title="Tickets"
 					render={
 						<>
 							<ToggleColumns />

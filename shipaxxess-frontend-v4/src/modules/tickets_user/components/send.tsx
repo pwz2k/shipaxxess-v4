@@ -39,7 +39,7 @@ const SendChatForm = ({ chats, ticket, setChat }: SendChatFormProps) => {
 		setIsLoading(false);
 	};
 
-	if (ticket && ticket.status === "close") return <></>;
+	if (ticket && ticket.status === "closed") return <></>;
 
 	return (
 		<Form {...form}>

@@ -4,9 +4,8 @@ import { useLoading } from "@client/hooks/useLoading";
 import { api } from "@client/lib/api";
 import { useQueryClient } from "@tanstack/react-query";
 import React from "react";
-import { Link } from "react-router-dom";
 
-const TableMenu = ({ uuid, id }: { id: number; uuid: string }) => {
+const TableMenu = ({ id, status }: { id?: number; status?: string | null }) => {
 	const [Open, setOpen] = React.useState(false);
 
 	const queryClient = useQueryClient();
@@ -35,14 +34,14 @@ const TableMenu = ({ uuid, id }: { id: number; uuid: string }) => {
 
 	return (
 		<div className="flex gap-4">
-			<Link to={`/admin/tickets/chat?uuid=${uuid}`}>
-				<Button>View</Button>
-			</Link>
-
 			<AlertWrapper
 				open={Open}
 				setOpen={setOpen}
-				trigger={<Button variant="destructive">Close</Button>}
+				trigger={
+					<Button disabled={status === "closed"} variant="destructive">
+						Close
+					</Button>
+				}
 				action={closeButton}
 				title="Close ticket"
 				description="Are you sure you want to close this ticket?"
