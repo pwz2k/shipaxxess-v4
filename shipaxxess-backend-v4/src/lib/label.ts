@@ -98,7 +98,8 @@ export class LabelManager {
 
 	async saveIntoCronTable() {
 		if (this.crons.length === 0) {
-			throw exception({ message: "Cron empty", code: 404 });
+			log("No crons to save.");
+			return;
 		}
 
 		await drizzle(this.env.DB).batch(
