@@ -105,10 +105,7 @@ export class LabelManager {
 		await drizzle(this.env.DB).batch(
 			// @ts-expect-error type error
 			this.crons.map((nod) =>
-				drizzle(this.env.DB)
-					.insert(crons)
-					.values({ label_uuid: nod.uuid, meta_data: nod.message, uuid: v4() })
-					.execute(),
+				drizzle(this.env.DB).insert(crons).values({ label_uuid: nod.uuid, meta_data: nod.message, uuid: v4() }),
 			),
 		);
 
