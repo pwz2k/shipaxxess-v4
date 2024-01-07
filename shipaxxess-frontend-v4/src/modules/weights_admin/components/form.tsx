@@ -27,7 +27,12 @@ const FromComponent = ({
 						return (
 							<FormItem>
 								<FormLabel>Delivery Type</FormLabel>
-								<Select defaultValue={field.value} onValueChange={field.onChange}>
+								<Select
+									defaultValue={field.value}
+									onValueChange={(value) => {
+										console.log(value);
+										field.onChange(value);
+									}}>
 									<FormControl>
 										<SelectTrigger>
 											<SelectValue placeholder="Choose a delivery type" />
@@ -39,9 +44,9 @@ const FromComponent = ({
 												Not found
 											</SelectItem>
 										)}
-										{query.data?.map((nod, index) => {
+										{query.data?.map((nod) => {
 											return (
-												<SelectItem key={index} value={nod.id.toString()}>
+												<SelectItem key={nod.id} value={nod.id.toString()}>
 													{nod.label}
 												</SelectItem>
 											);

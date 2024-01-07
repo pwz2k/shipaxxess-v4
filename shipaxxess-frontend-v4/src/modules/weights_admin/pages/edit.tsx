@@ -57,14 +57,14 @@ const EditWeightAdminPage = () => {
 	};
 
 	React.useEffect(() => {
-		if (weightQuery.data) {
+		if (weightQuery.data && typesQuery.data) {
 			form.setValue("from_weight", weightQuery.data.from_weight);
 			form.setValue("to_weight", weightQuery.data.to_weight);
 			form.setValue("type_id", weightQuery.data.type_id.toString());
 			form.setValue("user_cost", weightQuery.data.user_cost);
 			form.setValue("reseller_cost", weightQuery.data.reseller_cost);
 		}
-	}, [form, weightQuery.data]);
+	}, [form, typesQuery.data, weightQuery.data]);
 
 	if (typesQuery.isLoading) {
 		return <Loading />;
