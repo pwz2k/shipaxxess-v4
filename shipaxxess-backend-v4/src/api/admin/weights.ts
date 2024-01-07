@@ -1,4 +1,5 @@
 import { Model } from "@lib/model";
+import { adminWeights } from "@schemas/adminWeights";
 import { weights } from "@schemas/weights";
 import { Weights } from "@shipaxxess/shipaxxess-zod-v4";
 import { Context } from "hono";
@@ -20,11 +21,12 @@ const Create = async (c: Context<App>) => {
 
 	const model = new Model(c.env.DB);
 
-	await model.insert(weights, {
+	await model.insert(adminWeights, {
 		reseller_cost: parse.reseller_cost,
 		user_cost: parse.user_cost,
-		weight: parse.weight,
 		type_id: parse.type_id,
+		from_weight: parse.from_weight,
+		to_weight: parse.to_weight,
 		uuid: v4(),
 	});
 

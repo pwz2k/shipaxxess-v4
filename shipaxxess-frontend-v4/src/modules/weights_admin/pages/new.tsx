@@ -9,6 +9,9 @@ import { Weights } from "@shipaxxess/shipaxxess-zod-v4";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Loading from "@client/components/common/loading";
 import { useTypesQuery } from "../hooks/useTypesQuery";
+import { useLoading } from "@client/hooks/useLoading";
+import { api } from "@client/lib/api";
+import { useNavigate } from "react-router-dom";
 
 const NewWeightAdminPage = () => {
 	const form = useForm<Weights.CREATESCHEMA>({
@@ -23,6 +26,28 @@ const NewWeightAdminPage = () => {
 	});
 
 	const typesQuery = useTypesQuery();
+
+	const navigate = useNavigate();
+
+	const { button, setIsLoading } = useLoading({ label: "Submit" });
+
+	const submit = async (values: Weights.CREATESCHEMA) => {
+		setIsLoading(true);
+
+		const req = await api.url("/admin/weights").post(values);
+		const res = await req.json<{ success: true }>();
+
+		if (res.success) {
+			form.reset();
+			api.showSuccessToast("Weight created successfully");
+			setIsLoading(false);
+			navigate("/admin/weights");
+			return;
+		}
+
+		setIsLoading(false);
+		api.showErrorToast();
+	};
 
 	if (typesQuery.isLoading) {
 		return <Loading />;
@@ -41,7 +66,7 @@ const NewWeightAdminPage = () => {
 					]}
 				/>
 				<Card className="p-8">
-					<FromComponent form={form} query={typesQuery} />
+					<FromComponent form={form} query={typesQuery} button={button} submit={submit} />
 				</Card>
 			</div>
 		</>

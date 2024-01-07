@@ -9,13 +9,17 @@ import { TypesSelectModel } from "@db/types";
 const FromComponent = ({
 	form,
 	query,
+	button,
+	submit,
 }: {
 	form: UseFormReturn<Weights.CREATESCHEMA>;
 	query: UseQueryResult<TypesSelectModel[]>;
+	button: React.JSX.Element;
+	submit: (values: Weights.CREATESCHEMA) => void;
 }) => {
 	return (
 		<Form {...form}>
-			<form className="space-y-4">
+			<form onSubmit={form.handleSubmit(submit)} className="space-y-4">
 				<FormField
 					control={form.control}
 					name="type_id"
@@ -105,6 +109,8 @@ const FromComponent = ({
 						</FormItem>
 					)}
 				/>
+
+				{button}
 			</form>
 		</Form>
 	);
