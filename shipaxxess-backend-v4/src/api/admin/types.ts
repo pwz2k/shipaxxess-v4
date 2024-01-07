@@ -1,6 +1,6 @@
 import { Model } from "@lib/model";
 import { types } from "@schemas/types";
-import { Type } from "@shipaxxess/shipaxxess-zod-v4";
+import { Id, Type } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
 import { eq } from "drizzle-orm";
 import { Context } from "hono";
@@ -64,15 +64,16 @@ const Edit = async (c: Context<App>) => {
 	return c.json({ success: true });
 };
 
-const Delete = async (c: Context<App, "/:id">) => {
-	const type_id = c.req.param("id");
+const Delete = async (c: Context<App>) => {
+	const body = await c.req.json();
+	const parse = Id.ZODSCHEMA.parse(body);
 
 	const model = new Model(c.env.DB);
 
-	const check = await model.get(types, eq(types.id, parseInt(type_id)));
+	const check = await model.get(types, eq(types.id, parse.id));
 	if (!check) throw exception({ message: "Type not found", code: 404 });
 
-	await model.delete(types, eq(types.id, parseInt(type_id)));
+	await model.delete(types, eq(types.id, parse.id));
 
 	return c.json({ success: true });
 };

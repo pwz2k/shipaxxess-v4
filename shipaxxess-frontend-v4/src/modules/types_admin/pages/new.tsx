@@ -9,12 +9,15 @@ import { TypeForm } from "../components/form";
 import { useLoading } from "@client/hooks/useLoading";
 import { api } from "@client/lib/api";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router-dom";
 
 const NewTypeAdminPage = () => {
 	const form = useForm<Type.CREATESCHEMA>({
 		defaultValues: { label: "", type: "usps", unit: "lb", value: "" },
 		resolver: zodResolver(Type.CREATESCHEMA),
 	});
+
+	const navigate = useNavigate();
 
 	const { button, setIsLoading } = useLoading({ label: "Submit" });
 
@@ -28,6 +31,7 @@ const NewTypeAdminPage = () => {
 			form.reset();
 			setIsLoading(false);
 			api.showSuccessToast("Type created successfully");
+			navigate("/admin/types");
 			return;
 		}
 

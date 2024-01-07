@@ -1,16 +1,35 @@
 import AlertWrapper from "@client/components/common/alert";
 import { Button } from "@client/components/ui/button";
 import { useLoading } from "@client/hooks/useLoading";
+import { api } from "@client/lib/api";
+import { useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const TableMenu = ({ uuid }: { id: number; uuid: string }) => {
-	const [reject, setReject] = React.useState(false);
+const TableMenu = ({ uuid, id }: { id: number; uuid: string }) => {
+	const [Open, setOpen] = React.useState(false);
+
+	const queryClient = useQueryClient();
 
 	const { button: deleteButton, setIsLoading: deleteButtonLoading } = useLoading({
 		label: "Delete Type",
-		click() {
+		async click() {
 			deleteButtonLoading(true);
+
+			const req = await api.url(`/admin/types`).useAuth().delete({ id });
+			const res = await req.json<{ success: boolean }>();
+
+			if (res.success) {
+				api.showSuccessToast("Type deleted successfully");
+				deleteButtonLoading(false);
+				setOpen(false);
+				queryClient.invalidateQueries({ queryKey: ["admin", "types"] });
+				return;
+			}
+
+			api.showErrorToast();
+			deleteButtonLoading(false);
+			setOpen(false);
 		},
 	});
 
@@ -21,8 +40,8 @@ const TableMenu = ({ uuid }: { id: number; uuid: string }) => {
 			</Link>
 
 			<AlertWrapper
-				open={reject}
-				setOpen={setReject}
+				open={Open}
+				setOpen={setOpen}
 				trigger={<Button variant="destructive">Delete</Button>}
 				action={deleteButton}
 				title="Delete type"
