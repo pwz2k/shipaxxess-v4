@@ -97,14 +97,16 @@ export class LabelManager {
 	}
 
 	async saveIntoCronTable() {
+		if (this.crons.length === 0) {
+			throw exception({ message: "Cron empty", code: 404 });
+		}
+
 		await drizzle(this.env.DB).batch(
 			// @ts-expect-error type error
 			this.crons.map((nod) =>
 				drizzle(this.env.DB).insert(crons).values({ label_uuid: nod.uuid, uuid: v4(), meta_data: nod.message }),
 			),
 		);
-
-		console.log(this.crons);
 
 		log("Saved into cron table.");
 	}
