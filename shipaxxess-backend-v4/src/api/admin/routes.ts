@@ -36,10 +36,11 @@ admin.delete("/types", TypesAdmin.Delete);
 admin.get("/types/:uuid", TypesAdmin.Get);
 
 // Users routes
-admin.get("/users", UsersAdmin.Get);
+admin.get("/users", UsersAdmin.GetAll);
 admin.post("/users", UsersAdmin.Create);
 admin.patch("/users", UsersAdmin.Edit);
 admin.delete("/users", UsersAdmin.Delete);
+admin.get("/users/:uuid", UsersAdmin.Get);
 
 // Weights
 admin.get("/weights", WeightsAdmin.GetAll);
