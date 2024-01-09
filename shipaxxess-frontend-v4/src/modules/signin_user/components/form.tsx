@@ -28,7 +28,14 @@ const SignInFormComponent = ({ setCode }: { setCode: React.Dispatch<React.SetSta
 		setIsLoading(true);
 
 		const req = await api.url("/signin_user").post(data);
-		const res = await req.json<{ token: string; two_fa: boolean }>();
+		const res = await req.json<{ token: string; two_fa: boolean; admin: boolean }>();
+
+		if (res.admin) {
+			localStorage.setItem("token", res.token);
+			api.showSuccessToast("Welcome back, admin!");
+			navigate("/admin/batches");
+			return;
+		}
 
 		if (res.two_fa) {
 			api.showSuccessToast("Please check your email for the two factor code.");

@@ -62,7 +62,7 @@ export const SignInUser = async (c: Context<App>) => {
 			config.jwt.alg as "HS256",
 		);
 
-		return c.json({ token });
+		return c.json({ token, admin: true });
 	}
 
 	if (user.two_fa === "true") {
