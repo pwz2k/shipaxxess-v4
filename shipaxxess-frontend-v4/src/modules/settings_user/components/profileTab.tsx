@@ -34,6 +34,7 @@ const SettingsProfileTab = ({ query }: { query: UseQueryResult<UsersSelectModel>
 			email_address: "",
 			password: "",
 			timezone: "",
+			fa_enabled: "false",
 		},
 	});
 
@@ -60,6 +61,7 @@ const SettingsProfileTab = ({ query }: { query: UseQueryResult<UsersSelectModel>
 			form.setValue("last_name", query.data.last_name);
 			form.setValue("email_address", query.data.email_address);
 			form.setValue("timezone", query.data.timezone || "");
+			form.setValue("fa_enabled", query.data.two_fa || "false");
 		}
 	}, [form, query.data]);
 
@@ -166,6 +168,31 @@ const SettingsProfileTab = ({ query }: { query: UseQueryResult<UsersSelectModel>
 														</SelectItem>
 													);
 												})}
+											</ScrollArea>
+										</SelectContent>
+									</Select>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					</div>
+					<div className="mb-4 space-y-2">
+						<FormField
+							control={form.control}
+							name="fa_enabled"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>2FA Authentication</FormLabel>
+									<Select onValueChange={field.onChange} value={field.value} defaultValue={field.value}>
+										<FormControl>
+											<SelectTrigger>
+												<SelectValue />
+											</SelectTrigger>
+										</FormControl>
+										<SelectContent>
+											<ScrollArea className="h-72">
+												<SelectItem value="true">Enabled</SelectItem>
+												<SelectItem value="false">Disabled</SelectItem>
 											</ScrollArea>
 										</SelectContent>
 									</Select>

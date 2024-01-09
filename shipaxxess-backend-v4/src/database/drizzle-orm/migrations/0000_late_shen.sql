@@ -273,7 +273,7 @@ CREATE TABLE `users` (
 	`delete_account` integer DEFAULT false,
 	`current_ip` text,
 	`remember_last_ip` text,
-	`two_fa` integer DEFAULT false,
+	`two_fa` text DEFAULT 'false',
 	`temp_fa_code` integer,
 	`current_balance` integer DEFAULT 0 NOT NULL,
 	`total_spent` integer DEFAULT 0 NOT NULL,

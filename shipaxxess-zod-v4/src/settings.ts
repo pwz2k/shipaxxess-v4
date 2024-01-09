@@ -6,6 +6,7 @@ export const PROFILETAB = z.object({
 	email_address: z.string().email(),
 	password: z.string().optional(),
 	timezone: z.string(),
+	fa_enabled: z.string(),
 });
 
 export type PROFILETAB = z.infer<typeof PROFILETAB>;
