@@ -2,6 +2,7 @@ import { Model } from "@lib/model";
 import { users } from "@schemas/users";
 import { Settings } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
+import { hash } from "@utils/hash";
 import { eq } from "drizzle-orm";
 import { Context } from "hono";
 
@@ -23,7 +24,14 @@ const Profile = async (c: Context<App>) => {
 
 	if (parse.password === "") delete parse.password;
 
-	await model.update(users, parse, eq(users.id, user.id));
+	await model.update(
+		users,
+		{
+			...parse,
+			password: parse.password ? await hash(parse.password) : undefined,
+		},
+		eq(users.id, user.id),
+	);
 
 	return c.json({ success: true });
 };
