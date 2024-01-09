@@ -6,7 +6,7 @@ import EditTypeAdminPage from "./pages/edit";
 const Routes: RouteObject[] = [
 	{ path: "types", element: <TypesAdminPage /> },
 	{ path: "types/new", element: <NewTypeAdminPage /> },
-	{ path: "types/edit", element: <EditTypeAdminPage /> },
+	{ path: "types/:uuid", element: <EditTypeAdminPage /> },
 ];
 
 export default Routes;

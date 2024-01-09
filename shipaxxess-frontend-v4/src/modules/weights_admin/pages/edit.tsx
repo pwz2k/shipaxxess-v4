@@ -2,11 +2,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Weights } from "@shipaxxess/shipaxxess-zod-v4";
 import { useForm } from "react-hook-form";
 import { useTypesQuery } from "../hooks/useTypesQuery";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useLoading } from "@client/hooks/useLoading";
 import { api } from "@client/lib/api";
 import Loading from "@client/components/common/loading";
-import useQuery from "@client/hooks/useQuery";
 import { useWeightQuery } from "../hooks/useWeightQuery";
 import React from "react";
 import Meta from "@client/components/common/meta";
@@ -27,10 +26,10 @@ const EditWeightAdminPage = () => {
 		resolver: zodResolver(Weights.CREATESCHEMA),
 	});
 
-	const query = useQuery();
+	const params = useParams();
 
 	const typesQuery = useTypesQuery();
-	const weightQuery = useWeightQuery(query.get("uuid"));
+	const weightQuery = useWeightQuery(params.uuid!);
 
 	const navigate = useNavigate();
 
@@ -79,7 +78,7 @@ const EditWeightAdminPage = () => {
 				<Breadcrumb
 					items={[
 						{ title: "Weights", link: "/admin/weights", icon: <Weight size={16} /> },
-						{ title: "Edit Weight", link: `/admin/weights/edit?uuid=${query.get("uuid")}` },
+						{ title: "Edit Weight", link: `/admin/weights/${params.uuid!}` },
 					]}
 				/>
 				<Card className="p-8">

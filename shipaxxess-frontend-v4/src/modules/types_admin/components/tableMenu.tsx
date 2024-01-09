@@ -35,7 +35,7 @@ const TableMenu = ({ uuid, id }: { id: number; uuid: string }) => {
 
 	return (
 		<div className="flex gap-4">
-			<Link to={`/admin/types/edit?uuid=${uuid}`}>
+			<Link to={`/admin/types/${uuid}`}>
 				<Button>Edit</Button>
 			</Link>
 

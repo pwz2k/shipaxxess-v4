@@ -1,7 +1,6 @@
 import { ArrowUpDown } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@client/components/ui/button";
-import { Checkbox } from "@client/components/ui/checkbox";
 import moment from "moment-timezone";
 import { TypesSelectModel } from "@db/types";
 import { app } from "@client/config/app";
@@ -9,39 +8,6 @@ import TableMenu from "../components/tableMenu";
 
 export const typesColumns = (timezone: string) =>
 	[
-		{
-			id: "select",
-			header: ({ table }) => (
-				<Checkbox
-					checked={table.getIsAllPageRowsSelected()}
-					onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<Checkbox
-					checked={row.getIsSelected()}
-					onCheckedChange={(value) => row.toggleSelected(!!value)}
-					aria-label="Select row"
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
-		},
-		{
-			accessorKey: "id",
-			header: ({ column }) => {
-				return (
-					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Id
-						<ArrowUpDown className="w-4 h-4 ml-2" />
-					</Button>
-				);
-			},
-			cell: ({ row }) => <span>{row.index + 1}</span>,
-			enableSorting: true,
-			enableHiding: true,
-		},
 		{
 			accessorKey: "label",
 			header: ({ column }) => {
@@ -101,7 +67,7 @@ export const typesColumns = (timezone: string) =>
 			header: ({ column }) => {
 				return (
 					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Date
+						Created At
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);

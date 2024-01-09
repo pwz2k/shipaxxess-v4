@@ -3,8 +3,8 @@ import BatchsAdminPage from "./pages";
 import ViewBatchAdminPage from "./pages/view";
 
 const Routes: RouteObject[] = [
-	{ path: "batchs", element: <BatchsAdminPage /> },
-	{ path: "batchs/view", element: <ViewBatchAdminPage /> },
+	{ path: "batches", element: <BatchsAdminPage /> },
+	{ path: "batches/:uuid", element: <ViewBatchAdminPage /> },
 ];
 
 export default Routes;

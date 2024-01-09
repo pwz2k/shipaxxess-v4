@@ -21,7 +21,7 @@ import TicketsAdminRoutes from "@client/modules/tickets_admin/routes";
 import PaymentsAdminRoutes from "@client/modules/payments_admin/routes";
 import WeightsAdminRoutes from "@client/modules/weights_admin/routes";
 import TypesAdminRoutes from "@client/modules/types_admin/routes";
-import BatchsAdminRoutes from "@client/modules/batchs_admin/routes";
+import BatchsAdminRoutes from "@client/modules/batches_admin/routes";
 
 export const router = createBrowserRouter([
 	...LandingRoutes,

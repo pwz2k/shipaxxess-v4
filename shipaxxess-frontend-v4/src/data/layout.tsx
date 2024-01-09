@@ -80,7 +80,7 @@ export const adminSidebarItems: SidebarProps[] = [
 	{
 		icon: <Tags color="#fff" size={20} />,
 		label: "Batches",
-		slug: "/admin/batchs",
+		slug: "/admin/batches",
 		badge: "new",
 	},
 	{

@@ -1,4 +1,3 @@
-import useQuery from "@client/hooks/useQuery";
 import { useBatchQuery } from "../hooks/useBatchQuery";
 import React from "react";
 import { TimezoneContext } from "@client/contexts/timezone";
@@ -7,13 +6,14 @@ import useTable from "@client/hooks/useTable";
 import Meta from "@client/components/common/meta";
 import Title from "@client/components/common/title";
 import Breadcrumb from "@client/components/common/breadcrumb";
-import { Tags } from "lucide-react";
+import { BadgeDollarSign, Tags } from "lucide-react";
+import { useParams } from "react-router-dom";
 import { Button } from "@client/components/ui/button";
 
 const ViewBatchAdminPage = () => {
-	const query = useQuery();
+	const params = useParams();
 
-	const batchQuery = useBatchQuery({ uuid: query.get("uuid") });
+	const batchQuery = useBatchQuery({ uuid: params.uuid! });
 
 	const { timezone } = React.useContext(TimezoneContext);
 
@@ -27,23 +27,28 @@ const ViewBatchAdminPage = () => {
 
 	return (
 		<>
-			<Meta title="Batches" />
+			<Meta title="Batch History" />
 
 			<div className="px-4 py-8 space-y-8">
 				<Title
-					title="Batches"
+					title="Batch History"
 					render={
 						<>
 							<ToggleColumns />
-							<Button variant="outline">Refund</Button>
-							<Button variant="outline">Download PDF</Button>
+							<Button variant="outline" disabled className="gap-1">
+								<Tags size={16} />
+								Batch Download
+							</Button>
+							<Button variant="outline" disabled className="gap-1">
+								<BadgeDollarSign size={16} /> Batch Refund
+							</Button>
 						</>
 					}
 				/>
 				<Breadcrumb
 					items={[
-						{ title: "Batches", link: "/admin/batchs", icon: <Tags size={16} /> },
-						{ title: query.get("uuid")!, link: `/admin/batchs/view?uuid=${query.get("uuid")}` },
+						{ title: "Batch History", link: "/admin/batches", icon: <Tags size={16} /> },
+						{ title: params.uuid!, link: `/admin/batches/${params.uuid!}` },
 					]}
 				/>
 				<CardTable />

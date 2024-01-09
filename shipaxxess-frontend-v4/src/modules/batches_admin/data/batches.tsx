@@ -1,12 +1,13 @@
-import { ArrowUpDown, CopyIcon } from "lucide-react";
-import { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "@client/components/ui/badge";
-import { Button } from "@client/components/ui/button";
 import moment from "moment-timezone";
-import { LabelsSelectModel } from "@db/labels";
+import { ArrowUpDown } from "lucide-react";
+import { ColumnDef } from "@tanstack/react-table";
+import { Button } from "@client/components/ui/button";
+import { BatchsSelectModel } from "@db/batchs";
 import { app } from "@client/config/app";
+import { Badge } from "@client/components/ui/badge";
+import { Link } from "react-router-dom";
 
-export const labelsColumns = (timezone: string) =>
+export const batchColumns = (timezone: string) =>
 	[
 		{
 			accessorKey: "id",
@@ -16,34 +17,12 @@ export const labelsColumns = (timezone: string) =>
 						className="px-0 whitespace-nowrap"
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						#
+						Batch Id
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
 			},
-			cell: ({ row }) => <span>{parseInt(row.id) + 1}</span>,
-			enableSorting: true,
-			enableHiding: true,
-		},
-		{
-			accessorKey: "remote_tracking_number",
-			header: ({ column }) => {
-				return (
-					<Button
-						className="px-0 whitespace-nowrap"
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Tracking Id
-						<ArrowUpDown className="w-4 h-4 ml-2" />
-					</Button>
-				);
-			},
-			cell: ({ row }) => (
-				<div className="flex items-center gap-1 whitespace-nowrap">
-					<span id={`copy_${row.index}`}>{row.getValue("remote_tracking_number")}</span>
-					<CopyIcon size={16} className="cursor-copy" onClick={() => {}} />
-				</div>
-			),
+			cell: ({ row }) => <span>{row.original.uuid}</span>,
 			enableSorting: true,
 			enableHiding: true,
 		},
@@ -55,46 +34,66 @@ export const labelsColumns = (timezone: string) =>
 						className="px-0 whitespace-nowrap"
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Sender
+						Ship From Name
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
 			},
-			cell: ({ row }) => <span className="whitespace-nowrap">{row.getValue("sender_full_name")}</span>,
 			enableSorting: true,
 			enableHiding: true,
 		},
 		{
-			accessorKey: "recipent_full_name",
+			accessorKey: "type_label",
 			header: ({ column }) => {
 				return (
 					<Button
 						className="px-0 whitespace-nowrap"
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Recipent
+						Type
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
 			},
-			cell: ({ row }) => <span className="whitespace-nowrap">{row.getValue("recipent_full_name")}</span>,
+			cell: ({ row }) => <span className="whitespace-nowrap">{row.getValue("type_label")}</span>,
 			enableSorting: true,
 			enableHiding: true,
 		},
 		{
-			accessorKey: "package_name",
+			accessorKey: "package_weight",
 			header: ({ column }) => {
 				return (
 					<Button
 						className="px-0 whitespace-nowrap"
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Package
+						Weight
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
 			},
-			cell: ({ row }) => <span className="whitespace-nowrap">{row.getValue("package_name")}</span>,
+			cell: ({ row }) => (
+				<span className="whitespace-nowrap">
+					{row.getValue("package_weight")} {row.original.type_unit}
+				</span>
+			),
+			enableSorting: true,
+			enableHiding: true,
+		},
+		{
+			accessorKey: "cost_user",
+			header: ({ column }) => {
+				return (
+					<Button
+						className="px-0 whitespace-nowrap"
+						variant="ghost"
+						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+						Cost
+						<ArrowUpDown className="w-4 h-4 ml-2" />
+					</Button>
+				);
+			},
+			cell: ({ row }) => <span className="whitespace-nowrap">${row.original.cost_user.toFixed(2)}</span>,
 			enableSorting: true,
 			enableHiding: true,
 		},
@@ -106,7 +105,7 @@ export const labelsColumns = (timezone: string) =>
 						className="px-0 whitespace-nowrap"
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Shipping Date
+						Ship Date
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
@@ -135,60 +134,6 @@ export const labelsColumns = (timezone: string) =>
 			enableHiding: true,
 		},
 		{
-			accessorKey: "type_label",
-			header: ({ column }) => {
-				return (
-					<Button
-						className="px-0 whitespace-nowrap"
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Type
-						<ArrowUpDown className="w-4 h-4 ml-2" />
-					</Button>
-				);
-			},
-			enableSorting: true,
-			enableHiding: true,
-		},
-		{
-			accessorKey: "package_weight",
-			header: ({ column }) => {
-				return (
-					<Button
-						className="px-0 whitespace-nowrap"
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Weight
-						<ArrowUpDown className="w-4 h-4 ml-2" />
-					</Button>
-				);
-			},
-			cell: ({ row }) => (
-				<span>
-					{row.original.package_weight} {row.original.type_unit}
-				</span>
-			),
-			enableSorting: true,
-			enableHiding: true,
-		},
-		{
-			accessorKey: "cost_user",
-			header: ({ column }) => {
-				return (
-					<Button
-						className="px-0 whitespace-nowrap"
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Cost
-						<ArrowUpDown className="w-4 h-4 ml-2" />
-					</Button>
-				);
-			},
-			cell: ({ row }) => <span>${row.original.cost_user.toFixed(2)}</span>,
-			enableSorting: true,
-			enableHiding: true,
-		},
-		{
 			accessorKey: "created_at",
 			header: ({ column }) => {
 				return (
@@ -196,7 +141,7 @@ export const labelsColumns = (timezone: string) =>
 						className="px-0 whitespace-nowrap"
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Date
+						Created At
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
@@ -213,5 +158,10 @@ export const labelsColumns = (timezone: string) =>
 			id: "action",
 			enableSorting: false,
 			enableHiding: false,
+			cell: ({ row }) => (
+				<Link to={`/admin/batches/${row.original.uuid}`}>
+					<Button variant="outline">View</Button>
+				</Link>
+			),
 		},
-	] as ColumnDef<LabelsSelectModel>[];
+	] as ColumnDef<BatchsSelectModel>[];

@@ -1,4 +1,3 @@
-import useQuery from "@client/hooks/useQuery";
 import { useTypeQuery } from "../hooks/useTypeQuery";
 import Loading from "@client/components/common/loading";
 import { useForm } from "react-hook-form";
@@ -13,14 +12,14 @@ import { TypeForm } from "../components/form";
 import { Type as IconType } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const EditTypeAdminPage = () => {
-	const query = useQuery();
+	const params = useParams();
 
 	const navigate = useNavigate();
 
-	const typeQuery = useTypeQuery(query.get("uuid") ?? "");
+	const typeQuery = useTypeQuery(params.uuid!);
 
 	const form = useForm<Type.ZODSCHEMA>({
 		defaultValues: { label: "", type: "usps", unit: "lb", value: "" },
@@ -73,7 +72,7 @@ const EditTypeAdminPage = () => {
 				<Breadcrumb
 					items={[
 						{ title: "Types", link: "/admin/types", icon: <IconType size={16} /> },
-						{ title: "Edit Type", link: `/admin/types/edit?uuid=${query.get("uuid")}` },
+						{ title: "Edit Type", link: `/admin/types/edit?uuid=${params.uuid!}` },
 					]}
 				/>
 

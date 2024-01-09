@@ -6,7 +6,7 @@ import EditWeightAdminPage from "./pages/edit";
 const Routes: RouteObject[] = [
 	{ path: "weights", element: <WeightsAdminPage /> },
 	{ path: "weights/new", element: <NewWeightAdminPage /> },
-	{ path: "weights/edit", element: <EditWeightAdminPage /> },
+	{ path: "weights/:uuid", element: <EditWeightAdminPage /> },
 ];
 
 export default Routes;

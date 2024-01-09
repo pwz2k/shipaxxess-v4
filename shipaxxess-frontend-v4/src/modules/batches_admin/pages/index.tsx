@@ -7,6 +7,7 @@ import Meta from "@client/components/common/meta";
 import Title from "@client/components/common/title";
 import Breadcrumb from "@client/components/common/breadcrumb";
 import { Tags } from "lucide-react";
+import Loading from "@client/components/common/loading";
 
 const BatchsAdminPage = () => {
 	const { timezone } = React.useContext(TimezoneContext);
@@ -21,13 +22,17 @@ const BatchsAdminPage = () => {
 		sort: [{ id: "id", desc: true }],
 	});
 
+	if (batchesQuery.isLoading) {
+		return <Loading />;
+	}
+
 	return (
 		<>
-			<Meta title="Batches" />
+			<Meta title="Batch History" />
 
 			<div className="px-4 py-8 space-y-8">
 				<Title
-					title="Batches"
+					title="Batch History"
 					render={
 						<>
 							<ToggleColumns />
@@ -35,7 +40,7 @@ const BatchsAdminPage = () => {
 					}
 				/>
 
-				<Breadcrumb items={[{ title: "Batches", link: "/admin/batchs", icon: <Tags size={16} /> }]} />
+				<Breadcrumb items={[{ title: "Batch History", link: "/admin/batches", icon: <Tags size={16} /> }]} />
 				<CardTable />
 			</div>
 		</>
