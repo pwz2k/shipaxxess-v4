@@ -6,8 +6,9 @@ import { useLoading } from "@client/hooks/useLoading";
 import { api } from "@client/lib/api";
 import { Signin } from "@shipaxxess/shipaxxess-zod-v4";
 import { Link, useNavigate } from "react-router-dom";
+import React from "react";
 
-const SignInFormComponent = () => {
+const SignInFormComponent = ({ setCode }: { setCode: React.Dispatch<React.SetStateAction<string | null>> }) => {
 	const { button, setIsLoading } = useLoading({
 		label: "SignIn",
 		className: "w-full",
@@ -27,7 +28,14 @@ const SignInFormComponent = () => {
 		setIsLoading(true);
 
 		const req = await api.url("/signin_user").post(data);
-		const res = await req.json<{ token: string }>();
+		const res = await req.json<{ token: string; two_fa: boolean }>();
+
+		if (res.two_fa) {
+			api.showSuccessToast("Please check your email for the two factor code.");
+			setIsLoading(false);
+			setCode(data.email_address);
+			return;
+		}
 
 		if (res.token) {
 			localStorage.setItem("token", res.token);
@@ -41,7 +49,7 @@ const SignInFormComponent = () => {
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(submit)} className="space-y-8" autoComplete="off">
+			<form onSubmit={form.handleSubmit(submit)} className="w-full space-y-8" autoComplete="off">
 				<FormField
 					control={form.control}
 					name="email_address"

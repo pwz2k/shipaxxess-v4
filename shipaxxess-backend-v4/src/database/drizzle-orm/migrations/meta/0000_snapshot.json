@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "f21a447b-859e-4177-b208-cf6a27f1dec0",
+  "id": "a2d5409f-99fd-4738-8284-29bff528ff54",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "addresses": {
@@ -1817,7 +1817,7 @@
         },
         "temp_fa_code": {
           "name": "temp_fa_code",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false

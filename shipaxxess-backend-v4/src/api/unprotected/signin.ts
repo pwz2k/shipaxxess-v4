@@ -40,7 +40,7 @@ export const SignInUser = async (c: Context<App>) => {
 		const pain_passwd = Math.floor(Math.random() * 1000000000);
 		const update = await drizzle(c.env.DB)
 			.update(users)
-			.set({ temp_fa_code: pain_passwd })
+			.set({ temp_fa_code: pain_passwd.toString() })
 			.where(eq(users.id, user.id));
 		if (!update.success) throw exception({ message: "Failed to update the token", code: 8765 });
 

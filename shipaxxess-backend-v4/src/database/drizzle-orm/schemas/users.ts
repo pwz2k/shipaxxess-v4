@@ -26,7 +26,7 @@ export const users = sqliteTable("users", {
 
 	// 2fa
 	two_fa: text("two_fa").default("false"),
-	temp_fa_code: integer("temp_fa_code"),
+	temp_fa_code: text("temp_fa_code"),
 
 	// Account
 	current_balance: integer("current_balance").notNull().default(0),

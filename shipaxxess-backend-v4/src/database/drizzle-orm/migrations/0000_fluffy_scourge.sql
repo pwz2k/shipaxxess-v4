@@ -274,7 +274,7 @@ CREATE TABLE `users` (
 	`current_ip` text,
 	`remember_last_ip` text,
 	`two_fa` text DEFAULT 'false',
-	`temp_fa_code` integer,
+	`temp_fa_code` text,
 	`current_balance` integer DEFAULT 0 NOT NULL,
 	`total_spent` integer DEFAULT 0 NOT NULL,
 	`total_refund` integer DEFAULT 0 NOT NULL,
