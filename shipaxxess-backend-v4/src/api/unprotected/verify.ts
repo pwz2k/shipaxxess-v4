@@ -41,5 +41,7 @@ export const VerifyUser = async (c: Context<App>) => {
 		config.jwt.alg as "HS256",
 	);
 
+	await model.update(users, { email_verified: true }, eq(users.id, code.id));
+
 	return c.json({ token, success: true });
 };
