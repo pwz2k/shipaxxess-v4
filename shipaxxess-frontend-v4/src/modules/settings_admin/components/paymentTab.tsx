@@ -19,6 +19,7 @@ import { UseQueryResult } from "@tanstack/react-query";
 import React from "react";
 import Loading from "@client/components/common/loading";
 import { api } from "@client/lib/api";
+import { app } from "@client/config/app";
 
 const SettingsPaymentTab = ({ query }: { query: UseQueryResult<AdminSettingsSelectModel[]> }) => {
 	const { button, setIsLoading } = useLoading({ label: "Update Payment Configuration" });
@@ -137,7 +138,7 @@ const SettingsPaymentTab = ({ query }: { query: UseQueryResult<AdminSettingsSele
 									<FormControl>
 										<Input {...field} />
 									</FormControl>
-									<FormDescription />
+									<FormDescription>Webhook URL: {app.prod_api}/webhook/stripe</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -165,7 +166,7 @@ const SettingsPaymentTab = ({ query }: { query: UseQueryResult<AdminSettingsSele
 									<FormControl>
 										<Input {...field} />
 									</FormControl>
-									<FormDescription />
+									<FormDescription>Webhook URL: {app.prod_api}/webhook/coinbase</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}
