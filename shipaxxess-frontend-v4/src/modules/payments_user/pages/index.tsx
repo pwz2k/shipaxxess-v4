@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@client/components/ui/button";
 import Breadcrumb from "@client/components/common/breadcrumb";
 import { CreditCard } from "lucide-react";
+import Loading from "@client/components/common/loading";
 
 const PaymentsUserPage = () => {
 	const { timezone } = React.useContext(TimezoneContext);
@@ -22,6 +23,10 @@ const PaymentsUserPage = () => {
 		loading: paymentsQuery.isLoading,
 		sort: [{ id: "id", desc: true }],
 	});
+
+	if (paymentsQuery.isLoading) {
+		return <Loading />;
+	}
 
 	return (
 		<>

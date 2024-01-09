@@ -8,6 +8,7 @@ import { TimezoneContext } from "@client/contexts/timezone";
 import { batchColumns } from "../data/columns";
 import Search from "@client/components/common/search";
 import { Tags } from "lucide-react";
+import Loading from "@client/components/common/loading";
 
 const BatchsUserPage = () => {
 	const { timezone } = React.useContext(TimezoneContext);
@@ -21,6 +22,10 @@ const BatchsUserPage = () => {
 		loading: batchesQuery.isLoading,
 		sort: [{ id: "id", desc: true }],
 	});
+
+	if (batchesQuery.isLoading) {
+		return <Loading />;
+	}
 
 	return (
 		<>

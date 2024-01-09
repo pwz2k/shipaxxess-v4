@@ -12,6 +12,7 @@ import { Card } from "@client/components/ui/card";
 import Title from "@client/components/common/title";
 import React from "react";
 import { usePackageQuery } from "../hooks/usePackageQuery";
+import Loading from "@client/components/common/loading";
 
 const EditPackageUserPage = () => {
 	const params = useParams();
@@ -61,6 +62,10 @@ const EditPackageUserPage = () => {
 			form.setValue("width", packageQuery.data.width);
 		}
 	}, [packageQuery.data, form]);
+
+	if (packageQuery.isLoading) {
+		return <Loading />;
+	}
 
 	return (
 		<>

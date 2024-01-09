@@ -12,6 +12,7 @@ import { Share2 } from "lucide-react";
 import { Button } from "@client/components/ui/button";
 import { toast } from "sonner";
 import { app } from "@client/config/app";
+import Loading from "@client/components/common/loading";
 
 const ReferralsUserPage = () => {
 	const { timezone } = React.useContext(TimezoneContext);
@@ -35,6 +36,10 @@ const ReferralsUserPage = () => {
 		navigator.clipboard.writeText(link);
 		toast.success(`Copied: ${link}`);
 	};
+
+	if (referralsQuery.isLoading || statusQuery.isLoading) {
+		return <Loading />;
+	}
 
 	return (
 		<>
