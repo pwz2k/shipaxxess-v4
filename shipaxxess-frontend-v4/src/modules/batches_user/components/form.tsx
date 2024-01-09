@@ -1,7 +1,7 @@
 import Loading from "@client/components/common/loading";
 import { DatePicker } from "@client/components/common/picker";
 import { Button, buttonVariants } from "@client/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@client/components/ui/card";
+import { Card, CardContent, CardHeader } from "@client/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@client/components/ui/form";
 import { Input } from "@client/components/ui/input";
 import { Label } from "@client/components/ui/label";
@@ -218,9 +218,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)}>
 					<Card>
-						<CardHeader>
-							<CardTitle>New Label</CardTitle>
-						</CardHeader>
+						<CardHeader></CardHeader>
 						<CardContent className="space-y-6">
 							<div className="grid grid-cols-3 grid-rows-1 gap-6">
 								<FormField

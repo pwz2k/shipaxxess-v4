@@ -10,7 +10,7 @@ import ReferralsRoutes from "@client/modules/referrals_user/routes";
 import SettingsRoutes from "@client/modules/settings_user/routes";
 import TickersRoutes from "@client/modules/tickets_user/routes";
 import StoresRoutes from "@client/modules/stores_user/routes";
-import BatchsRoutes from "@client/modules/batchs_user/routes";
+import BatchsRoutes from "@client/modules/batches_user/routes";
 import LandingRoutes from "@client/modules/landing_page/routes";
 import AdminLayout from "./components/layouts/admin";
 
