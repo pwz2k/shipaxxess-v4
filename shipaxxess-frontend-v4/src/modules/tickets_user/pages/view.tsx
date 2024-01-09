@@ -1,4 +1,3 @@
-import useQuery from "@client/hooks/useQuery";
 import { useTicketQuery } from "../hooks/useTicketQuery";
 import Meta from "@client/components/common/meta";
 import React from "react";
@@ -15,16 +14,17 @@ import { Separator } from "@client/components/ui/separator";
 import SendChatForm from "../components/send";
 import Breadcrumb from "@client/components/common/breadcrumb";
 import { Ticket } from "lucide-react";
+import { useParams } from "react-router-dom";
 
 const ViewTicketUserPage = () => {
-	const query = useQuery();
+	const params = useParams();
 
 	const { timezone } = React.useContext(TimezoneContext);
 
 	const [ticket, setTicket] = React.useState<TicketsSelectModel>();
 	const [chats, setChat] = React.useState<ChatsSelectModel[]>([]);
 
-	const ticketQuery = useTicketQuery(query.get("uuid"));
+	const ticketQuery = useTicketQuery(params.uuid!);
 
 	React.useEffect(() => {
 		if (ticketQuery.data) {
@@ -49,7 +49,7 @@ const ViewTicketUserPage = () => {
 
 				<Card>
 					<CardHeader className="inline-block">
-						<Badge variant="outline" className="rounded-lg">
+						<Badge variant="outline" className="uppercase rounded-lg">
 							{ticket?.status}
 						</Badge>
 						<h1 className="text-2xl">{ticket?.title}</h1>

@@ -1,6 +1,5 @@
 import moment from "moment-timezone";
 import { Button } from "@client/components/ui/button";
-import { Checkbox } from "@client/components/ui/checkbox";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { app } from "@client/config/app";
@@ -8,42 +7,6 @@ import { UsersSelectModel } from "@db/users";
 
 export const referralsColumns = (timezone: string) =>
 	[
-		{
-			id: "select",
-			header: ({ table }) => (
-				<Checkbox
-					checked={table.getIsAllPageRowsSelected()}
-					onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<Checkbox
-					checked={row.getIsSelected()}
-					onCheckedChange={(value) => row.toggleSelected(!!value)}
-					aria-label="Select row"
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
-		},
-		{
-			accessorKey: "id",
-			header: ({ column }) => {
-				return (
-					<Button
-						className="px-0 whitespace-nowrap"
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						#
-						<ArrowUpDown className="w-4 h-4 ml-2" />
-					</Button>
-				);
-			},
-			cell: ({ row }) => <span>{row.index + 1}</span>,
-			enableSorting: true,
-			enableHiding: true,
-		},
 		{
 			accessorKey: "first_name",
 			header: ({ column }) => {
@@ -92,7 +55,7 @@ export const referralsColumns = (timezone: string) =>
 			header: ({ column }) => {
 				return (
 					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Date
+						Join At
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);

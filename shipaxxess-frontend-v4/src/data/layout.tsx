@@ -16,6 +16,7 @@ import {
 	Type,
 	Weight,
 	CircleDotDashed,
+	LifeBuoy,
 } from "lucide-react";
 
 // Sidebar items
@@ -50,8 +51,8 @@ export const sidebarItems: SidebarProps[] = [
 		badge: "new",
 	},
 	{
-		icon: <Ticket color="#fff" size={20} />,
-		label: "Tickets",
+		icon: <LifeBuoy color="#fff" size={20} />,
+		label: "Support",
 		slug: "/tickets",
 		badge: "new",
 	},

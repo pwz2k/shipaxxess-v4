@@ -6,7 +6,7 @@ import ViewTicketUserPage from "./pages/view";
 const Routes: RouteObject[] = [
 	{ path: "tickets", element: <TicketsUserPage /> },
 	{ path: "tickets/new", element: <NewTicketUserPage /> },
-	{ path: "tickets/view", element: <ViewTicketUserPage /> },
+	{ path: "tickets/:uuid", element: <ViewTicketUserPage /> },
 ];
 
 export default Routes;

@@ -48,12 +48,12 @@ const StoresUserPage = () => {
 							<ToggleColumns />
 							<DropdownWrapper
 								items={[
-									<a className="flex w-full" onClick={ebayOpen}>
+									<Button variant="ghost" className="w-full" onClick={ebayOpen}>
 										Ebay
-									</a>,
+									</Button>,
 								]}
-								className="mr-3.5">
-								<Button>Add Store's</Button>
+								className="">
+								<Button>Connect New Store's</Button>
 							</DropdownWrapper>
 						</>
 					}

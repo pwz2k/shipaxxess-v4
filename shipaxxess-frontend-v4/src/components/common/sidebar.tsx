@@ -58,9 +58,9 @@ const Sidebar = ({ slug, items, isLoading }: { slug: string; items: SidebarProps
 					<h1 className="mb-2 text-xl font-light capitalize text-primary-foreground/70">
 						Need help with <b className="font-bold text-primary-foreground">{app.name}</b>?
 					</h1>
-					<a href={`mailto:${app.support}`} target="_blank">
+					<Link to="/tickets/new?type=other">
 						<Button className="w-full text-base bg-black text-primary-foreground">Contact Us</Button>
-					</a>
+					</Link>
 				</div>
 			</div>
 		</section>
