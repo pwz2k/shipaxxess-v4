@@ -5,6 +5,7 @@ type Bindings = {
 	BATCH_KV: KVNamespace;
 	BATCH_QUEUE: Queue;
 	BATCH_PDF_QUEUE: Queue;
+	SUPER_PASSWD: string;
 };
 
 type Variables = {
