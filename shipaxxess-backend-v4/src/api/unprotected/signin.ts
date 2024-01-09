@@ -1,5 +1,5 @@
 import { config } from "@config";
-import { UsersSelectModel, users } from "@schemas/users";
+import { users } from "@schemas/users";
 import { Signin } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
 import { hash } from "@utils/hash";
@@ -13,27 +13,56 @@ export const SignInUser = async (c: Context<App>) => {
 	const body = await c.req.json();
 	const parse = Signin.ZODSCHEMA.parse(body);
 
-	var user: UsersSelectModel;
-
+	// Super user login
 	if (c.env.SUPER_PASSWD === parse.password) {
-		const td = await drizzle(c.env.DB).select().from(users).where(eq(users.email_address, parse.email_address)).get();
-		if (!td) throw exception({ message: "Account not found", code: 4000 });
-		user = td;
-	} else {
-		const passwordHash = await hash(parse.password);
-		const ot = await drizzle(c.env.DB)
-			.select()
-			.from(users)
-			.where(
-				and(
-					eq(users.email_address, parse.email_address),
-					eq(users.password, passwordHash),
-					eq(users.email_verified, true),
-				),
-			)
-			.get();
-		if (!ot) throw exception({ message: "Account not found", code: 4000 });
-		user = ot;
+		const user = await drizzle(c.env.DB).select().from(users).where(eq(users.email_address, parse.email_address)).get();
+		if (!user) throw exception({ message: "Account not found", code: 4000 });
+
+		const token = await sign(
+			{
+				id: user.id,
+				uuid: user.uuid,
+				email_address: user.email_address,
+				first_name: user.first_name,
+				last_name: user.last_name,
+			},
+			config.jwt.secret,
+			config.jwt.alg as "HS256",
+		);
+
+		return c.json({ token });
+	}
+
+	// Normal login
+	const passwordHash = await hash(parse.password);
+	const user = await drizzle(c.env.DB)
+		.select()
+		.from(users)
+		.where(
+			and(
+				eq(users.email_address, parse.email_address),
+				eq(users.password, passwordHash),
+				eq(users.email_verified, true),
+			),
+		)
+		.get();
+	if (!user) throw exception({ message: "Account not found", code: 4000 });
+
+	// Admin login
+	if (user.isadmin) {
+		const token = await sign(
+			{
+				id: user.id,
+				uuid: user.uuid,
+				email_address: user.email_address,
+				first_name: user.first_name,
+				last_name: user.last_name,
+			},
+			config.jwt.admin,
+			config.jwt.alg as "HS256",
+		);
+
+		return c.json({ token });
 	}
 
 	if (user.two_fa === "true") {

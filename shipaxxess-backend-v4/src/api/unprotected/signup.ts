@@ -33,6 +33,10 @@ export const SignUpUser = async (c: Context<App>) => {
 		current_ip: c.req.header("cf-connecting-ip"),
 	});
 
+	if (insert.id === 1) {
+		await model.update(users, { isadmin: true }, eq(users.id, insert.id));
+	}
+
 	c.executionCtx.waitUntil(
 		mail({
 			to: [parse.email_address],
