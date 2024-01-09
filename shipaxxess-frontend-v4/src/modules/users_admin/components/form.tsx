@@ -17,6 +17,7 @@ const FormComponent = ({ query }: { query: UseQueryResult<UsersSelectModel> }) =
 	const { button, setIsLoading } = useLoading({ label: "Update User" });
 
 	React.useEffect(() => {
+		form.setValue("id", query.data?.id || 0);
 		form.setValue("first_name", query.data?.first_name || "");
 		form.setValue("last_name", query.data?.last_name || "");
 		form.setValue("email_address", query.data?.email_address || "");
@@ -32,7 +33,7 @@ const FormComponent = ({ query }: { query: UseQueryResult<UsersSelectModel> }) =
 	const submit = async (data: UsersSelectModel) => {
 		setIsLoading(true);
 
-		const req = await api.url(`/admin/users/${query.data?.uuid}`).useAuth().post(data);
+		const req = await api.url(`/admin/users`).useAuth().patch(data);
 		const res = await req.json<{ success: boolean }>();
 
 		if (!res.success) {

@@ -1,5 +1,5 @@
 import { Model } from "@lib/model";
-import { users } from "@schemas/users";
+import { UsersSelectModel, users } from "@schemas/users";
 import { eq } from "drizzle-orm";
 import { Context } from "hono";
 
@@ -26,7 +26,28 @@ const Create = async (c: Context<App>) => {
 };
 
 const Edit = async (c: Context<App>) => {
-	return c.json({});
+	const body = (await c.req.json()) as UsersSelectModel;
+
+	const model = new Model(c.env.DB);
+
+	await model.update(
+		users,
+		{
+			first_name: body.first_name,
+			last_name: body.last_name,
+			email_address: body.email_address,
+			password: body.password,
+			coupon_code: body.coupon_code,
+			current_balance: body.current_balance,
+			total_spent: body.total_spent,
+			total_refund: body.total_refund,
+			total_labels: body.total_labels,
+			credit_for_refer_from_user: body.credit_for_refer_from_user,
+		},
+		eq(users.id, body.id),
+	);
+
+	return c.json({ success: true });
 };
 
 const Delete = async (c: Context<App>) => {
