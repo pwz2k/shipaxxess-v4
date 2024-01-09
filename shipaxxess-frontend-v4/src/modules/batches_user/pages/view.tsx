@@ -6,7 +6,7 @@ import useTable from "@client/hooks/useTable";
 import Meta from "@client/components/common/meta";
 import Title from "@client/components/common/title";
 import Breadcrumb from "@client/components/common/breadcrumb";
-import { Tags } from "lucide-react";
+import { BadgeDollarSign, FileDown, Tags } from "lucide-react";
 import { Button } from "@client/components/ui/button";
 import { useParams } from "react-router-dom";
 import Loading from "@client/components/common/loading";
@@ -40,8 +40,14 @@ const ViewBatchUserPage = () => {
 					render={
 						<>
 							<ToggleColumns />
-							<Button variant="outline">Refund</Button>
-							<Button variant="outline">Download PDF</Button>
+							<Button variant="outline" className="gap-1">
+								<BadgeDollarSign size={16} />
+								Batch Refund
+							</Button>
+							<Button variant="outline" className="gap-1">
+								<FileDown size={16} />
+								Batch Download
+							</Button>
 						</>
 					}
 				/>

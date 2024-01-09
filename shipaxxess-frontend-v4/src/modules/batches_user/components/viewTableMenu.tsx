@@ -13,9 +13,10 @@ const ViewTableMenu = ({ row }: { row: Row<LabelsSelectModel> }) => {
 
 	return (
 		<div className="flex items-center gap-2">
-			<Button variant="outline" size="icon">
+			<Button variant="outline" size="icon" disabled={row.original.is_downloaded === false}>
 				<FileDown />
 			</Button>
+
 			<AlertWrapper
 				description="Are you sure you want to refund this label? This action cannot be undone."
 				title="Are you sure you want to refund this label?"
@@ -23,7 +24,7 @@ const ViewTableMenu = ({ row }: { row: Row<LabelsSelectModel> }) => {
 				open={refund}
 				setOpen={setRefund}
 				trigger={
-					<Button variant="outline" size="icon">
+					<Button variant="outline" size="icon" disabled={row.original.status_refund === true}>
 						<BadgeDollarSign />
 					</Button>
 				}
