@@ -5,7 +5,7 @@ export const ZODSCHEMA = z.object({
 	last_name: z.string().min(1),
 	email_address: z.string().email(),
 	password: z.string().min(6),
-	refer_from: z.string().uuid().optional(),
+	refer_from: z.string().optional(),
 });
 
 export type ZODSCHEMA = z.infer<typeof ZODSCHEMA>;
