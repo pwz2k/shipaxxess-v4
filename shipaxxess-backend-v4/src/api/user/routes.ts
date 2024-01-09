@@ -44,6 +44,7 @@ user.get("/packages/:uuid", PackagesUser.Get);
 // Payments routes
 user.get("/payments", PaymentUser.Get);
 user.post("/payments", PaymentUser.Create);
+user.get("/payments/gateway", PaymentUser.Getway);
 
 // Tickets routes
 user.get("/tickets", TicketsUser.Get);

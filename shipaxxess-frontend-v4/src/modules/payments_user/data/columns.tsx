@@ -1,34 +1,15 @@
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, LifeBuoy } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@client/components/ui/badge";
 import { Button } from "@client/components/ui/button";
-import { Checkbox } from "@client/components/ui/checkbox";
 import moment from "moment-timezone";
 import { numberWithCommas } from "@client/lib/utils";
 import { app } from "@client/config/app";
 import { PaymentsSelectModel } from "@db/payments";
+import { Link } from "react-router-dom";
 
 export const paymentsColumns = (timezone: string) =>
 	[
-		{
-			id: "select",
-			header: ({ table }) => (
-				<Checkbox
-					checked={table.getIsAllPageRowsSelected()}
-					onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<Checkbox
-					checked={row.getIsSelected()}
-					onCheckedChange={(value) => row.toggleSelected(!!value)}
-					aria-label="Select row"
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
-		},
 		{
 			accessorKey: "id",
 			header: ({ column }) => {
@@ -37,12 +18,12 @@ export const paymentsColumns = (timezone: string) =>
 						className="px-0 whitespace-nowrap"
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						#
+						Payment #
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
 			},
-			cell: ({ row }) => <span>{row.index + 1}</span>,
+			cell: ({ row }) => <span>{row.original.uuid}</span>,
 			enableSorting: true,
 			enableHiding: true,
 		},
@@ -131,7 +112,7 @@ export const paymentsColumns = (timezone: string) =>
 			header: ({ column }) => {
 				return (
 					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Date
+						Request At
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
@@ -143,5 +124,15 @@ export const paymentsColumns = (timezone: string) =>
 			),
 			enableSorting: true,
 			enableHiding: true,
+		},
+		{
+			id: "action",
+			cell: ({ row }) => (
+				<Link to={`/tickets/new?type=payment&id=${row.original.id}`}>
+					<Button variant="outline" size="icon">
+						<LifeBuoy />
+					</Button>
+				</Link>
+			),
 		},
 	] as ColumnDef<PaymentsSelectModel>[];

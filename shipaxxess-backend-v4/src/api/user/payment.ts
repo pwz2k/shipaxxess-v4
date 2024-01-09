@@ -4,6 +4,7 @@ import { users } from "@schemas/users";
 import { Payment } from "@shipaxxess/shipaxxess-zod-v4";
 import { coinbaseCharge } from "@utils/coinbase";
 import { exception } from "@utils/error";
+import { getSettings } from "@utils/settings";
 import { stripeCheckout } from "@utils/stripe";
 import { eq } from "drizzle-orm";
 import { Context } from "hono";
@@ -65,6 +66,16 @@ const Create = async (c: Context<App>) => {
 	return c.json({ success: true });
 };
 
-const PaymentUser = { Create, Get };
+const Getway = async (c: Context<App>) => {
+	const settings = await getSettings(c.env.DB);
+
+	return c.json({
+		venmo_email: settings["venmo_email"],
+		cashapp_email: settings["cashapp_email"],
+		zelle_email: settings["zelle_email"],
+	});
+};
+
+const PaymentUser = { Create, Get, Getway };
 
 export { PaymentUser };

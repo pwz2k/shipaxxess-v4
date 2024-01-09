@@ -9,8 +9,10 @@ import { Input } from "@client/components/ui/input";
 import { useLoading } from "@client/hooks/useLoading";
 import { api } from "@client/lib/api";
 import { useNavigate } from "react-router-dom";
+import { UseQueryResult } from "@tanstack/react-query";
+import { GatewayProps } from "@client/types/gateway";
 
-const NewPaymentForm = () => {
+const NewPaymentForm = ({ query }: { query: UseQueryResult<GatewayProps> }) => {
 	const form = useForm<Payment.ZODSCHEMA>({
 		defaultValues: { credit: 10, gateway: "card" },
 		resolver: zodResolver(Payment.ZODSCHEMA),
@@ -95,7 +97,7 @@ const NewPaymentForm = () => {
 					<Alert>
 						<AlertTitle>Venmo</AlertTitle>
 						<AlertDescription>
-							Please send <b>${form.watch("credit")}</b> to <b>venmo@gmail.com</b>
+							Please send <b>${form.watch("credit")}</b> to <b>{query.data?.venmo_email || "[unknown]"}</b>
 						</AlertDescription>
 					</Alert>
 				)}
@@ -103,7 +105,7 @@ const NewPaymentForm = () => {
 					<Alert>
 						<AlertTitle>Zelle</AlertTitle>
 						<AlertDescription>
-							Please send <b>${form.watch("credit")}</b> to <b>zelle@gmail.com</b>
+							Please send <b>${form.watch("credit")}</b> to <b>{query.data?.zelle_email || "[unknown]"}</b>
 						</AlertDescription>
 					</Alert>
 				)}
@@ -111,7 +113,7 @@ const NewPaymentForm = () => {
 					<Alert>
 						<AlertTitle>CashApp</AlertTitle>
 						<AlertDescription>
-							Please send <b>${form.watch("credit")}</b> to <b>cashapp@gmail.com</b>
+							Please send <b>${form.watch("credit")}</b> to <b>{query.data?.cashapp_email || "[unknown]"}</b>
 						</AlertDescription>
 					</Alert>
 				)}

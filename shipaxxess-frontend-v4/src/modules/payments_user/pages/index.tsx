@@ -5,7 +5,6 @@ import useTable from "@client/hooks/useTable";
 import { paymentsColumns } from "../data/columns";
 import Meta from "@client/components/common/meta";
 import Title from "@client/components/common/title";
-import Search from "@client/components/common/search";
 import { Link } from "react-router-dom";
 import { Button } from "@client/components/ui/button";
 import Breadcrumb from "@client/components/common/breadcrumb";
@@ -32,10 +31,9 @@ const PaymentsUserPage = () => {
 					title="Payments"
 					render={
 						<>
-							<Search />
 							<ToggleColumns />
 							<Link to="/payments/new">
-								<Button>New Payment</Button>
+								<Button>Add Funds</Button>
 							</Link>
 						</>
 					}
