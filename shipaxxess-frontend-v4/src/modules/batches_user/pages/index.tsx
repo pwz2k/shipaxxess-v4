@@ -1,15 +1,13 @@
 import Breadcrumb from "@client/components/common/breadcrumb";
 import Meta from "@client/components/common/meta";
 import Title from "@client/components/common/title";
-import { Button } from "@client/components/ui/button";
-import { Tag, Tags } from "lucide-react";
-import { Link } from "react-router-dom";
 import { useBatchesQuery } from "../hooks/useBatchesQuery";
 import useTable from "@client/hooks/useTable";
 import React from "react";
 import { TimezoneContext } from "@client/contexts/timezone";
 import { batchColumns } from "../data/columns";
 import Search from "@client/components/common/search";
+import { Tags } from "lucide-react";
 
 const BatchsUserPage = () => {
 	const { timezone } = React.useContext(TimezoneContext);
@@ -35,15 +33,6 @@ const BatchsUserPage = () => {
 						<>
 							<Search />
 							<ToggleColumns />
-							<Button variant="outline" className="gap-2">
-								<Tag size={16} />
-								Create a Label
-							</Button>
-							<Link to="/batchs/new">
-								<Button className="gap-2">
-									<Tags size={16} /> Create New Batch
-								</Button>
-							</Link>
 						</>
 					}
 				/>

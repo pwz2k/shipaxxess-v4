@@ -10,7 +10,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Skeleton } from "../ui/skeleton";
-import { Bell, BellDot, Check, ChevronDown, LogOut } from "lucide-react";
+import { Bell, BellDot, Check, ChevronDown, LogOut, Tag, Tags } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { numberWithCommas } from "@client/lib/utils";
@@ -30,6 +30,7 @@ const Header = ({ items, user }: { items: HeaderProps[]; user: UseQueryResult<Us
 				app.mode === "dev" ? "top-9" : "top-0"
 			}`}>
 			<ProfileDropDownMenu items={items} userQuery={user} />
+
 			<NotificationsComponent />
 		</header>
 	);
@@ -124,6 +125,17 @@ const NotificationsComponent = () => {
 
 	return (
 		<div className="flex items-center gap-4">
+			<Link to="/labels/new">
+				<Button variant="outline" className="gap-2">
+					<Tag size={16} />
+					Create a Label
+				</Button>
+			</Link>
+			<Link to="/batchs/new">
+				<Button className="gap-2">
+					<Tags size={16} /> Create New Batch
+				</Button>
+			</Link>
 			<DropdownMenu>
 				<DropdownMenuTrigger className="p-2 rounded outline-none bg-primary/5 hover:ring-2 hover:ring-primary/10">
 					<div className="relative">{notifications.length === 0 ? <Bell /> : <BellDot />}</div>
