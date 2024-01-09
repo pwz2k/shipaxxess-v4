@@ -26,7 +26,11 @@ export const error = (err: Error, c: Context<App>) => {
 	}
 
 	if (err instanceof HTTPException) {
-		return err.getResponse();
+		if (err.message === "") {
+			return c.json({ message: "Unauthorized", code: 401 }, 401);
+		}
+
+		return c.json({ message: err.message, code: 500 }, 500);
 	}
 
 	try {
