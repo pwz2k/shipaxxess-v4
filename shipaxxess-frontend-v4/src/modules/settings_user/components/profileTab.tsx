@@ -34,7 +34,7 @@ const SettingsProfileTab = ({ query }: { query: UseQueryResult<UsersSelectModel>
 			email_address: "",
 			password: "",
 			timezone: "",
-			fa_enabled: "false",
+			two_fa: "false",
 		},
 	});
 
@@ -61,7 +61,7 @@ const SettingsProfileTab = ({ query }: { query: UseQueryResult<UsersSelectModel>
 			form.setValue("last_name", query.data.last_name);
 			form.setValue("email_address", query.data.email_address);
 			form.setValue("timezone", query.data.timezone || "");
-			form.setValue("fa_enabled", query.data.two_fa || "false");
+			form.setValue("two_fa", query.data.two_fa as "false");
 		}
 	}, [form, query.data]);
 
@@ -179,7 +179,7 @@ const SettingsProfileTab = ({ query }: { query: UseQueryResult<UsersSelectModel>
 					<div className="mb-4 space-y-2">
 						<FormField
 							control={form.control}
-							name="fa_enabled"
+							name="two_fa"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>2FA Authentication</FormLabel>
