@@ -128,11 +128,11 @@ const NotificationsComponent = () => {
 			<Link to="/labels/new">
 				<Button variant="outline" className="gap-2">
 					<Tag size={16} />
-					Create a Label
+					Create New Label
 				</Button>
 			</Link>
-			<Link to="/batchs/new">
-				<Button className="gap-2">
+			<Link to="/batches/new">
+				<Button variant="outline" className="gap-2">
 					<Tags size={16} /> Create New Batch
 				</Button>
 			</Link>

@@ -37,7 +37,7 @@ const BatchsUserPage = () => {
 					}
 				/>
 
-				<Breadcrumb items={[{ title: "Batch History", link: "/batchs", icon: <Tags size={16} /> }]} />
+				<Breadcrumb items={[{ title: "Batch History", link: "/batches", icon: <Tags size={16} /> }]} />
 				<CardTable />
 			</div>
 		</>

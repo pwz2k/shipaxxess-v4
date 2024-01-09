@@ -17,7 +17,7 @@ export const labelsColumns = (timezone: string) =>
 						className="px-0 whitespace-nowrap"
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						#
+						Label #
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
@@ -42,7 +42,7 @@ export const labelsColumns = (timezone: string) =>
 			cell: ({ row }) => (
 				<div className="flex items-center gap-1 whitespace-nowrap">
 					<span id={`copy_${row.index}`}>{row.getValue("remote_tracking_number")}</span>
-					<CopyIcon size={16} className="cursor-copy" onClick={() => {}} />
+					{row.original.remote_tracking_number && <CopyIcon size={16} className="cursor-copy" onClick={() => {}} />}
 				</div>
 			),
 			enableSorting: true,
@@ -73,7 +73,7 @@ export const labelsColumns = (timezone: string) =>
 						className="px-0 whitespace-nowrap"
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Recipent
+						Recipient Name
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
@@ -107,7 +107,7 @@ export const labelsColumns = (timezone: string) =>
 						className="px-0 whitespace-nowrap"
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Shipping Date
+						Ship Date
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
@@ -115,23 +115,6 @@ export const labelsColumns = (timezone: string) =>
 			cell: ({ row }) => (
 				<span className="whitespace-nowrap">{moment(row.original.shipping_date).format("DD MMM, YYYY")}</span>
 			),
-			enableSorting: true,
-			enableHiding: true,
-		},
-		{
-			accessorKey: "status_label",
-			header: ({ column }) => {
-				return (
-					<Button
-						className="px-0 whitespace-nowrap"
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Status
-						<ArrowUpDown className="w-4 h-4 ml-2" />
-					</Button>
-				);
-			},
-			cell: ({ row }) => <Badge>{row.original.status_label}</Badge>,
 			enableSorting: true,
 			enableHiding: true,
 		},
@@ -190,6 +173,23 @@ export const labelsColumns = (timezone: string) =>
 			enableHiding: true,
 		},
 		{
+			accessorKey: "status_label",
+			header: ({ column }) => {
+				return (
+					<Button
+						className="px-0 whitespace-nowrap"
+						variant="ghost"
+						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+						Status
+						<ArrowUpDown className="w-4 h-4 ml-2" />
+					</Button>
+				);
+			},
+			cell: ({ row }) => <Badge>{row.original.status_label}</Badge>,
+			enableSorting: true,
+			enableHiding: true,
+		},
+		{
 			accessorKey: "created_at",
 			header: ({ column }) => {
 				return (
@@ -197,7 +197,7 @@ export const labelsColumns = (timezone: string) =>
 						className="px-0 whitespace-nowrap"
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Date
+						Created At
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);

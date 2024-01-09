@@ -147,23 +147,6 @@ export const batchColumns = (timezone: string) =>
 			enableHiding: true,
 		},
 		{
-			accessorKey: "status_label",
-			header: ({ column }) => {
-				return (
-					<Button
-						className="px-0 whitespace-nowrap"
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Status
-						<ArrowUpDown className="w-4 h-4 ml-2" />
-					</Button>
-				);
-			},
-			cell: ({ row }) => <Badge>{row.original.status_label}</Badge>,
-			enableSorting: true,
-			enableHiding: true,
-		},
-		{
 			accessorKey: "shipping_date",
 			header: ({ column }) => {
 				return (
@@ -179,6 +162,23 @@ export const batchColumns = (timezone: string) =>
 			cell: ({ row }) => (
 				<span className="whitespace-nowrap">{moment(row.original.shipping_date).format("DD MMM, YYYY")}</span>
 			),
+			enableSorting: true,
+			enableHiding: true,
+		},
+		{
+			accessorKey: "status_label",
+			header: ({ column }) => {
+				return (
+					<Button
+						className="px-0 whitespace-nowrap"
+						variant="ghost"
+						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+						Status
+						<ArrowUpDown className="w-4 h-4 ml-2" />
+					</Button>
+				);
+			},
+			cell: ({ row }) => <Badge>{row.original.status_label}</Badge>,
 			enableSorting: true,
 			enableHiding: true,
 		},
@@ -208,7 +208,7 @@ export const batchColumns = (timezone: string) =>
 			enableSorting: false,
 			enableHiding: false,
 			cell: ({ row }) => (
-				<Link to={`/batchs/view?uuid=${row.original.uuid}`}>
+				<Link to={`/batches/${row.original.uuid}`}>
 					<Button variant="outline">View</Button>
 				</Link>
 			),
