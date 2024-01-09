@@ -21,7 +21,6 @@ const FormComponent = ({ query }: { query: UseQueryResult<UsersSelectModel> }) =
 		form.setValue("first_name", query.data?.first_name || "");
 		form.setValue("last_name", query.data?.last_name || "");
 		form.setValue("email_address", query.data?.email_address || "");
-		form.setValue("password", query.data?.password || "");
 		form.setValue("coupon_code", query.data?.coupon_code || "");
 		form.setValue("current_balance", query.data?.current_balance || 0);
 		form.setValue("total_spent", query.data?.total_spent || 0);
@@ -88,19 +87,7 @@ const FormComponent = ({ query }: { query: UseQueryResult<UsersSelectModel> }) =
 						</FormItem>
 					)}
 				/>
-				<FormField
-					control={form.control}
-					name="password"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Password </FormLabel>
-							<FormControl>
-								<Input {...field} autoComplete="on" />
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+
 				<FormField
 					control={form.control}
 					name="coupon_code"

@@ -1,4 +1,3 @@
-import useQuery from "@client/hooks/useQuery";
 import { useUserQuery } from "../hooks/useUserQuery";
 import Meta from "@client/components/common/meta";
 import Title from "@client/components/common/title";
@@ -7,11 +6,12 @@ import { User } from "lucide-react";
 import Loading from "@client/components/common/loading";
 import { Card } from "@client/components/ui/card";
 import FormComponent from "../components/form";
+import { useParams } from "react-router-dom";
 
 const ViewUserAdminPage = () => {
-	const query = useQuery();
+	const params = useParams();
 
-	const userQuery = useUserQuery(query.get("uuid"));
+	const userQuery = useUserQuery(params.uuid!);
 
 	if (userQuery.isLoading) {
 		return <Loading />;

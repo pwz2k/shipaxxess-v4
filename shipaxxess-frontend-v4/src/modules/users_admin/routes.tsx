@@ -4,7 +4,7 @@ import ViewUserAdminPage from "./pages/view";
 
 const Routes: RouteObject[] = [
 	{ path: "users", element: <UsersAdminPage /> },
-	{ path: "users/view", element: <ViewUserAdminPage /> },
+	{ path: "users/:uuid", element: <ViewUserAdminPage /> },
 ];
 
 export default Routes;

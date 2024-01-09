@@ -128,7 +128,7 @@ export const usersColumns = (timezone: string) =>
 		{
 			id: "action",
 			cell: ({ row }) => (
-				<Link to={`/admin/users/view?uuid=${row.original.uuid}`}>
+				<Link to={`/admin/users/${row.original.uuid}`}>
 					<Button>View</Button>
 				</Link>
 			),

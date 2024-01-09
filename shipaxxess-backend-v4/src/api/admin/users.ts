@@ -36,7 +36,6 @@ const Edit = async (c: Context<App>) => {
 			first_name: body.first_name,
 			last_name: body.last_name,
 			email_address: body.email_address,
-			password: body.password,
 			coupon_code: body.coupon_code,
 			current_balance: body.current_balance,
 			total_spent: body.total_spent,

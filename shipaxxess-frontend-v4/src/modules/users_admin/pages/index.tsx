@@ -8,6 +8,7 @@ import Title from "@client/components/common/title";
 import Breadcrumb from "@client/components/common/breadcrumb";
 import { User } from "lucide-react";
 import Search from "@client/components/common/search";
+import Loading from "@client/components/common/loading";
 
 const UsersAdminPage = () => {
 	const { timezone } = React.useContext(TimezoneContext);
@@ -21,6 +22,10 @@ const UsersAdminPage = () => {
 		loading: usersQuery.isLoading,
 		sort: [{ id: "id", desc: true }],
 	});
+
+	if (usersQuery.isLoading) {
+		return <Loading />;
+	}
 
 	return (
 		<>

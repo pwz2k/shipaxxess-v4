@@ -1,6 +1,5 @@
 import { Badge } from "@client/components/ui/badge";
 import { Button } from "@client/components/ui/button";
-import { Checkbox } from "@client/components/ui/checkbox";
 import { app } from "@client/config/app";
 import { TicketsInsertModel } from "@db/tickets";
 import { ColumnDef } from "@tanstack/react-table";
@@ -11,39 +10,6 @@ import TableMenu from "../components/tableMenu";
 
 export const ticketsColumns = (timezone: string) =>
 	[
-		{
-			id: "select",
-			header: ({ table }) => (
-				<Checkbox
-					checked={table.getIsAllPageRowsSelected()}
-					onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<Checkbox
-					checked={row.getIsSelected()}
-					onCheckedChange={(value) => row.toggleSelected(!!value)}
-					aria-label="Select row"
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
-		},
-		{
-			accessorKey: "id",
-			header: ({ column }) => {
-				return (
-					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Id
-						<ArrowUpDown className="w-4 h-4 ml-2" />
-					</Button>
-				);
-			},
-			cell: ({ row }) => <span>{row.index + 1}</span>,
-			enableSorting: true,
-			enableHiding: true,
-		},
 		{
 			accessorKey: "title",
 			header: ({ column }) => {
@@ -71,6 +37,19 @@ export const ticketsColumns = (timezone: string) =>
 			enableHiding: true,
 		},
 		{
+			accessorKey: "data_id",
+			header: ({ column }) => {
+				return (
+					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+						Data Id
+						<ArrowUpDown className="w-4 h-4 ml-2" />
+					</Button>
+				);
+			},
+			enableSorting: true,
+			enableHiding: true,
+		},
+		{
 			accessorKey: "status",
 			header: ({ column }) => {
 				return (
@@ -89,7 +68,7 @@ export const ticketsColumns = (timezone: string) =>
 			header: ({ column }) => {
 				return (
 					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Date
+						Created At
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
@@ -104,9 +83,9 @@ export const ticketsColumns = (timezone: string) =>
 			enableHiding: false,
 			cell: ({ row }) => (
 				<div className="flex justify-end gap-4 pr-12">
-					<Link to={`/admin/tickets/chat?uuid=${row.original.uuid}`}>
-						<Button size="icon" variant="outline">
-							<MessagesSquare size={16} />
+					<Link to={`/admin/tickets/${row.original.uuid}`}>
+						<Button variant="outline" className="gap-1">
+							<MessagesSquare size={16} /> View Message
 						</Button>
 					</Link>
 

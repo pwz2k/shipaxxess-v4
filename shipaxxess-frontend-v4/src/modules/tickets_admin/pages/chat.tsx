@@ -1,5 +1,4 @@
 import { TimezoneContext } from "@client/contexts/timezone";
-import useQuery from "@client/hooks/useQuery";
 import { ChatsSelectModel } from "@db/chats";
 import { TicketsSelectModel } from "@db/tickets";
 import React from "react";
@@ -15,16 +14,18 @@ import { app } from "@client/config/app";
 import { Separator } from "@client/components/ui/separator";
 import { Avatar } from "@client/components/ui/avatar";
 import SendChatForm from "../components/send";
+import Loading from "@client/components/common/loading";
+import { useParams } from "react-router-dom";
 
 const ChatAdminPage = () => {
-	const query = useQuery();
+	const params = useParams();
 
 	const { timezone } = React.useContext(TimezoneContext);
 
 	const [ticket, setTicket] = React.useState<TicketsSelectModel>();
 	const [chats, setChat] = React.useState<ChatsSelectModel[]>([]);
 
-	const ticketQuery = useTicketQuery(query.get("uuid"));
+	const ticketQuery = useTicketQuery(params.uuid!);
 
 	React.useEffect(() => {
 		if (ticketQuery.data) {
@@ -32,6 +33,10 @@ const ChatAdminPage = () => {
 			setChat(ticketQuery.data.chats);
 		}
 	}, [ticketQuery.data]);
+
+	if (ticketQuery.isLoading) {
+		return <Loading />;
+	}
 
 	return (
 		<>
@@ -43,13 +48,13 @@ const ChatAdminPage = () => {
 				<Breadcrumb
 					items={[
 						{ title: "Tickets", link: "/admin/tickets", icon: <Ticket size={16} /> },
-						{ title: ticket?.title || "", link: `/admin/tickets/chat?uuid=${ticket?.uuid}` },
+						{ title: ticket?.title || "", link: `/admin/tickets/${ticket?.uuid}` },
 					]}
 				/>
 
 				<Card>
 					<CardHeader className="inline-block">
-						<Badge variant="outline" className="rounded-lg">
+						<Badge variant="outline" className="uppercase rounded-lg">
 							{ticket?.status}
 						</Badge>
 						<h1 className="text-2xl">{ticket?.title}</h1>
