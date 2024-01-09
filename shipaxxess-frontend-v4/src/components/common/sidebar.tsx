@@ -6,8 +6,18 @@ import { app } from "@client/config/app";
 import { SidebarProps } from "@client/types/layout";
 import { Link } from "react-router-dom";
 import { Skeleton } from "../ui/skeleton";
+import { UseQueryResult } from "@tanstack/react-query";
+import { UsersSelectModel } from "@db/users";
 
-const Sidebar = ({ slug, items, isLoading }: { slug: string; items: SidebarProps[]; isLoading: boolean }) => {
+const Sidebar = ({
+	slug,
+	items,
+	query,
+}: {
+	slug: string;
+	items: SidebarProps[];
+	query: UseQueryResult<UsersSelectModel>;
+}) => {
 	return (
 		<section
 			className={`${
@@ -28,7 +38,7 @@ const Sidebar = ({ slug, items, isLoading }: { slug: string; items: SidebarProps
 									item.slug === slug && "bg-primary-foreground/5"
 								} `}>
 								<div className="flex items-center flex-1 gap-2">
-									{!isLoading ? (
+									{!query.isLoading ? (
 										<>
 											{item.icon}
 											<span className="text-base font-normal text-primary-foreground">{item.label}</span>
@@ -40,7 +50,7 @@ const Sidebar = ({ slug, items, isLoading }: { slug: string; items: SidebarProps
 										</>
 									)}
 								</div>
-								{!isLoading && (
+								{!query.isLoading && (
 									<div className="flex items-center gap-2">
 										{item.badge && <Badge variant="secondary">{item.badge}</Badge>}
 									</div>
@@ -52,17 +62,19 @@ const Sidebar = ({ slug, items, isLoading }: { slug: string; items: SidebarProps
 			</ScrollArea>
 
 			{/* FOOTER CONTENT */}
-			<div className="p-4">
-				<div className="flex flex-col w-full gap-2 p-6 rounded-lg bg-primary-foreground/5">
-					<SVGsiteLogo className="w-5 h-5" strokeWidth={2} />
-					<h1 className="mb-2 text-xl font-light capitalize text-primary-foreground/70">
-						Need help with <b className="font-bold text-primary-foreground">{app.name}</b>?
-					</h1>
-					<Link to="/tickets/new?type=other">
-						<Button className="w-full text-base bg-black text-primary-foreground">Contact Us</Button>
-					</Link>
+			{query.data?.isadmin === false && (
+				<div className="p-4">
+					<div className="flex flex-col w-full gap-2 p-6 rounded-lg bg-primary-foreground/5">
+						<SVGsiteLogo className="w-5 h-5" strokeWidth={2} />
+						<h1 className="mb-2 text-xl font-light capitalize text-primary-foreground/70">
+							Need help with <b className="font-bold text-primary-foreground">{app.name}</b>?
+						</h1>
+						<Link to="/tickets/new?type=other">
+							<Button className="w-full text-base bg-black text-primary-foreground">Contact Us</Button>
+						</Link>
+					</div>
 				</div>
-			</div>
+			)}
 		</section>
 	);
 };

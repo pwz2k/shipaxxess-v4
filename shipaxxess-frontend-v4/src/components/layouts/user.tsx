@@ -32,7 +32,7 @@ const UserLayout = ({ children }: { children?: ReactNode }) => {
 		<>
 			{app.mode === "dev" && <Banner />}
 			<main className="flex">
-				<Sidebar slug={location.pathname} items={sidebarItems} isLoading={statusQuery.isLoading} />
+				<Sidebar slug={location.pathname} items={sidebarItems} query={statusQuery} />
 				<section className="w-[calc(100%-18rem)]">
 					<Header items={statusQuery.data?.isadmin ? adminHeaderItems : headerItems} user={statusQuery} />
 					<React.Suspense fallback={<Loading className="h-screen" />}>

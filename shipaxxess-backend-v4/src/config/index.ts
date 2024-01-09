@@ -7,6 +7,7 @@ export const config = {
 	jwt: {
 		secret: "KRqub7QWY8nczJ9rGNYYcte6IevIcu9m",
 		alg: "HS256",
+		admin: "5aee2c98-3094-4c90-8229-a8f0bc27aa22",
 	},
 	mail: {
 		postalserver: {

@@ -8,7 +8,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Skeleton } from "../ui/skeleton";
 import { Bell, BellDot, Check, ChevronDown, LogOut, Tag, Tags } from "lucide-react";
 import { Button } from "../ui/button";
@@ -31,7 +31,7 @@ const Header = ({ items, user }: { items: HeaderProps[]; user: UseQueryResult<Us
 			}`}>
 			<ProfileDropDownMenu items={items} userQuery={user} />
 
-			<NotificationsComponent />
+			<NotificationsComponent userQuery={user} />
 		</header>
 	);
 };
@@ -52,7 +52,6 @@ const ProfileDropDownMenu = ({
 			<DropdownMenu>
 				<DropdownMenuTrigger className="flex items-center gap-2 pr-5 border-r outline-none border-primary/5">
 					<Avatar>
-						<AvatarImage src="https://github.com/shadcn.png" />
 						<AvatarFallback>
 							{userQuery.isSuccess && (
 								<>
@@ -111,30 +110,35 @@ const ProfileDropDownMenu = ({
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
-			{!userQuery.data?.isadmin && (
+			{userQuery.data?.isadmin === false && (
 				<Badge variant="outline">Balance: ${numberWithCommas(userQuery.data?.current_balance || 0)}</Badge>
 			)}
 		</div>
 	);
 };
 
-const NotificationsComponent = () => {
+const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<UsersSelectModel> }) => {
 	const notifications: NotificationProps[] = [];
 
 	const notificationsQuery = useNotificationsQuery();
 
 	return (
 		<div className="flex items-center gap-4">
-			<Button variant="outline" className="gap-2" disabled>
-				<Tag size={16} />
-				Create New Label
-			</Button>
+			{userQuery.data?.isadmin === false && (
+				<>
+					<Button variant="outline" className="gap-2" disabled>
+						<Tag size={16} />
+						Create New Label
+					</Button>
 
-			<Link to="/batches/new">
-				<Button variant="outline" className="gap-2">
-					<Tags size={16} /> Create New Batch
-				</Button>
-			</Link>
+					<Link to="/batches/new">
+						<Button variant="outline" className="gap-2">
+							<Tags size={16} /> Create New Batch
+						</Button>
+					</Link>
+				</>
+			)}
+
 			<DropdownMenu>
 				<DropdownMenuTrigger className="p-2 rounded outline-none bg-primary/5 hover:ring-2 hover:ring-primary/10">
 					<div className="relative">{notifications.length === 0 ? <Bell /> : <BellDot />}</div>

@@ -20,7 +20,7 @@ app.use("*", logger());
 app.use("*", cors());
 app.use("*", prettyJSON());
 app.use("/user/*", jwt({ secret: config.jwt.secret }));
-app.use("/admin/*", jwt({ secret: config.jwt.secret }));
+app.use("/admin/*", jwt({ secret: config.jwt.admin }));
 
 /**
  * Websocket routes
