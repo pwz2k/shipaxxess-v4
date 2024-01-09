@@ -102,7 +102,7 @@ const ProfileDropDownMenu = ({
 							className="flex items-center justify-start w-full gap-2 px-2 py-1"
 							onClick={() => {
 								localStorage.removeItem("token");
-								navigate("/signin?ref=logout");
+								navigate("/signin?action=logout");
 							}}>
 							<LogOut size={16} />
 							<span className="text-sm">Logout</span>
