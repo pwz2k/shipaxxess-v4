@@ -24,7 +24,13 @@ export const SignInUser = async (c: Context<App>) => {
 		const ot = await drizzle(c.env.DB)
 			.select()
 			.from(users)
-			.where(and(eq(users.email_address, parse.email_address), eq(users.password, passwordHash)))
+			.where(
+				and(
+					eq(users.email_address, parse.email_address),
+					eq(users.password, passwordHash),
+					eq(users.email_verified, true),
+				),
+			)
 			.get();
 		if (!ot) throw exception({ message: "Account not found", code: 4000 });
 		user = ot;
