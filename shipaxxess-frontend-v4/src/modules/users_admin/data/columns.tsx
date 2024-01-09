@@ -5,6 +5,7 @@ import moment from "moment-timezone";
 import { numberWithCommas } from "@client/lib/utils";
 import { app } from "@client/config/app";
 import { UsersSelectModel } from "@db/users";
+import { Link } from "react-router-dom";
 
 export const usersColumns = (timezone: string) =>
 	[
@@ -69,16 +70,16 @@ export const usersColumns = (timezone: string) =>
 			enableHiding: true,
 		},
 		{
-			accessorKey: "coupon_code",
+			accessorKey: "timezone",
 			header: ({ column }) => {
 				return (
 					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Coupon Code
+						TimeZone
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
 			},
-			cell: ({ row }) => <span>{row.getValue("coupon_code")}</span>,
+			cell: ({ row }) => <span>{row.getValue("timezone")}</span>,
 			enableSorting: true,
 			enableHiding: true,
 		},
@@ -123,5 +124,13 @@ export const usersColumns = (timezone: string) =>
 			cell: ({ row }) => <span>{moment.utc(row.original.created_at).tz(timezone).format(app.time.format)}</span>,
 			enableSorting: true,
 			enableHiding: true,
+		},
+		{
+			id: "action",
+			cell: ({ row }) => (
+				<Link to={`/admin/users/view?uuid=${row.original.uuid}`}>
+					<Button>View</Button>
+				</Link>
+			),
 		},
 	] as ColumnDef<UsersSelectModel>[];
