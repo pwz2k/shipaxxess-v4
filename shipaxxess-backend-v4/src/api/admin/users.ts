@@ -53,6 +53,16 @@ const Delete = async (c: Context<App>) => {
 	return c.json({});
 };
 
-const UsersAdmin = { Get, Create, Edit, Delete, GetAll };
+const MakeAdmin = async (c: Context<App, "/:id">) => {
+	const user_id = c.req.param("id");
+
+	const model = new Model(c.env.DB);
+
+	await model.update(users, { isadmin: true }, eq(users.id, Number(user_id)));
+
+	return c.json({ success: true });
+};
+
+const UsersAdmin = { Get, Create, Edit, Delete, GetAll, MakeAdmin };
 
 export { UsersAdmin };

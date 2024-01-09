@@ -41,6 +41,7 @@ admin.post("/users", UsersAdmin.Create);
 admin.patch("/users", UsersAdmin.Edit);
 admin.delete("/users", UsersAdmin.Delete);
 admin.get("/users/:uuid", UsersAdmin.Get);
+admin.get("/users/:id", UsersAdmin.MakeAdmin);
 
 // Weights
 admin.get("/weights", WeightsAdmin.GetAll);
