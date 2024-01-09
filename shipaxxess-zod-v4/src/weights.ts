@@ -11,8 +11,8 @@ export type FETCHSCHEMA = z.infer<typeof FETCHSCHEMA>;
 export const CREATESCHEMA = z.object({
 	to_weight: z.coerce.number().min(1),
 	from_weight: z.coerce.number().min(1),
-	user_cost: z.coerce.number().min(1),
-	reseller_cost: z.coerce.number().min(1),
+	user_cost: z.coerce.number(),
+	reseller_cost: z.coerce.number(),
 	type_id: z.string().min(1),
 });
 
