@@ -305,7 +305,9 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 									render={({ field }) => {
 										return (
 											<FormItem>
-												<FormLabel>Sender</FormLabel>
+												<FormLabel>
+													Ship From <span className="pl-2 text-xs text-blue-600">(Add New)</span>
+												</FormLabel>
 												<Select
 													defaultValue={field.value}
 													onValueChange={(id) => {
@@ -328,7 +330,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 													}}>
 													<FormControl>
 														<SelectTrigger>
-															<SelectValue placeholder="Choose a sender" />
+															<SelectValue placeholder="Choose an address" />
 														</SelectTrigger>
 													</FormControl>
 													<SelectContent>
@@ -359,7 +361,9 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 									render={({ field }) => {
 										return (
 											<FormItem>
-												<FormLabel>Package</FormLabel>
+												<FormLabel>
+													Package <span className="pl-2 text-xs text-blue-600">(Add New)</span>
+												</FormLabel>
 												<Select
 													defaultValue={field.value}
 													onValueChange={(id) => {
@@ -408,7 +412,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 									name="package.weight"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Weight ({form.watch("type.unit")})</FormLabel>
+											<FormLabel>Weight ({form.watch("type.unit") || "unit"})</FormLabel>
 											<FormControl>
 												<Input {...field} type="number" disabled={form.watch("type.id") ? false : true} />
 											</FormControl>
@@ -418,10 +422,10 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 								/>
 								<FormField
 									control={form.control}
-									name="package.height"
+									name="package.length"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Height (inch)</FormLabel>
+											<FormLabel>Length (inch)</FormLabel>
 											<FormControl>
 												<Input {...field} type="number" disabled={form.watch("type.id") ? false : true} />
 											</FormControl>
@@ -444,10 +448,10 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 								/>
 								<FormField
 									control={form.control}
-									name="package.length"
+									name="package.height"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Length (inch)</FormLabel>
+											<FormLabel>Height (inch)</FormLabel>
 											<FormControl>
 												<Input {...field} type="number" disabled={form.watch("type.id") ? false : true} />
 											</FormControl>
@@ -479,7 +483,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 
 					<div className="flex w-full gap-8">
 						<Card className="w-4/6 p-4 ">
-							<h1 className="mb-4">New Recipent</h1>
+							<h1 className="mb-4">Ship To</h1>
 							<div className="grid grid-cols-2 grid-rows-4 mb-4 gap-x-6 gap-y-2">
 								<FormField
 									control={form.control}
@@ -500,7 +504,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 									name="recipient.0.full_name"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Full Name</FormLabel>
+											<FormLabel>Name</FormLabel>
 											<FormControl>
 												<Input {...field} />
 											</FormControl>
@@ -514,7 +518,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 									render={({ field }) => (
 										<FormItem>
 											<FormLabel>
-												Company Name <span>(optional)</span>
+												Company / Reference<span> (optional)</span>
 											</FormLabel>
 											<FormControl>
 												<Input {...field} autoComplete="on" />
@@ -529,7 +533,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 									name="recipient.0.street_one"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Street 1</FormLabel>
+											<FormLabel>Address</FormLabel>
 											<FormControl>
 												<Autocomplete
 													placeholder=""
@@ -555,7 +559,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 									render={({ field }) => (
 										<FormItem>
 											<FormLabel>
-												Street 2 <span>(optional)</span>
+												Apt / Unit / Suite <span>(optional)</span>
 											</FormLabel>
 											<FormControl>
 												<Input {...field} />
@@ -582,7 +586,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 									name="recipient.0.zip"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel>Zip</FormLabel>
+											<FormLabel>Zip Code</FormLabel>
 											<FormControl>
 												<Input {...field} />
 											</FormControl>
@@ -641,11 +645,14 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 							<div className="py-4 mt-4 bg-white rounded-lg shadow">
 								<p className="px-4 text-xs text-justify text-muted-foreground">
 									Note: You are responsible for all variable and transactional costs of using the service (including but
-									not limited to: postage, fees for carrier services, package insurance, items purchased in the online
-									store, direct and indirect costs of third-party service providers and carriers, transaction fees
-									charged directly by {app.name} for shipping or other services, or other special services selected,
-									such as on-demand consulting, order fulfillment and technical support) in addition to your applicable
-									service fee
+									not limited to: postage, fees for carrier services, package insurance, direct and indirect costs of
+									third-party service providers and carriers, transaction fees charged directly by{" "}
+									<span className="font-semibold">{app.name}</span> Labels for shipping or other services, or other
+									special services selected. We hold no responsibility for lost, stolen, damaged, or undeliverable
+									packages and any other issues with the carrier or delivery that used a shipping label provided by{" "}
+									<span className="font-semibold">{app.name}</span> Labels. You can create a support ticket and we will
+									assist you if you do encounter an issue, but please remember we are a label provider and we hold no
+									responsibility for any issues after a transaction has been completed on our platform
 								</p>
 							</div>
 						</div>

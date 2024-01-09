@@ -17,12 +17,12 @@ const NewBatchUserPage = () => {
 			<Meta title="Create a New Batch Label" />
 
 			<div className="px-4 py-8 space-y-8">
-				<Title title="Create a New Batch Label" />
+				<Title title="Create New Batch Label" />
 
 				<Breadcrumb
 					items={[
-						{ title: "Batch History", link: "/batchs", icon: <Tags size={16} /> },
-						{ title: "Create a New Batch Label", link: "batchs/new_batch" },
+						{ title: "Batch History", link: "/batches", icon: <Tags size={16} /> },
+						{ title: "Create New Batch Label", link: "/batches/new" },
 					]}
 				/>
 

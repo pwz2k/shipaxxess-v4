@@ -125,12 +125,11 @@ const NotificationsComponent = () => {
 
 	return (
 		<div className="flex items-center gap-4">
-			<Link to="/labels/new">
-				<Button variant="outline" className="gap-2">
-					<Tag size={16} />
-					Create New Label
-				</Button>
-			</Link>
+			<Button variant="outline" className="gap-2" disabled>
+				<Tag size={16} />
+				Create New Label
+			</Button>
+
 			<Link to="/batches/new">
 				<Button variant="outline" className="gap-2">
 					<Tags size={16} /> Create New Batch
