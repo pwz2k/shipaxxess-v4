@@ -1,12 +1,13 @@
 import { TimezoneContext } from "@client/contexts/timezone";
 import React from "react";
-import { useCronsQuery } from "../components/useCronsQuery";
+import { useCronsQuery } from "../hooks/useCronsQuery";
 import useTable from "@client/hooks/useTable";
 import { cronsColumns } from "../data/columns";
 import Meta from "@client/components/common/meta";
 import Title from "@client/components/common/title";
 import Breadcrumb from "@client/components/common/breadcrumb";
 import { CircleDotDashed } from "lucide-react";
+import Loading from "@client/components/common/loading";
 
 const CronsAdminPage = () => {
 	const { timezone } = React.useContext(TimezoneContext);
@@ -20,6 +21,10 @@ const CronsAdminPage = () => {
 		loading: cronsQuery.isLoading,
 		sort: [{ id: "id", desc: true }],
 	});
+
+	if (cronsQuery.isLoading) {
+		return <Loading />;
+	}
 
 	return (
 		<>
