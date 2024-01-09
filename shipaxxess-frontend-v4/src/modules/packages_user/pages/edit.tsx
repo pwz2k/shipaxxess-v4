@@ -6,19 +6,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Package } from "@shipaxxess/shipaxxess-zod-v4";
 import { Boxes } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PackageForm from "../components/form";
 import { Card } from "@client/components/ui/card";
 import Title from "@client/components/common/title";
 import React from "react";
 import { usePackageQuery } from "../hooks/usePackageQuery";
-import useQuery from "@client/hooks/useQuery";
 
 const EditPackageUserPage = () => {
-	const query = useQuery();
+	const params = useParams();
 	const navigate = useNavigate();
 
-	const packageQuery = usePackageQuery(query.get("uuid"));
+	const packageQuery = usePackageQuery(params.uuid!);
 
 	const { button, setIsLoading } = useLoading({
 		label: "Update Package",
@@ -72,7 +71,7 @@ const EditPackageUserPage = () => {
 				<Breadcrumb
 					items={[
 						{ title: "Packages", link: "/packages", icon: <Boxes size={16} /> },
-						{ title: "Edit Package", link: `/packages/edit?uuid=${query.get("uuid")}` },
+						{ title: "Edit Package", link: `/packages/${params.uuid!}` },
 					]}
 				/>
 				<Card className="p-8">

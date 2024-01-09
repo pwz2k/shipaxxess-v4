@@ -39,8 +39,9 @@ const TableMenu = ({ row }: { row: Row<PackagesSelectModel> }) => {
 
 	return (
 		<DropdownWrapper
+			className="mr-20"
 			items={[
-				<Link to={`/packages/edit?uuid=${row.original.uuid}`} key="edit_packages">
+				<Link to={`/packages/${row.original.uuid}`} key="edit_packages">
 					<Button type="button" variant="ghost" className="justify-start w-full gap-2 px-2">
 						<Edit size={16} />
 						Edit
@@ -51,8 +52,8 @@ const TableMenu = ({ row }: { row: Row<PackagesSelectModel> }) => {
 					open={alertDialog}
 					setOpen={setAlertDialog}
 					key="delete_address"
-					description="This action cannot be undone. This will permanently delete your account and remove your data from our servers."
-					title="Are you absolutely sure?"
+					description="Are you sure you want to delete this package? This action cannot be undone"
+					title="Are you sure you want to delete this package?"
 					trigger={
 						<Button type="button" variant="ghost" className="justify-between w-full gap-2 px-2">
 							<div className="flex items-center gap-2">

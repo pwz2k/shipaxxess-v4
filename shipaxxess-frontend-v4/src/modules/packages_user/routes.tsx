@@ -6,7 +6,7 @@ import EditPackageUserPage from "./pages/edit";
 const Routes: RouteObject[] = [
 	{ path: "packages", element: <PackagesUserPage /> },
 	{ path: "packages/new", element: <NewPackageUserPage /> },
-	{ path: "packages/edit", element: <EditPackageUserPage /> },
+	{ path: "packages/:uuid", element: <EditPackageUserPage /> },
 ];
 
 export default Routes;

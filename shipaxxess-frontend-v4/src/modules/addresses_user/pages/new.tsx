@@ -50,14 +50,14 @@ const NewAddressUserPage = () => {
 
 	return (
 		<>
-			<Meta title="New Address" />
+			<Meta title="Create Ship From Address" />
 
 			<div className="px-4 py-8 space-y-8">
-				<Title title="New Address" />
+				<Title title="Create Ship From Address" />
 				<Breadcrumb
 					items={[
-						{ title: "Addresses", link: "/addresses", icon: <MapPin size={16} /> },
-						{ title: "New Address", link: "/addresses/new" },
+						{ title: "Manage Ship From Addresses", link: "/addresses", icon: <MapPin size={16} /> },
+						{ title: "Create Ship From Address", link: "/addresses/new" },
 					]}
 				/>
 				<Card className="p-8">

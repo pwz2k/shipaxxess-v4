@@ -33,7 +33,7 @@ export const sidebarItems: SidebarProps[] = [
 	},
 	{
 		icon: <MapPin color="#fff" size={20} />,
-		label: "Saved addresses",
+		label: "From Addresses",
 		slug: "/addresses",
 		badge: "new",
 	},

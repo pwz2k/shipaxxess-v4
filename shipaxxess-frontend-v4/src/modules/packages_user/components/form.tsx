@@ -44,10 +44,10 @@ const PackageForm = ({
 				/>
 				<FormField
 					control={form.control}
-					name="height"
+					name="length"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Height</FormLabel>
+							<FormLabel>Length (inch)</FormLabel>
 							<FormControl>
 								<Input {...field} type="number" onChange={(event) => field.onChange(+event.target.value)} />
 							</FormControl>
@@ -55,13 +55,12 @@ const PackageForm = ({
 						</FormItem>
 					)}
 				/>
-
 				<FormField
 					control={form.control}
 					name="width"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Width</FormLabel>
+							<FormLabel>Width (inch)</FormLabel>
 							<FormControl>
 								<Input {...field} type="number" onChange={(event) => field.onChange(+event.target.value)} />
 							</FormControl>
@@ -71,10 +70,10 @@ const PackageForm = ({
 				/>
 				<FormField
 					control={form.control}
-					name="length"
+					name="height"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Length</FormLabel>
+							<FormLabel>Height (inch)</FormLabel>
 							<FormControl>
 								<Input {...field} type="number" onChange={(event) => field.onChange(+event.target.value)} />
 							</FormControl>
@@ -82,7 +81,6 @@ const PackageForm = ({
 						</FormItem>
 					)}
 				/>
-
 				{button}
 			</form>
 		</Form>

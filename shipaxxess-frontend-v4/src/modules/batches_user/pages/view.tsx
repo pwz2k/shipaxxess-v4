@@ -40,11 +40,11 @@ const ViewBatchUserPage = () => {
 					render={
 						<>
 							<ToggleColumns />
-							<Button variant="outline" className="gap-1">
+							<Button variant="outline" className="gap-1" disabled>
 								<BadgeDollarSign size={16} />
 								Batch Refund
 							</Button>
-							<Button variant="outline" className="gap-1">
+							<Button variant="outline" className="gap-1" disabled>
 								<FileDown size={16} />
 								Batch Download
 							</Button>

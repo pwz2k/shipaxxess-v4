@@ -13,7 +13,7 @@ const Routes: RouteObject[] = [
 		element: <NewAddressUserPage />,
 	},
 	{
-		path: "addresses/edit",
+		path: "addresses/:uuid",
 		element: <EditAddressPage />,
 	},
 ];

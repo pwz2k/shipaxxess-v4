@@ -1,51 +1,11 @@
-import moment from "moment-timezone";
 import { ArrowUpDown } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@client/components/ui/button";
-import { Checkbox } from "@client/components/ui/checkbox";
 import { AddressesSelectModel } from "@db/addresses";
 import TableMenu from "../components/menu";
-import { app } from "@client/config/app";
 
-// Columns
-export const addressesColumns = (timezone: string) =>
+export const addressesColumns = () =>
 	[
-		{
-			id: "select",
-			header: ({ table }) => (
-				<Checkbox
-					checked={table.getIsAllPageRowsSelected()}
-					onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-					aria-label="Select all"
-				/>
-			),
-			cell: ({ row }) => (
-				<Checkbox
-					checked={row.getIsSelected()}
-					onCheckedChange={(value) => row.toggleSelected(!!value)}
-					aria-label="Select row"
-				/>
-			),
-			enableSorting: false,
-			enableHiding: false,
-		},
-		{
-			accessorKey: "id",
-			header: ({ column }) => {
-				return (
-					<Button
-						className="px-0 whitespace-nowrap"
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						#
-						<ArrowUpDown className="w-4 h-4 ml-2" />
-					</Button>
-				);
-			},
-			cell: ({ row }) => <span>{row.index + 1}</span>,
-			enableSorting: true,
-			enableHiding: true,
-		},
 		{
 			accessorKey: "full_name",
 			header: ({ column }) => {
@@ -54,7 +14,7 @@ export const addressesColumns = (timezone: string) =>
 						className="px-0 whitespace-nowrap"
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Full Name
+						Name
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
@@ -70,7 +30,7 @@ export const addressesColumns = (timezone: string) =>
 						className="px-0 whitespace-nowrap"
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Company Name
+						Company/Reference
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
@@ -87,7 +47,7 @@ export const addressesColumns = (timezone: string) =>
 						className="px-0 whitespace-nowrap"
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Street One
+						Address
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
@@ -104,7 +64,7 @@ export const addressesColumns = (timezone: string) =>
 						className="px-0 whitespace-nowrap"
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Street Two
+						Apt / Unit / Suite
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
@@ -138,7 +98,7 @@ export const addressesColumns = (timezone: string) =>
 						className="px-0 whitespace-nowrap"
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Zip
+						Zip Code
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
@@ -177,28 +137,6 @@ export const addressesColumns = (timezone: string) =>
 				);
 			},
 			cell: ({ row }) => <span className="whitespace-nowrap">{row.getValue("country")}</span>,
-			enableSorting: true,
-			enableHiding: true,
-		},
-
-		{
-			accessorKey: "created_at",
-			header: ({ column }) => {
-				return (
-					<Button
-						className="px-0 whitespace-nowrap"
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Date
-						<ArrowUpDown className="w-4 h-4 ml-2" />
-					</Button>
-				);
-			},
-			cell: ({ row }) => (
-				<span className="whitespace-nowrap">
-					{moment.utc(row.original.created_at).tz(timezone).format(app.time.format)}
-				</span>
-			),
 			enableSorting: true,
 			enableHiding: true,
 		},

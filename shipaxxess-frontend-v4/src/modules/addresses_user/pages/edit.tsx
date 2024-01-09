@@ -10,16 +10,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "@client/lib/api";
 import { useAddressQuery } from "../hooks/useAddressQuery";
 import AddressForm from "../components/form";
-
 import { Address } from "@shipaxxess/shipaxxess-zod-v4";
-import { useNavigate } from "react-router-dom";
-import useQuery from "@client/hooks/useQuery";
+import { useNavigate, useParams } from "react-router-dom";
+import Loading from "@client/components/common/loading";
 
 const EditAddressPage = () => {
-	const query = useQuery();
+	const params = useParams();
 	const navigate = useNavigate();
 
-	const addressQuery = useAddressQuery(query.get("uuid")!);
+	const addressQuery = useAddressQuery(params.uuid!);
 
 	const { button, setIsLoading } = useLoading({
 		label: "Update Address",
@@ -71,6 +70,10 @@ const EditAddressPage = () => {
 		}
 	}, [addressQuery.data, form]);
 
+	if (addressQuery.isLoading) {
+		return <Loading />;
+	}
+
 	return (
 		<>
 			<Meta title="Edit Address" />
@@ -79,8 +82,8 @@ const EditAddressPage = () => {
 				<Title title="Edit Address" />
 				<Breadcrumb
 					items={[
-						{ title: "Addresses", link: "/addresses", icon: <MapPin size={16} /> },
-						{ title: "Edit Address", link: `/addresses/edit?uuid=${query.get("uuid")}` },
+						{ title: "Manage Ship From Addresses", link: "/addresses", icon: <MapPin size={16} /> },
+						{ title: "Edit Address", link: `/addresses/edit?uuid=${params.uuid}` },
 					]}
 				/>
 				<Card className="p-8">

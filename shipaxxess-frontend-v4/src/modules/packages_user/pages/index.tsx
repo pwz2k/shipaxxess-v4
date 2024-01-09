@@ -1,5 +1,3 @@
-import { TimezoneContext } from "@client/contexts/timezone";
-import React from "react";
 import { usePackagesQuery } from "../hooks/usePackagesQuery";
 import { packagesColumns } from "../data/columns";
 import useTable from "@client/hooks/useTable";
@@ -9,20 +7,22 @@ import Breadcrumb from "@client/components/common/breadcrumb";
 import { Boxes } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@client/components/ui/button";
-import Search from "@client/components/common/search";
+import Loading from "@client/components/common/loading";
 
 const PackagesUserPage = () => {
-	const { timezone } = React.useContext(TimezoneContext);
-
 	const packagesQuery = usePackagesQuery();
 
 	const { CardTable, ToggleColumns } = useTable({
 		key: "packages",
-		columns: packagesColumns(timezone),
+		columns: packagesColumns(),
 		data: packagesQuery.data,
 		loading: packagesQuery.isLoading,
 		sort: [{ id: "id", desc: true }],
 	});
+
+	if (packagesQuery.isLoading) {
+		return <Loading />;
+	}
 
 	return (
 		<>
@@ -33,10 +33,9 @@ const PackagesUserPage = () => {
 					title="Packages"
 					render={
 						<>
-							<Search />
 							<ToggleColumns />
 							<Link to="/packages/new">
-								<Button>New Package</Button>
+								<Button>Create New Package</Button>
 							</Link>
 						</>
 					}

@@ -51,13 +51,13 @@ const AddressForm = ({
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(submit)} className="space-y-8">
+			<form onSubmit={form.handleSubmit(submit)} className="space-y-4">
 				<FormField
 					control={form.control}
 					name="full_name"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Full Name</FormLabel>
+							<FormLabel>Name</FormLabel>
 							<FormControl>
 								<Input {...field} />
 							</FormControl>
@@ -71,7 +71,7 @@ const AddressForm = ({
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								Company Name <span>(optional)</span>
+								Company/Reference <span>(optional)</span>
 							</FormLabel>
 							<FormControl>
 								<Input {...field} autoComplete="on" />
@@ -85,7 +85,7 @@ const AddressForm = ({
 					name="street_one"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Street 1</FormLabel>
+							<FormLabel>Address</FormLabel>
 							<FormControl>
 								<Autocomplete
 									placeholder=""
@@ -111,7 +111,7 @@ const AddressForm = ({
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								Street 2 <span>(optional)</span>
+								Apt / Unit / Suite <span>(optional)</span>
 							</FormLabel>
 							<FormControl>
 								<Input {...field} />
@@ -138,7 +138,7 @@ const AddressForm = ({
 					name="zip"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Zip</FormLabel>
+							<FormLabel>Zip Code</FormLabel>
 							<FormControl>
 								<Input {...field} />
 							</FormControl>
