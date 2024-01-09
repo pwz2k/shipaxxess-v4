@@ -12,7 +12,7 @@ export const useStatusQuery = (url: string) => {
 			const res = await req.json<UsersSelectModel>();
 
 			if (!res.id) {
-				api.showErrorToast();
+				throw api.showErrorToast();
 			}
 
 			return res;
