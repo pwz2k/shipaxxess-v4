@@ -6,11 +6,16 @@ import { useAddressesQuery } from "@client/modules/addresses_user/hooks/useAddre
 import { usePackagesQuery } from "@client/modules/packages_user/hooks/usePackagesQuery";
 import { Tags } from "lucide-react";
 import BatchNewForm from "../components/form";
+import Loading from "@client/components/common/loading";
 
 const NewBatchUserPage = () => {
 	const addressesQuery = useAddressesQuery();
 	const packagesQuery = usePackagesQuery();
 	const typesQuery = useTypesQuery();
+
+	if (addressesQuery.isLoading || packagesQuery.isLoading || typesQuery.isLoading) {
+		return <Loading />;
+	}
 
 	return (
 		<>

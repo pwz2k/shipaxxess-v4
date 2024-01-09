@@ -1,4 +1,3 @@
-import Loading from "@client/components/common/loading";
 import { DatePicker } from "@client/components/common/picker";
 import { Button, buttonVariants } from "@client/components/ui/button";
 import { Card, CardContent, CardHeader } from "@client/components/ui/card";
@@ -208,10 +207,6 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [form.watch("package.weight")]);
-
-	if (addresses.isLoading || packages.isLoading || types.isLoading) {
-		return <Loading />;
-	}
 
 	return (
 		<>
