@@ -10,9 +10,12 @@ import { Ticket } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import TicketForm from "../components/form";
+import useQuery from "@client/hooks/useQuery";
 
 const NewTicketUserPage = () => {
 	const navigate = useNavigate();
+
+	const query = useQuery();
 
 	const { button, setIsLoading } = useLoading({
 		label: "Submit Ticket",
@@ -23,7 +26,8 @@ const NewTicketUserPage = () => {
 		defaultValues: {
 			content: "",
 			title: "",
-			type: "other",
+			type: query.get("type") ? query.get("type")! : "other",
+			data_id: query.get("id") ? Number(query.get("id")) : undefined,
 		},
 	});
 

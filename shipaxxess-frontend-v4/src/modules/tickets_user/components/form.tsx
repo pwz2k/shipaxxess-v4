@@ -45,7 +45,7 @@ const TicketForm = ({
 								</FormControl>
 								<SelectContent>
 									<SelectItem value="label">Label</SelectItem>
-									<SelectItem value="topup">Topup</SelectItem>
+									<SelectItem value="payment">Payment</SelectItem>
 									<SelectItem value="referral">Referral</SelectItem>
 									<SelectItem value="other">Other</SelectItem>
 								</SelectContent>
@@ -70,13 +70,13 @@ const TicketForm = ({
 						)}
 					/>
 				)}
-				{form.watch("type") === "topup" && (
+				{form.watch("type") === "payment" && (
 					<FormField
 						control={form.control}
 						name="data_id"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Topup ID</FormLabel>
+								<FormLabel>Payment ID</FormLabel>
 								<FormControl>
 									<Input {...field} type="number" />
 								</FormControl>
