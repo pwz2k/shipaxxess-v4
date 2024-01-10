@@ -71,7 +71,7 @@ const AddressForm = ({
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>
-								Company/Reference <span>(optional)</span>
+								Company <span>(optional)</span>
 							</FormLabel>
 							<FormControl>
 								<Input {...field} autoComplete="on" />

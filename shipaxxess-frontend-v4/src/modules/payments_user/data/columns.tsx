@@ -25,7 +25,7 @@ export const paymentsColumns = (timezone: string) =>
 			},
 			cell: ({ row }) => <span>{row.original.uuid}</span>,
 			enableSorting: true,
-			enableHiding: true,
+			enableHiding: false,
 		},
 		{
 			accessorKey: "gateway",
@@ -112,7 +112,7 @@ export const paymentsColumns = (timezone: string) =>
 			header: ({ column }) => {
 				return (
 					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Request At
+						Date
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);

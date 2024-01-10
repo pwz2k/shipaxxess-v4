@@ -513,7 +513,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 									render={({ field }) => (
 										<FormItem>
 											<FormLabel>
-												Company / Reference<span> (optional)</span>
+												Company<span> (optional)</span>
 											</FormLabel>
 											<FormControl>
 												<Input {...field} autoComplete="on" />
@@ -641,12 +641,11 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 								<p className="px-4 text-xs text-justify text-muted-foreground">
 									Note: You are responsible for all variable and transactional costs of using the service (including but
 									not limited to: postage, fees for carrier services, package insurance, direct and indirect costs of
-									third-party service providers and carriers, transaction fees charged directly by{" "}
-									<span className="font-semibold">{app.name}</span> Labels for shipping or other services, or other
-									special services selected. We hold no responsibility for lost, stolen, damaged, or undeliverable
-									packages and any other issues with the carrier or delivery that used a shipping label provided by{" "}
-									<span className="font-semibold">{app.name}</span> Labels. You can create a support ticket and we will
-									assist you if you do encounter an issue, but please remember we are a label provider and we hold no
+									third-party service providers and carriers, transaction fees charged directly by Xclusive Labels for
+									shipping or other services, or other special services selected. We hold no responsibility for lost,
+									stolen, damaged, or undeliverable packages and any other issues with the carrier or delivery that used
+									a shipping label provided by Xclusive Labels. You can create a support ticket and we will assist you
+									if you do encounter an issue, but please remember we are a label provider and we hold no
 									responsibility for any issues after a transaction has been completed on our platform
 								</p>
 							</div>

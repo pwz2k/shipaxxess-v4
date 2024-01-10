@@ -26,6 +26,7 @@ const NewPackageUserPage = () => {
 			name: "",
 			weight: 0,
 			width: 0,
+			radio: "lb",
 		},
 	});
 
@@ -47,14 +48,14 @@ const NewPackageUserPage = () => {
 
 	return (
 		<>
-			<Meta title="Create New Package" />
+			<Meta title="Create Saved Package" />
 
 			<div className="px-4 py-8 space-y-8">
-				<Title title="Create New Package" />
+				<Title title="Create Saved Package" />
 				<Breadcrumb
 					items={[
 						{ title: "Packages", link: "/packages", icon: <Boxes size={16} /> },
-						{ title: "Create New Package", link: "/packages/new" },
+						{ title: "Create Saved Package", link: "/packages/new" },
 					]}
 				/>
 				<Card className="p-8">

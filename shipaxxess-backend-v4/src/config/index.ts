@@ -11,10 +11,10 @@ export const config = {
 	},
 	mail: {
 		postalserver: {
-			sender: "support@xclusivelabels.com",
-			apiKey: "2bp9yCIDH8bz7Ct6OjrwajDF",
-			from: "support@xclusivelabels.com",
-			url: "https://smtp.sakibhasan.dev",
+			sender: "support@mailoom.com",
+			apiKey: "CcYFT0bzKCrbzsRX0np9X8LX",
+			from: "support@mailoom.com",
+			url: "https://mailoom.com",
 		},
 	},
 	label: {

@@ -35,7 +35,7 @@ const PackagesUserPage = () => {
 						<>
 							<ToggleColumns />
 							<Link to="/packages/new">
-								<Button>Create New Package</Button>
+								<Button>Create Saved Package</Button>
 							</Link>
 						</>
 					}

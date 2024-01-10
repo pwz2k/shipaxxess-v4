@@ -53,7 +53,7 @@ const StoresUserPage = () => {
 									</Button>,
 								]}
 								className="">
-								<Button>Connect New Store's</Button>
+								<Button>Connect Store</Button>
 							</DropdownWrapper>
 						</>
 					}
