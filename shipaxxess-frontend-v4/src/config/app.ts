@@ -8,7 +8,7 @@ export const app = {
 	version: "v4.0-dev",
 	support: "support@gmail.com",
 	time: {
-		format: "dddd, D/MM/YY hh:mm A",
+		format: "dddd, M/D/YY hh:mm A",
 	},
 	mapapi: "AIzaSyCqrZnjQWx79s1srv3sii29aAzah-5v_Jo",
 };
