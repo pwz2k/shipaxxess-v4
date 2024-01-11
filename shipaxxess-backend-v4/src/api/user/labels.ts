@@ -104,9 +104,9 @@ const RefundSingle = async (c: Context<App>) => {
 		throw exception({ message: "Label not found.", code: 404 });
 	}
 
-	if (label.status_label === "awaiting") {
-		return c.json({ success: true, message: "Refund funds will be added in your balance within 2-3 days" });
-	}
+	// if (label.status_label === "awaiting") {
+	// 	return c.json({ success: true, message: "Refund funds will be added in your balance within 2-3 days" });
+	// }
 
 	if (label.status_label === "refunded") {
 		throw exception({ message: "Label already refunded.", code: 404 });
