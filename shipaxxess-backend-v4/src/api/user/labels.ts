@@ -3,12 +3,15 @@ import { LabelManager } from "@lib/label";
 import { Model } from "@lib/model";
 import { batchs } from "@schemas/batchs";
 import { labels } from "@schemas/labels";
-import { Id, Labels, Refund as RF } from "@shipaxxess/shipaxxess-zod-v4";
+import { payments } from "@schemas/payments";
+import { users } from "@schemas/users";
+import { Id, Labels, Refund } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
 import { log } from "@utils/log";
 import { getSettings } from "@utils/settings";
 import { eq } from "drizzle-orm";
 import { Context } from "hono";
+import { v4 } from "uuid";
 
 const GetAll = async (c: Context<App>) => {
 	const model = new Model(c.env.DB);
@@ -75,9 +78,9 @@ const Create = async (c: Context<App>) => {
 	return c.json({ success: true, message: "We are processing your batch. Please check back later." });
 };
 
-const Refund = async (c: Context<App>) => {
+const RefundAsBatch = async (c: Context<App>) => {
 	const body = await c.req.json();
-	const parse = RF.ZODSCHEMA.parse(body);
+	const parse = Refund.ZODSCHEMA.parse(body);
 
 	for (const label of parse.batch) {
 		await fetch(`https://api.labelaxxess.com/api/admin/ex-recycle-label`, {
@@ -88,6 +91,71 @@ const Refund = async (c: Context<App>) => {
 	}
 
 	return c.json({ success: true, body });
+};
+
+const RefundSingle = async (c: Context<App>) => {
+	const body = await c.req.json();
+	const parse = Id.ZODSCHEMA.parse(body);
+
+	const model = new Model(c.env.DB);
+
+	const label = await model.get(labels, eq(labels.id, parse.id));
+	if (!label) {
+		throw exception({ message: "Label not found.", code: 404 });
+	}
+
+	if (label.status_label === "awaiting") {
+		throw exception({ message: "To get this refund added in your balance might take 2-3 days", code: 404 });
+	}
+
+	if (label.status_label === "refunded") {
+		throw exception({ message: "Label already refunded.", code: 404 });
+	}
+
+	const req = await fetch(`https://api.labelaxxess.com/api/admin/ex-recycle-label`, {
+		method: "POST",
+		headers: config.label.headers,
+		body: JSON.stringify({ id: label.remote_id }),
+	});
+
+	const res = (await req.json()) as { message: string };
+
+	if (!req.ok) throw exception({ message: res.message, code: 404 });
+
+	await model.update(labels, { status_label: "refunded" }, eq(labels.id, label.id));
+
+	const user = await model.get(users, eq(users.id, label.user_id));
+	if (!user) {
+		throw exception({ message: "User not found.", code: 404 });
+	}
+
+	c.executionCtx.waitUntil(
+		model.update(
+			users,
+			{
+				current_balance: user.current_balance + label.cost_user,
+				total_refund: user.total_refund + label.cost_user,
+				total_labels: user.total_labels - 1,
+				total_spent: user.total_spent - label.cost_user,
+			},
+			eq(users.id, label.user_id),
+		),
+	);
+
+	c.executionCtx.waitUntil(
+		model.insert(payments, {
+			credit: label.cost_user,
+			current_balance: user.current_balance,
+			gateway: "Refund",
+			new_balance: user.current_balance + label.cost_user,
+			user_email: user.email_address,
+			user_id: user.id,
+			user_name: `${user.first_name} ${user.last_name}`,
+			uuid: v4(),
+		}),
+	);
+
+	return c.json({ success: true });
 };
 
 const DownloadSingle = async (c: Context<App>) => {
@@ -117,4 +185,4 @@ const DownloadSingle = async (c: Context<App>) => {
 	});
 };
 
-export const LabelsUser = { GetAll, Create, Refund, Get, DownloadSingle };
+export const LabelsUser = { GetAll, Create, RefundAsBatch, Get, DownloadSingle, RefundSingle };

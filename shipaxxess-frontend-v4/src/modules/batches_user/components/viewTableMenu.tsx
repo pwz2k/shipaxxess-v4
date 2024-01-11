@@ -2,6 +2,7 @@ import AlertWrapper from "@client/components/common/alert";
 import { Button } from "@client/components/ui/button";
 import { app } from "@client/config/app";
 import { useLoading } from "@client/hooks/useLoading";
+import { api } from "@client/lib/api";
 import { LabelsSelectModel } from "@db/labels";
 import { Row } from "@tanstack/react-table";
 import { BadgeDollarSign, FileDown, LifeBuoy } from "lucide-react";
@@ -11,7 +12,24 @@ import { toast } from "sonner";
 
 const ViewTableMenu = ({ row }: { row: Row<LabelsSelectModel> }) => {
 	const [refund, setRefund] = React.useState(false);
-	const { button: RefundSubmitButton } = useLoading({ label: "Refund The Label" });
+	const { button: RefundSubmitButton, setIsLoading } = useLoading({
+		label: "Refund The Label",
+		async click() {
+			setIsLoading(true);
+
+			const req = await api.url("/user/labels/refund").useAuth().post({ id: row.original.id });
+			const res = await req.json<{ success: boolean }>();
+
+			if (res.success) {
+				api.showSuccessToast("Label Refunded!");
+				setIsLoading(false);
+				return;
+			}
+
+			api.showErrorToast("Failed to refund the label!");
+			setIsLoading(false);
+		},
+	});
 
 	const downloadSinglePDF = async () => {
 		const download = () =>
