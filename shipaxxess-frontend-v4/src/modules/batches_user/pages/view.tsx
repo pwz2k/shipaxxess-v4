@@ -42,7 +42,7 @@ const ViewBatchUserPage = () => {
 						Authorization: `Bearer ${localStorage.getItem("token")}`,
 					},
 					body: JSON.stringify({
-						id: params.uuid,
+						uuid: params.uuid,
 					}),
 				})
 					.then((response) => {
