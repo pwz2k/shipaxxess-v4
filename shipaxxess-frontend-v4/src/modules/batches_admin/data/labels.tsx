@@ -159,6 +159,6 @@ export const labelsColumns = (timezone: string) =>
 			id: "action",
 			enableSorting: false,
 			enableHiding: false,
-			cell: () => <TableMenu />,
+			cell: ({ row }) => <TableMenu row={row} />,
 		},
 	] as ColumnDef<LabelsSelectModel>[];

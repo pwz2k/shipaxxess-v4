@@ -9,6 +9,9 @@ import Breadcrumb from "@client/components/common/breadcrumb";
 import { BadgeDollarSign, Tags } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { Button } from "@client/components/ui/button";
+import Loading from "@client/components/common/loading";
+import { app } from "@client/config/app";
+import { toast } from "sonner";
 
 const ViewBatchAdminPage = () => {
 	const params = useParams();
@@ -25,6 +28,51 @@ const ViewBatchAdminPage = () => {
 		sort: [{ id: "id", desc: true }],
 	});
 
+	if (batchQuery.isLoading) {
+		return <Loading />;
+	}
+
+	const batchDownload = async () => {
+		const download = () =>
+			new Promise((resolve, reject) => {
+				fetch(`${app.prod_api}/admin/labels/batch/download`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
+					},
+					body: JSON.stringify({
+						uuid: params.uuid,
+					}),
+				})
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error(response.statusText);
+						}
+						return response.blob();
+					})
+					.then((blob) => {
+						const url = window.URL.createObjectURL(new Blob([blob]));
+						const link = document.createElement("a");
+						link.href = url;
+						link.setAttribute("download", `${params.uuid}.pdf`);
+						document.body.appendChild(link);
+						link.click();
+						link.parentNode?.removeChild(link);
+						resolve(true);
+					})
+					.catch((error) => {
+						reject(error);
+					});
+			});
+
+		toast.promise(download, {
+			loading: "Downloading PDF...",
+			success: "PDF Downloaded!",
+			error: "PDF Download Failed!",
+		});
+	};
+
 	return (
 		<>
 			<Meta title="Batch History" />
@@ -35,7 +83,7 @@ const ViewBatchAdminPage = () => {
 					render={
 						<>
 							<ToggleColumns />
-							<Button variant="outline" disabled className="gap-1">
+							<Button variant="outline" onClick={batchDownload} className="gap-1">
 								<Tags size={16} />
 								Batch Download
 							</Button>

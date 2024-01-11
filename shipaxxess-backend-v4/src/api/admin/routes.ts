@@ -16,7 +16,10 @@ admin.get("/status", StatusAdmin);
 
 // Batches routes
 admin.get("/labels/batch", LabelsAdmin.GetAll);
+admin.post("/labels/download", LabelsAdmin.DownloadSingle);
+
 admin.get("/labels/batch/:uuid", LabelsAdmin.Get);
+admin.post("/labels/batch/download", LabelsAdmin.DownloadBatch);
 
 // Payments routes
 admin.get("/payments", PaymentsAdmin.GetAll);
