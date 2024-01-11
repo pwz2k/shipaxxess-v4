@@ -409,12 +409,16 @@ export class LabelManager {
 
 		if (!user.labels_email_notify) return;
 
-		await mail({
-			to: [user.email_address],
-			from: this.settings["postalserver_address"],
-			subject,
-			html: body,
-		});
+		await mail(
+			{
+				to: [user.email_address],
+				from: this.settings["postalserver_address"],
+				subject,
+				html: body,
+			},
+			this.settings["postalserver_apikey"],
+			this.settings["postalserver_address"],
+		);
 		log("Email sent.");
 	}
 
@@ -453,6 +457,15 @@ export class LabelManager {
 			})
 			.where(eq(labels.id, id))
 			.execute();
+	}
+
+	async updateLabelDownloadStatusFromDrizzleBatch(uuids: string[]) {
+		return await drizzle(this.env.DB).batch(
+			// @ts-expect-error type error
+			uuids.map((uuid) =>
+				drizzle(this.env.DB).update(labels).set({ is_downloaded: true }).where(eq(labels.uuid, uuid)),
+			),
+		);
 	}
 
 	private pushLabelToPrivateArray(
@@ -517,6 +530,6 @@ export class LabelManager {
 
 		if (!payload.pdf || payload.pdf === null || payload.pdf === "") return;
 
-		this.pdfs.push({ type: batch.type, pdf: payload.pdf });
+		this.pdfs.push({ type: batch.type, pdf: payload.pdf, uuid: recipient.uuid });
 	}
 }

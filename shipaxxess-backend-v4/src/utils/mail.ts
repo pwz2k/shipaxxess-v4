@@ -1,18 +1,15 @@
 import { config } from "@config";
 import { exception } from "./error";
 
-const postalserver = async (payload: Payload) => {
+const postalserver = async (payload: Payload, apikey: string, sender: string) => {
 	try {
 		const req = await fetch(`${config.mail.postalserver.url}/api/v1/send/message`, {
 			method: "POST",
-			headers: { "Content-Type": "application/json", "X-Server-API-Key": config.mail.postalserver.apiKey },
+			headers: { "Content-Type": "application/json", "X-Server-API-Key": apikey },
 			body: JSON.stringify({
-				from: config.mail.postalserver.from,
-				sender: config.mail.postalserver.sender,
+				from: sender,
+				sender: sender,
 				to: payload.to,
-				headers: {
-					"List-Unsubscribe": `<mailto: ${config.app.support}?subject=unsubscribe>,  <${config.app.url}?unsubscribe=true>`,
-				},
 				subject: payload.subject,
 				html_body: payload.html,
 			}),
@@ -28,7 +25,7 @@ const postalserver = async (payload: Payload) => {
 	}
 };
 
-export const mail = async (payload: Payload) => {
+export const mail = async (payload: Payload, apiKey: string, sender: string) => {
 	switch (payload.gateway) {
 		case "sendgrid":
 			break;
@@ -40,6 +37,6 @@ export const mail = async (payload: Payload) => {
 			break;
 
 		default:
-			return await postalserver(payload);
+			return await postalserver(payload, apiKey, sender);
 	}
 };

@@ -13,6 +13,8 @@ export const pdfDownloadBatchQueue = async (batch: MessageBatch<QueueProps>, env
 			const merger = new PDFMerger();
 			const manager = new LabelManager(env, settings);
 
+			const labels_uuid: string[] = [];
+
 			for (const pdf of item.body.pdfs) {
 				var buffer: ArrayBuffer;
 
@@ -31,11 +33,15 @@ export const pdfDownloadBatchQueue = async (batch: MessageBatch<QueueProps>, env
 				} catch (error) {
 					await merger.add(buffer);
 				}
+
+				labels_uuid.push(pdf.uuid);
 			}
 
 			await manager.downloadMergePdf(`${item.body.batch_uuid}.pdf`, merger);
 
 			await manager.updateLabelBatchStatus(item.body.batch_uuid);
+
+			await manager.updateLabelDownloadStatusFromDrizzleBatch(labels_uuid);
 
 			await manager.notifyBatchDownloadCompleteEvent(item.body.batch_uuid);
 		} catch (err) {
