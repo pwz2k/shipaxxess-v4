@@ -340,6 +340,8 @@ export class LabelManager {
 		}
 		log("Parsed UPS label. Payload: " + JSON.stringify(payload));
 
+		await this.env.BATCH_KV.put(recipient.uuid, JSON.stringify(payload));
+
 		if (!req.ok) {
 			this.crons.push({ uuid: recipient.uuid, message: payload.message });
 		}
