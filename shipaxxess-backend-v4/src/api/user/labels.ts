@@ -186,4 +186,8 @@ const DownloadSingle = async (c: Context<App>) => {
 	});
 };
 
-export const LabelsUser = { GetAll, Create, RefundAsBatch, Get, DownloadSingle, RefundSingle };
+const DownloadBatch = async (c: Context<App>) => {
+	return c.json({ success: true });
+};
+
+export const LabelsUser = { GetAll, Create, RefundAsBatch, Get, DownloadSingle, RefundSingle, DownloadBatch };
