@@ -1,19 +1,66 @@
 import AlertWrapper from "@client/components/common/alert";
 import { Button } from "@client/components/ui/button";
+import { app } from "@client/config/app";
 import { useLoading } from "@client/hooks/useLoading";
 import { LabelsSelectModel } from "@db/labels";
 import { Row } from "@tanstack/react-table";
 import { BadgeDollarSign, FileDown, LifeBuoy } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 const ViewTableMenu = ({ row }: { row: Row<LabelsSelectModel> }) => {
 	const [refund, setRefund] = React.useState(false);
 	const { button: RefundSubmitButton } = useLoading({ label: "Refund The Label" });
 
+	const downloadSinglePDF = async () => {
+		const download = () =>
+			new Promise((resolve, reject) => {
+				fetch(`${app.prod_api}/user/labels/download`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
+					},
+					body: JSON.stringify({
+						id: row.original.id,
+					}),
+				})
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error(response.statusText);
+						}
+						return response.blob();
+					})
+					.then((blob) => {
+						if (row.original.remote_pdf_r2_link === null) {
+							reject("No PDF found");
+						}
+
+						const url = window.URL.createObjectURL(new Blob([blob]));
+						const link = document.createElement("a");
+						link.href = url;
+						link.setAttribute("download", row.original.remote_pdf_r2_link!);
+						document.body.appendChild(link);
+						link.click();
+						link.parentNode?.removeChild(link);
+						resolve(true);
+					})
+					.catch((error) => {
+						reject(error);
+					});
+			});
+
+		toast.promise(download, {
+			loading: "Downloading PDF...",
+			success: "PDF Downloaded!",
+			error: "PDF Download Failed!",
+		});
+	};
+
 	return (
 		<div className="flex items-center gap-2">
-			<Button variant="outline" size="icon" disabled={row.original.is_downloaded === false}>
+			<Button variant="outline" size="icon" disabled={row.original.is_downloaded === false} onClick={downloadSinglePDF}>
 				<FileDown />
 			</Button>
 
