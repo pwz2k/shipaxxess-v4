@@ -22,9 +22,10 @@ user.get("/status", StatusUser);
 user.get("/dashboard", DashboardUser);
 
 // Labels routes
+user.post("/labels/refund", LabelsUser.Refund);
+user.post("/labels/download", LabelsUser.DownloadSingle);
 user.get("/labels/batch", LabelsUser.GetAll);
 user.post("/labels/batch", LabelsUser.Create);
-user.post("/labels/refund", LabelsUser.Refund);
 user.get("/labels/batch/:uuid", LabelsUser.Get);
 
 // Addresses routes

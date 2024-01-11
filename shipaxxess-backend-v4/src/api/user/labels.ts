@@ -3,7 +3,7 @@ import { LabelManager } from "@lib/label";
 import { Model } from "@lib/model";
 import { batchs } from "@schemas/batchs";
 import { labels } from "@schemas/labels";
-import { Labels, Refund as RF } from "@shipaxxess/shipaxxess-zod-v4";
+import { Id, Labels, Refund as RF } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
 import { log } from "@utils/log";
 import { getSettings } from "@utils/settings";
@@ -90,4 +90,31 @@ const Refund = async (c: Context<App>) => {
 	return c.json({ success: true, body });
 };
 
-export const LabelsUser = { GetAll, Create, Refund, Get };
+const DownloadSingle = async (c: Context<App>) => {
+	const body = await c.req.json();
+	const parse = Id.ZODSCHEMA.parse(body);
+
+	const model = new Model(c.env.DB);
+
+	const label = await model.get(labels, eq(labels.id, parse.id));
+	if (!label) {
+		throw exception({ message: "Label not found.", code: 404 });
+	}
+	if (!label.remote_pdf_r2_link) {
+		throw exception({ message: "Label not ready to download.", code: 404 });
+	}
+
+	const r2data = await c.env.LABELS_BUCKET.get(label.remote_pdf_r2_link);
+	if (!r2data) {
+		throw exception({ message: "pdf not found.", code: 404 });
+	}
+
+	return new Response(r2data.body, {
+		headers: {
+			"Content-Type": "application/pdf",
+			"Content-Disposition": `attachment; filename="${label.remote_pdf_r2_link}"`,
+		},
+	});
+};
+
+export const LabelsUser = { GetAll, Create, Refund, Get, DownloadSingle };
