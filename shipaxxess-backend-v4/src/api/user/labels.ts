@@ -187,7 +187,31 @@ const DownloadSingle = async (c: Context<App>) => {
 };
 
 const DownloadBatch = async (c: Context<App>) => {
-	return c.json({ success: true });
+	const body = await c.req.json();
+	const parse = Id.UUIDSCHEMA.parse(body);
+
+	const model = new Model(c.env.DB);
+
+	const batch = await model.get(batchs, eq(batchs.uuid, parse.uuid));
+	if (!batch) {
+		throw exception({ message: "Batch not found.", code: 404 });
+	}
+
+	if (!batch.merge_pdf_key) {
+		throw exception({ message: "Batch not ready to download.", code: 404 });
+	}
+
+	const r2data = await c.env.LABELS_BUCKET.get(batch.merge_pdf_key);
+	if (!r2data) {
+		throw exception({ message: "pdf not found.", code: 404 });
+	}
+
+	return new Response(r2data.body, {
+		headers: {
+			"Content-Type": "application/pdf",
+			"Content-Disposition": `attachment; filename="${batch.merge_pdf_key}"`,
+		},
+	});
 };
 
 export const LabelsUser = { GetAll, Create, RefundAsBatch, Get, DownloadSingle, RefundSingle, DownloadBatch };

@@ -5,3 +5,9 @@ export const ZODSCHEMA = z.object({
 });
 
 export type ZODSCHEMA = z.infer<typeof ZODSCHEMA>;
+
+export const UUIDSCHEMA = z.object({
+	uuid: z.string(),
+});
+
+export type UUIDSCHEMA = z.infer<typeof UUIDSCHEMA>;

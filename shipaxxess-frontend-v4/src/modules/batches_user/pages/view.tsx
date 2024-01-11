@@ -10,6 +10,8 @@ import { BadgeDollarSign, FileDown, Tags } from "lucide-react";
 import { Button } from "@client/components/ui/button";
 import { useParams } from "react-router-dom";
 import Loading from "@client/components/common/loading";
+import { app } from "@client/config/app";
+import { toast } from "sonner";
 
 const ViewBatchUserPage = () => {
 	const params = useParams();
@@ -30,6 +32,47 @@ const ViewBatchUserPage = () => {
 		return <Loading />;
 	}
 
+	const batchDownload = async () => {
+		const download = () =>
+			new Promise((resolve, reject) => {
+				fetch(`${app.prod_api}/user/labels/batch/download`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${localStorage.getItem("token")}`,
+					},
+					body: JSON.stringify({
+						id: params.uuid,
+					}),
+				})
+					.then((response) => {
+						if (!response.ok) {
+							throw new Error(response.statusText);
+						}
+						return response.blob();
+					})
+					.then((blob) => {
+						const url = window.URL.createObjectURL(new Blob([blob]));
+						const link = document.createElement("a");
+						link.href = url;
+						link.setAttribute("download", `${params.uuid}.pdf`);
+						document.body.appendChild(link);
+						link.click();
+						link.parentNode?.removeChild(link);
+						resolve(true);
+					})
+					.catch((error) => {
+						reject(error);
+					});
+			});
+
+		toast.promise(download, {
+			loading: "Downloading PDF...",
+			success: "PDF Downloaded!",
+			error: "PDF Download Failed!",
+		});
+	};
+
 	return (
 		<>
 			<Meta title="Labels" />
@@ -44,7 +87,7 @@ const ViewBatchUserPage = () => {
 								<BadgeDollarSign size={16} />
 								Batch Refund
 							</Button>
-							<Button variant="outline" className="gap-1" disabled>
+							<Button variant="outline" className="gap-1" onClick={batchDownload}>
 								<FileDown size={16} />
 								Batch Download
 							</Button>
