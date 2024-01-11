@@ -27,6 +27,7 @@ import { usePapaParse } from "react-papaparse";
 import CSVForm from "./csvform";
 import LabelsRecipentsTable from "./recipientsTable";
 import { useLoading } from "@client/hooks/useLoading";
+import { RadioGroup, RadioGroupItem } from "@client/components/ui/radio-group";
 
 type BatchNewFormProps = {
 	addresses: UseQueryResult<AddressesSelectModel[]>;
@@ -76,6 +77,8 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 				weight: 0,
 				width: 0,
 			},
+			saturday: false,
+			signature: false,
 		},
 		resolver: zodResolver(Labels.BATCHZODSCHEMA),
 	});
@@ -94,6 +97,9 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 	});
 
 	const onSubmit = async (data: Labels.BATCHZODSCHEMA) => {
+		console.log(data);
+		return;
+
 		setIsLoading(true);
 
 		const req = await api.url("/user/labels/batch").useAuth().post(data);
@@ -454,6 +460,72 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 										</FormItem>
 									)}
 								/>
+								{form.watch("type.type") === "ups" && (
+									<div className="flex items-center gap-16">
+										<FormField
+											control={form.control}
+											name="saturday"
+											render={({ field }) => (
+												<FormItem className="space-y-3">
+													<FormLabel>Saturday (+$2)</FormLabel>
+													<FormControl>
+														<RadioGroup
+															onValueChange={(value) => {
+																field.onChange(value === "true" ? true : false);
+															}}
+															defaultValue={String(field.value)}
+															className="flex gap-4 space-y-1">
+															<FormItem className="flex items-center space-x-1 space-y-0">
+																<FormControl>
+																	<RadioGroupItem value="true" />
+																</FormControl>
+																<FormLabel className="font-normal">Yes</FormLabel>
+															</FormItem>
+															<FormItem className="flex items-center space-x-1 space-y-0">
+																<FormControl>
+																	<RadioGroupItem value="false" />
+																</FormControl>
+																<FormLabel className="font-normal">No</FormLabel>
+															</FormItem>
+														</RadioGroup>
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+										<FormField
+											control={form.control}
+											name="signature"
+											render={({ field }) => (
+												<FormItem className="space-y-3">
+													<FormLabel>Signature (+$2)</FormLabel>
+													<FormControl>
+														<RadioGroup
+															onValueChange={(value) => {
+																field.onChange(value === "true" ? true : false);
+															}}
+															defaultValue={String(field.value)}
+															className="flex gap-4 space-y-1">
+															<FormItem className="flex items-center space-x-1 space-y-0">
+																<FormControl>
+																	<RadioGroupItem value="true" />
+																</FormControl>
+																<FormLabel className="font-normal">Yes</FormLabel>
+															</FormItem>
+															<FormItem className="flex items-center space-x-1 space-y-0">
+																<FormControl>
+																	<RadioGroupItem value="false" />
+																</FormControl>
+																<FormLabel className="font-normal">No</FormLabel>
+															</FormItem>
+														</RadioGroup>
+													</FormControl>
+													<FormMessage />
+												</FormItem>
+											)}
+										/>
+									</div>
+								)}
 							</div>
 						</CardContent>
 					</Card>
