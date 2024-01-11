@@ -4,6 +4,7 @@ import { app } from "@client/config/app";
 import { useLoading } from "@client/hooks/useLoading";
 import { api } from "@client/lib/api";
 import { LabelsSelectModel } from "@db/labels";
+import { useQueryClient } from "@tanstack/react-query";
 import { Row } from "@tanstack/react-table";
 import { BadgeDollarSign, FileDown, LifeBuoy } from "lucide-react";
 import React from "react";
@@ -11,6 +12,8 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
 const ViewTableMenu = ({ row }: { row: Row<LabelsSelectModel> }) => {
+	const queryClient = useQueryClient();
+
 	const [refund, setRefund] = React.useState(false);
 	const { button: RefundSubmitButton, setIsLoading } = useLoading({
 		label: "Refund The Label",
@@ -21,13 +24,16 @@ const ViewTableMenu = ({ row }: { row: Row<LabelsSelectModel> }) => {
 			const res = await req.json<{ success: boolean }>();
 
 			if (res.success) {
-				api.showSuccessToast("Label Refunded!");
+				api.showSuccessToast();
 				setIsLoading(false);
+				setRefund(false);
+				queryClient.invalidateQueries({ queryKey: ["batches", row.original.batch_uuid] });
 				return;
 			}
 
-			api.showErrorToast("Failed to refund the label!");
+			api.showErrorToast();
 			setIsLoading(false);
+			setRefund(false);
 		},
 	});
 

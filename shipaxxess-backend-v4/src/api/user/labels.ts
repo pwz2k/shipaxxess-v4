@@ -105,7 +105,7 @@ const RefundSingle = async (c: Context<App>) => {
 	}
 
 	if (label.status_label === "awaiting") {
-		throw exception({ message: "To get this refund added in your balance might take 2-3 days", code: 404 });
+		return c.json({ success: true, message: "Refund funds will be added in your balance within 2-3 days" });
 	}
 
 	if (label.status_label === "refunded") {
@@ -151,6 +151,7 @@ const RefundSingle = async (c: Context<App>) => {
 			user_email: user.email_address,
 			user_id: user.id,
 			user_name: `${user.first_name} ${user.last_name}`,
+			status: "confirmed",
 			uuid: v4(),
 		}),
 	);
