@@ -10,7 +10,13 @@ export const COMMONSCHEMA = z.object({
 	package_select: z.string().optional(),
 	type: Type.IDZODSCHEMA,
 	type_select: z.string().optional(),
-	shippingdate: z.string(),
+	shippingdate: z
+		.string()
+		.transform((val) => {
+			const date = new Date(val);
+			return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+		})
+		.optional(),
 	reference1: z.string().optional(),
 	description: z.string().optional(),
 	saturday: z.boolean().optional(),
