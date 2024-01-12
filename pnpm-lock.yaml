@@ -271,6 +271,9 @@ importers:
 
   shipaxxess-zod-v4:
     dependencies:
+      moment-timezone:
+        specifier: ^0.5.43
+        version: 0.5.43
       typescript:
         specifier: ^5.3.3
         version: 5.3.3

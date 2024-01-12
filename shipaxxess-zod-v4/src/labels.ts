@@ -1,3 +1,4 @@
+import moment from "moment-timezone";
 import { z } from "zod";
 import * as Address from "./address";
 import * as Package from "./package";
@@ -13,8 +14,7 @@ export const COMMONSCHEMA = z.object({
 	shippingdate: z
 		.string()
 		.transform((val) => {
-			const date = new Date(val);
-			return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+			return moment(val).format("MM/DD/YYYY");
 		})
 		.optional(),
 	reference1: z.string().optional(),
