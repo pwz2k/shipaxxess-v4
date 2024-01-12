@@ -246,7 +246,7 @@ export class LabelManager {
 			method: "POST",
 			headers: { "Content-Type": "application/json", "x-api-key": this.settings["label_apikey"] },
 			body: JSON.stringify({
-				type: label.type,
+				type: label.type_value,
 				weight: label.package_weight,
 				height: label.package_height,
 				width: label.package_width,
@@ -299,7 +299,7 @@ export class LabelManager {
 			method: "POST",
 			headers: { "Content-Type": "application/json", "x-api-key": this.settings["label_apikey"] },
 			body: JSON.stringify({
-				type: batch.type,
+				type: batch.type_value,
 				weight: batch.package_weight,
 				height: batch.package_height,
 				width: batch.package_width,
