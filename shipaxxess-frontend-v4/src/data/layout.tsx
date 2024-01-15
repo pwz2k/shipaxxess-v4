@@ -28,8 +28,8 @@ export const sidebarItems: SidebarProps[] = [
 	},
 	{
 		icon: <Tags color="#fff" size={20} />,
-		label: "Ship",
-		slug: "/batches",
+		label: "Batch Labels",
+		slug: "/batch",
 		badge: "new",
 	},
 	{
@@ -40,7 +40,7 @@ export const sidebarItems: SidebarProps[] = [
 	},
 	{
 		icon: <Boxes color="#fff" size={20} />,
-		label: "Saved packages",
+		label: "Saved Packages",
 		slug: "/packages",
 		badge: "new",
 	},

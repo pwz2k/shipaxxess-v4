@@ -114,39 +114,6 @@ export const batchColumns = (timezone: string) =>
 			enableHiding: true,
 		},
 		{
-			accessorKey: "failed_labels",
-			header: ({ column }) => {
-				return (
-					<Button
-						className="px-0 whitespace-nowrap"
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Failed Labels
-						<ArrowUpDown className="w-4 h-4 ml-2" />
-					</Button>
-				);
-			},
-			enableSorting: true,
-			enableHiding: true,
-		},
-		{
-			accessorKey: "is_downloaded",
-			header: ({ column }) => {
-				return (
-					<Button
-						className="px-0 whitespace-nowrap"
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Downloaded
-						<ArrowUpDown className="w-4 h-4 ml-2" />
-					</Button>
-				);
-			},
-			cell: ({ row }) => <span>{row.original.is_downloaded ? "Yes" : "No"}</span>,
-			enableSorting: true,
-			enableHiding: true,
-		},
-		{
 			accessorKey: "shipping_date",
 			header: ({ column }) => {
 				return (
@@ -208,7 +175,7 @@ export const batchColumns = (timezone: string) =>
 			enableSorting: false,
 			enableHiding: false,
 			cell: ({ row }) => (
-				<Link to={`/batches/${row.original.uuid}`}>
+				<Link to={`/batch/${row.original.uuid}`}>
 					<Button variant="outline">View</Button>
 				</Link>
 			),

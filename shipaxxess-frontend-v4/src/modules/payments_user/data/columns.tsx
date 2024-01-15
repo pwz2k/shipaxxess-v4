@@ -128,7 +128,7 @@ export const paymentsColumns = (timezone: string) =>
 		{
 			id: "action",
 			cell: ({ row }) => (
-				<Link to={`/tickets/new?type=payment&id=${row.original.id}`}>
+				<Link to={`/tickets/new?type=payment&id=${row.original.uuid}`}>
 					<Button variant="outline" size="icon">
 						<LifeBuoy />
 					</Button>

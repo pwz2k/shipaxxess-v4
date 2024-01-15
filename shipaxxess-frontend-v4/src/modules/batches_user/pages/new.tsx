@@ -26,8 +26,8 @@ const NewBatchUserPage = () => {
 
 				<Breadcrumb
 					items={[
-						{ title: "Batch History", link: "/batches", icon: <Tags size={16} /> },
-						{ title: "Create New Batch Label", link: "/batches/new" },
+						{ title: "Batch History", link: "/batch", icon: <Tags size={16} /> },
+						{ title: "Create New Batch Label", link: "/batch/new" },
 					]}
 				/>
 

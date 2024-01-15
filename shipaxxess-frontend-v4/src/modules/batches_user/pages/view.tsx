@@ -96,8 +96,8 @@ const ViewBatchUserPage = () => {
 				/>
 				<Breadcrumb
 					items={[
-						{ title: "Batch History", link: "/batches", icon: <Tags size={16} /> },
-						{ title: params.uuid!, link: `/batchs/view?uuid=${params.uuid}` },
+						{ title: "Batch History", link: "/batch", icon: <Tags size={16} /> },
+						{ title: params.uuid!, link: `/batch/${params.uuid}` },
 					]}
 				/>
 				<CardTable />

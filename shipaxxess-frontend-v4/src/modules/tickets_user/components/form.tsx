@@ -63,7 +63,7 @@ const TicketForm = ({
 							<FormItem>
 								<FormLabel>Label ID</FormLabel>
 								<FormControl>
-									<Input {...field} type="number" />
+									<Input {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -78,7 +78,7 @@ const TicketForm = ({
 							<FormItem>
 								<FormLabel>Payment ID</FormLabel>
 								<FormControl>
-									<Input {...field} type="number" />
+									<Input {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>

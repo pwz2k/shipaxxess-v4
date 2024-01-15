@@ -131,7 +131,7 @@ const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<Users
 						Create New Label
 					</Button>
 
-					<Link to="/batches/new">
+					<Link to="/batch/new">
 						<Button variant="outline" className="gap-2">
 							<Tags size={16} /> Create New Batch
 						</Button>

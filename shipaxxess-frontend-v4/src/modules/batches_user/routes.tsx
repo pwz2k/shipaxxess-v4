@@ -4,9 +4,9 @@ import NewBatchUserPage from "./pages/new";
 import ViewBatchUserPage from "./pages/view";
 
 const Routes: RouteObject[] = [
-	{ path: "batches", element: <BatchsUserPage /> },
-	{ path: "batches/new", element: <NewBatchUserPage /> },
-	{ path: "batches/:uuid", element: <ViewBatchUserPage /> },
+	{ path: "batch", element: <BatchsUserPage /> },
+	{ path: "batch/new", element: <NewBatchUserPage /> },
+	{ path: "batch/:uuid", element: <ViewBatchUserPage /> },
 ];
 
 export default Routes;

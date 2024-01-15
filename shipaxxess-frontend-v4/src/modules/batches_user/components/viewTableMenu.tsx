@@ -88,20 +88,22 @@ const ViewTableMenu = ({ row }: { row: Row<LabelsSelectModel> }) => {
 				<FileDown />
 			</Button>
 
-			<AlertWrapper
-				description="Are you sure you want to refund this label? This action cannot be undone."
-				title="Are you sure you want to refund this label?"
-				action={RefundSubmitButton}
-				open={refund}
-				setOpen={setRefund}
-				trigger={
-					<Button variant="outline" size="icon" disabled={row.original.status_refund === true}>
-						<BadgeDollarSign />
-					</Button>
-				}
-			/>
+			{row.original.type === "usps" && (
+				<AlertWrapper
+					description="Are you sure you want to refund this label? This action cannot be undone."
+					title="Are you sure you want to refund this label?"
+					action={RefundSubmitButton}
+					open={refund}
+					setOpen={setRefund}
+					trigger={
+						<Button variant="outline" size="icon" disabled={row.original.status_refund === true}>
+							<BadgeDollarSign />
+						</Button>
+					}
+				/>
+			)}
 
-			<Link to={`/tickets/new?type=label&id=${row.original.id}`}>
+			<Link to={`/tickets/new?type=label&id=${row.original.uuid}`}>
 				<Button variant="outline" size="icon">
 					<LifeBuoy />
 				</Button>

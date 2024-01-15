@@ -27,7 +27,7 @@ const NewTicketUserPage = () => {
 			content: "",
 			title: "",
 			type: query.get("type") ? query.get("type")! : "other",
-			data_id: query.get("id") ? Number(query.get("id")) : undefined,
+			data_id: query.get("id") ? query.get("id")! : undefined,
 		},
 	});
 
