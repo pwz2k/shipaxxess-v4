@@ -41,8 +41,6 @@ export const pdfDownloadBatchQueue = async (batch: MessageBatch<QueueProps>, env
 
 			await manager.updateLabelBatchStatus(item.body.batch_uuid);
 
-			await manager.updateLabelDownloadStatusFromDrizzleBatch(labels_uuid);
-
 			await manager.notifyBatchDownloadCompleteEvent(item.body.batch_uuid);
 		} catch (err) {
 			log(`pdf download queue error: ${(err as Error).message}`);

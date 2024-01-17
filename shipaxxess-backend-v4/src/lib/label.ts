@@ -423,6 +423,9 @@ export class LabelManager {
 		log("Notification saved.");
 
 		if (!user.labels_email_notify) return;
+		if (!this.settings["postalserver_address"]) return;
+		if (!this.settings["postalserver_apikey"]) return;
+		if (!this.settings["postalserver_address"]) return;
 
 		await mail(
 			{
@@ -440,7 +443,12 @@ export class LabelManager {
 	async updateLabelBatchStatus(batch_uuid: string) {
 		await drizzle(this.env.DB)
 			.update(batchs)
-			.set({ status_label: "completed", status_message: "Batch is completed", merge_pdf_key: `${batch_uuid}.pdf` })
+			.set({
+				status_label: "completed",
+				status_message: "Batch is completed",
+				merge_pdf_key: `${batch_uuid}.pdf`,
+				is_downloaded: true,
+			})
 			.where(eq(batchs.uuid, batch_uuid))
 			.execute();
 		log("Updated batch status.");
