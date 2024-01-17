@@ -15,6 +15,13 @@
       "when": 1705491771380,
       "tag": "0001_busy_golden_guardian",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1705502678446,
+      "tag": "0002_young_whistler",
+      "breakpoints": true
     }
   ]
 }
