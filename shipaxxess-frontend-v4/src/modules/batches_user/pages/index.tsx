@@ -29,11 +29,11 @@ const BatchsUserPage = () => {
 
 	return (
 		<>
-			<Meta title="Batch History" />
+			<Meta title="Order History" />
 
 			<div className="px-4 py-8 space-y-8">
 				<Title
-					title="Batch History"
+					title="Order History"
 					render={
 						<>
 							<Search />
@@ -42,7 +42,7 @@ const BatchsUserPage = () => {
 					}
 				/>
 
-				<Breadcrumb items={[{ title: "Batch History", link: "/batch", icon: <Tags size={16} /> }]} />
+				<Breadcrumb items={[{ title: "Order History", link: "/batch", icon: <Tags size={16} /> }]} />
 				<CardTable />
 			</div>
 		</>

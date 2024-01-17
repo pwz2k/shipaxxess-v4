@@ -5,7 +5,7 @@ import * as Package from "./package";
 import * as Type from "./type";
 
 export const COMMONSCHEMA = z.object({
-	sender: Address.IDZODSCHEMA,
+	sender: Address.ZODSCHEMA,
 	sender_select: z.string().optional(),
 	package: Package.IDOPTIONAL,
 	package_select: z.string().optional(),

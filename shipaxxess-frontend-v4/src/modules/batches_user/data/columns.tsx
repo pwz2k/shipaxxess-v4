@@ -5,7 +5,7 @@ import { Button } from "@client/components/ui/button";
 import { BatchsSelectModel } from "@db/batchs";
 import { app } from "@client/config/app";
 import { Badge } from "@client/components/ui/badge";
-import { Link } from "react-router-dom";
+import TableMenu from "../components/tableMenu";
 
 export const batchColumns = (timezone: string) =>
 	[
@@ -39,6 +39,9 @@ export const batchColumns = (timezone: string) =>
 					</Button>
 				);
 			},
+			cell: ({ row }) => (
+				<span>{row.original.total_labels === 1 ? row.original.sender_full_name : row.original.name}</span>
+			),
 			enableSorting: true,
 			enableHiding: true,
 		},
@@ -94,22 +97,6 @@ export const batchColumns = (timezone: string) =>
 				);
 			},
 			cell: ({ row }) => <span className="whitespace-nowrap">${row.original.cost_user.toFixed(2)}</span>,
-			enableSorting: true,
-			enableHiding: true,
-		},
-		{
-			accessorKey: "total_labels",
-			header: ({ column }) => {
-				return (
-					<Button
-						className="px-0 whitespace-nowrap"
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Total Labels
-						<ArrowUpDown className="w-4 h-4 ml-2" />
-					</Button>
-				);
-			},
 			enableSorting: true,
 			enableHiding: true,
 		},
@@ -174,10 +161,6 @@ export const batchColumns = (timezone: string) =>
 			id: "action",
 			enableSorting: false,
 			enableHiding: false,
-			cell: ({ row }) => (
-				<Link to={`/batch/${row.original.uuid}`}>
-					<Button variant="outline">View</Button>
-				</Link>
-			),
+			cell: ({ row }) => <TableMenu row={row} />,
 		},
 	] as ColumnDef<BatchsSelectModel>[];

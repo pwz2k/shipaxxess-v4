@@ -28,7 +28,7 @@ export const sidebarItems: SidebarProps[] = [
 	},
 	{
 		icon: <Tags color="#fff" size={20} />,
-		label: "Batch Labels",
+		label: "Order History",
 		slug: "/batch",
 		badge: "new",
 	},

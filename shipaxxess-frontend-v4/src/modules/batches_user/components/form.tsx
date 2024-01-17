@@ -57,6 +57,16 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 		defaultValues: {
 			batch_uuid: v4(),
 			shippingdate: new Date().toISOString(),
+			sender: {
+				city: "",
+				country: "United States",
+				full_name: "",
+				street_one: "",
+				street_two: "",
+				state: "",
+				zip: "",
+				company_name: "",
+			},
 			recipient: [
 				{
 					city: "",
@@ -158,8 +168,38 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 		csvform.reset();
 	};
 
-	const onPlaceSelected = (place: onPlaceSelectedProps) => {
-		place.address_components.map((components) => {
+	const onPlaceSelected = (place: onPlaceSelectedProps, type: "sender" | "recipient") => {
+		if (type === "sender") {
+			return place.address_components.map((components) => {
+				switch (components.types[0]) {
+					case "route":
+						form.setValue("sender.street_one", `${form.getValues("sender.street_one")} ${components.long_name}`);
+						break;
+					case "street_number":
+						form.setValue("sender.street_one", components.long_name);
+						break;
+					case "locality":
+						form.setValue("sender.city", components.long_name);
+						break;
+					case "administrative_area_level_1":
+						form.setValue("sender.state", components.short_name);
+						break;
+					case "postal_code":
+						form.setValue("sender.zip", components.long_name);
+						break;
+					case "country":
+						form.setValue("sender.country", components.long_name);
+						break;
+					case "postal_code_suffix":
+						form.setValue("sender.zip", `${form.getValues("sender.zip")}-${components.long_name}`);
+						break;
+					default:
+						break;
+				}
+			});
+		}
+
+		return place.address_components.map((components) => {
 			switch (components.types[0]) {
 				case "route":
 					form.setValue(
@@ -303,18 +343,19 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 									render={({ field }) => {
 										return (
 											<FormItem>
-												<FormLabel>
-													Ship From <span className="pl-2 text-xs text-blue-600">(Add New)</span>
-												</FormLabel>
+												<FormLabel>Ship From</FormLabel>
 												<Select
 													defaultValue={field.value}
 													onValueChange={(id) => {
+														if (id === "custom") {
+															field.onChange(id);
+														}
+
 														if (!addresses.data) return;
 
 														const item = findItemById(addresses.data, Number(id));
 														if (!item) return;
 
-														form.setValue("sender.id", item.id);
 														form.setValue("sender.full_name", item.full_name);
 														form.setValue("sender.company_name", item.company_name || "");
 														form.setValue("sender.street_one", item.street_one);
@@ -332,11 +373,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 														</SelectTrigger>
 													</FormControl>
 													<SelectContent>
-														{addresses.data?.length === 0 && (
-															<SelectItem value="0" disabled>
-																Not found
-															</SelectItem>
-														)}
+														<SelectItem value="custom">Don't use saved from address</SelectItem>
 														{addresses.data?.map((nod) => {
 															return (
 																<SelectItem key={nod.id} value={nod.id.toString()}>
@@ -351,6 +388,130 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 										);
 									}}
 								/>
+
+								{form.watch("sender_select") === "custom" && (
+									<div className="col-start-1 col-end-5 p-6 rounded-lg bg-primary/5">
+										<h1 className="mb-4">Ship From</h1>
+										<div className="grid grid-cols-4 gap-x-8 ">
+											<FormField
+												control={form.control}
+												name="sender.full_name"
+												render={({ field }) => (
+													<FormItem>
+														<FormLabel>Name</FormLabel>
+														<FormControl>
+															<Input {...field} />
+														</FormControl>
+														<FormMessage />
+													</FormItem>
+												)}
+											/>
+											<FormField
+												control={form.control}
+												name="sender.company_name"
+												render={({ field }) => (
+													<FormItem>
+														<FormLabel>
+															Company<span> (optional)</span>
+														</FormLabel>
+														<FormControl>
+															<Input {...field} autoComplete="on" />
+														</FormControl>
+														<FormMessage />
+													</FormItem>
+												)}
+											/>
+											<FormField
+												control={form.control}
+												name="sender.street_one"
+												render={({ field }) => (
+													<FormItem>
+														<FormLabel>Address</FormLabel>
+														<FormControl>
+															<Autocomplete
+																placeholder=""
+																className="border border-[#d9d9d9] border-solid w-full h-10  rounded-lg px-4"
+																options={{
+																	componentRestrictions: { country: ["us"] },
+																	fields: ["address_components", "geometry"],
+																	types: ["address"],
+																}}
+																apiKey={app.mapapi}
+																onPlaceSelected={(place) => onPlaceSelected(place, "sender")}
+																{...field}
+															/>
+														</FormControl>
+														<FormMessage />
+													</FormItem>
+												)}
+											/>
+											<FormField
+												control={form.control}
+												name="sender.street_two"
+												render={({ field }) => (
+													<FormItem>
+														<FormLabel>
+															Apt / Unit / Suite <span>(optional)</span>
+														</FormLabel>
+														<FormControl>
+															<Input {...field} />
+														</FormControl>
+														<FormMessage />
+													</FormItem>
+												)}
+											/>
+											<FormField
+												control={form.control}
+												name="sender.city"
+												render={({ field }) => (
+													<FormItem>
+														<FormLabel>City</FormLabel>
+														<FormControl>
+															<Input {...field} />
+														</FormControl>
+														<FormMessage />
+													</FormItem>
+												)}
+											/>
+											<FormField
+												control={form.control}
+												name="sender.zip"
+												render={({ field }) => (
+													<FormItem>
+														<FormLabel>Zip Code</FormLabel>
+														<FormControl>
+															<Input {...field} />
+														</FormControl>
+														<FormMessage />
+													</FormItem>
+												)}
+											/>
+											<div className="mt-2.5">
+												<StateCombobox form={form} name="sender.state" title="State" />
+											</div>
+											<FormField
+												control={form.control}
+												name="sender.country"
+												render={({ field }) => (
+													<FormItem>
+														<FormLabel>Country</FormLabel>
+														<Select onValueChange={field.onChange} defaultValue={field.value}>
+															<FormControl>
+																<SelectTrigger>
+																	<SelectValue />
+																</SelectTrigger>
+															</FormControl>
+															<SelectContent>
+																<SelectItem value="United States">United States</SelectItem>
+															</SelectContent>
+														</Select>
+														<FormMessage />
+													</FormItem>
+												)}
+											/>
+										</div>
+									</div>
+								)}
 							</div>
 							<div className="grid grid-cols-5 grid-rows-1 gap-6">
 								<FormField
@@ -359,9 +520,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 									render={({ field }) => {
 										return (
 											<FormItem>
-												<FormLabel>
-													Package <span className="pl-2 text-xs text-blue-600">(Add New)</span>
-												</FormLabel>
+												<FormLabel>Package</FormLabel>
 												<Select
 													defaultValue={field.value}
 													onValueChange={(id) => {
@@ -608,7 +767,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 														types: ["address"],
 													}}
 													apiKey={app.mapapi}
-													onPlaceSelected={(place) => onPlaceSelected(place)}
+													onPlaceSelected={(place) => onPlaceSelected(place, "recipient")}
 													{...field}
 												/>
 											</FormControl>

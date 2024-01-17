@@ -6,6 +6,7 @@ export const batchs = sqliteTable("batchs", {
 	id: integer("id").primaryKey({ autoIncrement: true }),
 	uuid: text("uuid").notNull(),
 	user_id: integer("user_id").notNull(),
+	name: text("name"),
 
 	total_labels: integer("total_labels").notNull(),
 	failed_labels: integer("failed_labels").default(0),

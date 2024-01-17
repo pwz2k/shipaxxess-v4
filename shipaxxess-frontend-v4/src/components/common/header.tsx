@@ -10,7 +10,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Skeleton } from "../ui/skeleton";
-import { Bell, BellDot, Check, ChevronDown, LogOut, Tag, Tags } from "lucide-react";
+import { Bell, BellDot, Check, ChevronDown, LogOut, Tags } from "lucide-react";
 import { Button } from "../ui/button";
 import { Badge } from "../ui/badge";
 import { numberWithCommas } from "@client/lib/utils";
@@ -126,14 +126,9 @@ const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<Users
 		<div className="flex items-center gap-4">
 			{userQuery.data?.isadmin === false && (
 				<>
-					<Button variant="outline" className="gap-2" disabled>
-						<Tag size={16} />
-						Create New Label
-					</Button>
-
 					<Link to="/batch/new">
 						<Button variant="outline" className="gap-2">
-							<Tags size={16} /> Create New Batch
+							<Tags size={16} /> Create New Label
 						</Button>
 					</Link>
 				</>
