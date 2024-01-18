@@ -86,6 +86,7 @@ export class LabelManager {
 				signature: params.signature,
 				cost_user: user_cost,
 				cost_reseller: reseller_cost,
+				name: params.name,
 			})
 			.returning({ id: batchs.id });
 
