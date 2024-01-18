@@ -1,20 +1,56 @@
 import { DialogWrapperWithForm } from "@client/components/common/dialog";
 import { Button } from "@client/components/ui/button";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@client/components/ui/form";
+import { Input } from "@client/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@client/components/ui/select";
 import { Address } from "@shipaxxess/shipaxxess-zod-v4";
+import React from "react";
 import { UseFormReturn } from "react-hook-form";
 
 type CSVFormProps = {
 	dialog: boolean;
 	setDialog: React.Dispatch<React.SetStateAction<boolean>>;
-	form: UseFormReturn<Address.ZODSCHEMA>;
+	form: UseFormReturn<Address.WITHNAMESCHEMA>;
 	headers: string[];
 	setHeaders: React.Dispatch<React.SetStateAction<string[]>>;
-	onsubmit: (values: Address.ZODSCHEMA) => void;
+	onsubmit: (values: Address.WITHNAMESCHEMA) => void;
 };
 
 const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) => {
+	React.useEffect(() => {
+		if (dialog) {
+			for (const header of headers) {
+				if (header.toLocaleLowerCase() === "name") {
+					form.setValue("full_name", header);
+				}
+				if (header.toLocaleLowerCase() === "company") {
+					form.setValue("company_name", header);
+				}
+				if (header.toLocaleLowerCase() === "address") {
+					form.setValue("street_one", header);
+				}
+				if (header.toLocaleLowerCase() === "apt/unit/suite") {
+					form.setValue("street_two", header);
+				}
+				if (header.toLocaleLowerCase() === "city") {
+					form.setValue("city", header);
+				}
+				if (header.toLocaleLowerCase() === "state") {
+					form.setValue("state", header);
+				}
+				if (header.toLocaleLowerCase() === "zip") {
+					form.setValue("zip", header);
+				}
+				if (header.toLocaleLowerCase() === "street1") {
+					form.setValue("street_one", header);
+				}
+				if (header.toLocaleLowerCase() === "street2") {
+					form.setValue("street_two", header);
+				}
+			}
+		}
+	}, [dialog, form, headers]);
+
 	return (
 		<DialogWrapperWithForm
 			form={form}
@@ -26,11 +62,24 @@ const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) =
 			<>
 				<FormField
 					control={form.control}
+					name="name"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Sheet Name</FormLabel>
+							<FormControl>
+								<Input {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
 					name="full_name"
 					render={({ field }) => {
 						return (
 							<FormItem>
-								<FormLabel>Full Name</FormLabel>
+								<FormLabel>Name</FormLabel>
 								<Select defaultValue={field.value} onValueChange={field.onChange}>
 									<FormControl>
 										<SelectTrigger>
@@ -64,7 +113,7 @@ const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) =
 						return (
 							<FormItem>
 								<FormLabel>
-									Campany/Reference <span className="text-xs text-muted-foreground">(optional)</span>
+									Campany <span className="text-xs text-muted-foreground">(optional)</span>
 								</FormLabel>
 								<Select defaultValue={field.value} onValueChange={field.onChange}>
 									<FormControl>
@@ -98,11 +147,11 @@ const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) =
 					render={({ field }) => {
 						return (
 							<FormItem>
-								<FormLabel>Street 1</FormLabel>
+								<FormLabel>Address</FormLabel>
 								<Select defaultValue={field.value} onValueChange={field.onChange}>
 									<FormControl>
 										<SelectTrigger>
-											<SelectValue placeholder="Assign field for street 1" />
+											<SelectValue placeholder="Assign field for address" />
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
@@ -132,12 +181,12 @@ const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) =
 						return (
 							<FormItem>
 								<FormLabel>
-									Street 2 <span className="text-xs text-muted-foreground">(optional)</span>
+									Apt / Unit / Suite <span className="text-xs text-muted-foreground">(optional)</span>
 								</FormLabel>
 								<Select defaultValue={field.value} onValueChange={field.onChange}>
 									<FormControl>
 										<SelectTrigger>
-											<SelectValue placeholder="Assign field for street 2" />
+											<SelectValue placeholder="Assign field for Apt / Unit / Suite" />
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
@@ -232,7 +281,7 @@ const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) =
 					render={({ field }) => {
 						return (
 							<FormItem>
-								<FormLabel>Zip</FormLabel>
+								<FormLabel>Zip Code</FormLabel>
 								<Select defaultValue={field.value} onValueChange={field.onChange}>
 									<FormControl>
 										<SelectTrigger>

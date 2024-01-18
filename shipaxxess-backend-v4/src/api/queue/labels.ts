@@ -29,7 +29,7 @@ export const batchLabelQueue = async (batch: MessageBatch<MessageProps>, env: Bi
 			}
 
 			await manager.sendToBatchDownloadQueue(batch.uuid);
-
+			await manager.saveIntoLabelTableWithDrizzleBatch();
 			await manager.saveIntoCronTable();
 
 			log("label queue");

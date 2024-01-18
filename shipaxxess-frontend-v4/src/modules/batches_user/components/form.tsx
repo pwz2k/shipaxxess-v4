@@ -92,8 +92,9 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 		},
 		resolver: zodResolver(Labels.BATCHZODSCHEMA),
 	});
-	const csvform = useForm<Address.ZODSCHEMA>({
+	const csvform = useForm<Address.WITHNAMESCHEMA>({
 		defaultValues: {
+			name: "",
 			full_name: "",
 			company_name: "",
 			street_one: "",
@@ -103,10 +104,12 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 			state: "",
 			country: "United States",
 		},
-		resolver: zodResolver(Address.ZODSCHEMA),
+		resolver: zodResolver(Address.WITHNAMESCHEMA),
 	});
 
 	const onSubmit = async (data: Labels.BATCHZODSCHEMA) => {
+		console.log(data);
+		return;
 		setIsLoading(true);
 
 		const req = await api.url("/user/labels/batch").useAuth().post(data);
@@ -139,6 +142,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 				complete: (results) => {
 					if (results.errors.length > 0) return toast.error("Failed to load");
 
+					csvform.setValue("name", e.target.files![0].name);
 					setCsvheaders(results.meta.fields as string[]);
 					setCsvdata(results.data);
 					setCsvdialog(true);
@@ -147,7 +151,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 		};
 	};
 
-	const onCSVSubmit = (values: Address.ZODSCHEMA) => {
+	const onCSVSubmit = (values: Address.WITHNAMESCHEMA) => {
 		form.setValue(
 			"recipient",
 			csvdata.map((item) => ({
@@ -162,6 +166,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 				uuid: v4(),
 			})),
 		);
+		form.setValue("name", values.name);
 
 		setCsvdialog(false);
 

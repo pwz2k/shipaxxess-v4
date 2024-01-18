@@ -21,3 +21,7 @@ export type IDZODSCHEMA = z.infer<typeof IDZODSCHEMA>;
 export const UUIDSCHEMA = ZODSCHEMA.merge(z.object({ uuid: z.string() }));
 
 export type UUIDSCHEMA = z.infer<typeof UUIDSCHEMA>;
+
+export const WITHNAMESCHEMA = ZODSCHEMA.merge(z.object({ name: z.string() }));
+
+export type WITHNAMESCHEMA = z.infer<typeof WITHNAMESCHEMA>;

@@ -141,23 +141,6 @@ export const recipentsColumns: ColumnDef<Address.ZODSCHEMA>[] = [
 		enableHiding: true,
 	},
 	{
-		accessorKey: "country",
-		header: ({ column }) => {
-			return (
-				<Button
-					className="px-0 whitespace-nowrap"
-					variant="ghost"
-					onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-					Country
-					<ArrowUpDown className="w-4 h-4 ml-2" />
-				</Button>
-			);
-		},
-		cell: ({ row }) => <span className="whitespace-nowrap">{row.getValue("country")}</span>,
-		enableSorting: true,
-		enableHiding: true,
-	},
-	{
 		id: "action",
 		enableSorting: false,
 		enableHiding: false,
