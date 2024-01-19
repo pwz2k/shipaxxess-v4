@@ -35,11 +35,11 @@ export class LabelManager {
 	haveGrithOk(height: number, length: number, width: number, type: "ups" | "usps") {
 		const isGirthOk = girth([height, length, width]);
 
-		if (type === "ups" && isGirthOk < config.packages.ups_max_girth) {
+		if (type === "ups" && isGirthOk > config.packages.ups_max_girth) {
 			return false;
 		}
 
-		if (type === "usps" && isGirthOk < config.packages.usps_max_girth) {
+		if (type === "usps" && isGirthOk > config.packages.usps_max_girth) {
 			return false;
 		}
 

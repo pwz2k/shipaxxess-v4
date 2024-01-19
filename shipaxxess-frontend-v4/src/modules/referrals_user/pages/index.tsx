@@ -6,7 +6,6 @@ import { referralsColumns } from "../data/columns";
 import { TimezoneContext } from "@client/contexts/timezone";
 import Meta from "@client/components/common/meta";
 import Title from "@client/components/common/title";
-import Search from "@client/components/common/search";
 import { Alert, AlertDescription, AlertTitle } from "@client/components/ui/alert";
 import { Share2 } from "lucide-react";
 import { Button } from "@client/components/ui/button";
@@ -50,7 +49,6 @@ const ReferralsUserPage = () => {
 					title="Referrals"
 					render={
 						<>
-							<Search />
 							<ToggleColumns />
 						</>
 					}

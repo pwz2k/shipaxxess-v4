@@ -5,7 +5,6 @@ import { ticketsColumns } from "../data/columns";
 import { TimezoneContext } from "@client/contexts/timezone";
 import Meta from "@client/components/common/meta";
 import Title from "@client/components/common/title";
-import Search from "@client/components/common/search";
 import { Link } from "react-router-dom";
 import { Button } from "@client/components/ui/button";
 import Breadcrumb from "@client/components/common/breadcrumb";
@@ -37,7 +36,6 @@ const TicketsUserPage = () => {
 					title="Tickets"
 					render={
 						<>
-							<Search />
 							<ToggleColumns />
 							<Link to="/tickets/new">
 								<Button>New Ticket</Button>

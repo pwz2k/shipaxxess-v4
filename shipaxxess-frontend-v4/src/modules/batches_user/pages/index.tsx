@@ -9,11 +9,13 @@ import { batchColumns } from "../data/columns";
 import Search from "@client/components/common/search";
 import { Tags } from "lucide-react";
 import Loading from "@client/components/common/loading";
+import { useTypesQuery } from "@client/hooks/useTypes";
 
 const BatchsUserPage = () => {
 	const { timezone } = React.useContext(TimezoneContext);
 
 	const batchesQuery = useBatchesQuery();
+	const typesQuery = useTypesQuery();
 
 	const { CardTable, ToggleColumns } = useTable({
 		key: "addresses",
@@ -36,7 +38,7 @@ const BatchsUserPage = () => {
 					title="Order History"
 					render={
 						<>
-							<Search />
+							<Search type="order_history" typesQuery={typesQuery} />
 							<ToggleColumns />
 						</>
 					}
