@@ -55,6 +55,7 @@ const Reject = async (c: Context<App>) => {
 		payments,
 		{
 			status: "rejected",
+			new_balance: payment.current_balance,
 		},
 		eq(payments.id, parse.payment_id),
 	);
