@@ -32,10 +32,14 @@ export class LabelManager {
 		log("Label manager is ready.");
 	}
 
-	haveGrithOk(height: number, length: number, width: number) {
+	haveGrithOk(height: number, length: number, width: number, type: "ups" | "usps") {
 		const isGirthOk = girth([height, length, width]);
 
-		if (isGirthOk > config.packages.max_girth) {
+		if (type === "ups" && isGirthOk < config.packages.ups_max_girth) {
+			return false;
+		}
+
+		if (type === "usps" && isGirthOk < config.packages.usps_max_girth) {
 			return false;
 		}
 

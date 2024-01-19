@@ -22,7 +22,8 @@ export const config = {
 		headers: { "Content-Type": "application/json", "x-api-key": "RO-ujX-u50l-ANtj78rl-8vNHE69y-qY" },
 	},
 	packages: {
-		max_girth: 108,
+		usps_max_girth: 108,
+		ups_max_girth: 160,
 	},
 	stripe: {
 		pubkey:

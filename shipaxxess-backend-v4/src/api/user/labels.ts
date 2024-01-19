@@ -42,7 +42,7 @@ const Create = async (c: Context<App>) => {
 	const manager = new LabelManager(c.env, settings);
 	log("Created label manager.");
 
-	if (!manager.haveGrithOk(parse.package.height, parse.package.width, parse.package.length)) {
+	if (!manager.haveGrithOk(parse.package.height, parse.package.width, parse.package.length, parse.type.type)) {
 		throw exception({ message: "Package dimensions are too large.", code: 508 });
 	}
 	log("Package dimensions are ok.");
