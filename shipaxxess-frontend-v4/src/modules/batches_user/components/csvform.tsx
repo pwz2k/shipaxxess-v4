@@ -87,11 +87,6 @@ const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) =
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										{headers.length === 0 && (
-											<SelectItem value="0" disabled>
-												Not found
-											</SelectItem>
-										)}
 										{headers.map((header, index) => {
 											return (
 												<SelectItem key={index} value={header}>
@@ -122,11 +117,6 @@ const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) =
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										{headers.length === 0 && (
-											<SelectItem value="0" disabled>
-												Not found
-											</SelectItem>
-										)}
 										{headers.map((header, index) => {
 											return (
 												<SelectItem key={index} value={header}>
@@ -134,6 +124,7 @@ const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) =
 												</SelectItem>
 											);
 										})}
+										<SelectItem value="undefined">None</SelectItem>
 									</SelectContent>
 								</Select>
 								<FormMessage />
@@ -155,11 +146,6 @@ const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) =
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										{headers.length === 0 && (
-											<SelectItem value="0" disabled>
-												Not found
-											</SelectItem>
-										)}
 										{headers.map((header, index) => {
 											return (
 												<SelectItem key={index} value={header}>
@@ -190,11 +176,6 @@ const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) =
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										{headers.length === 0 && (
-											<SelectItem value="0" disabled>
-												Not found
-											</SelectItem>
-										)}
 										{headers.map((header, index) => {
 											return (
 												<SelectItem key={index} value={header}>
@@ -202,6 +183,7 @@ const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) =
 												</SelectItem>
 											);
 										})}
+										<SelectItem value="undefined">None</SelectItem>
 									</SelectContent>
 								</Select>
 								<FormMessage />
@@ -223,11 +205,6 @@ const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) =
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										{headers.length === 0 && (
-											<SelectItem value="0" disabled>
-												Not found
-											</SelectItem>
-										)}
 										{headers.map((header, index) => {
 											return (
 												<SelectItem key={index} value={header}>
@@ -235,6 +212,7 @@ const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) =
 												</SelectItem>
 											);
 										})}
+										<SelectItem value="undefined">None</SelectItem>
 									</SelectContent>
 								</Select>
 								<FormMessage />
@@ -256,11 +234,6 @@ const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) =
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										{headers.length === 0 && (
-											<SelectItem value="0" disabled>
-												Not found
-											</SelectItem>
-										)}
 										{headers.map((header, index) => {
 											return (
 												<SelectItem key={index} value={header}>
@@ -289,11 +262,6 @@ const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) =
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
-										{headers.length === 0 && (
-											<SelectItem value="0" disabled>
-												Not found
-											</SelectItem>
-										)}
 										{headers.map((header, index) => {
 											return (
 												<SelectItem key={index} value={header}>

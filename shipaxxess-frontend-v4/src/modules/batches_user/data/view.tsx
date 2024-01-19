@@ -10,23 +10,6 @@ import ViewTableMenu from "../components/viewTableMenu";
 export const labelsColumns = (timezone: string) =>
 	[
 		{
-			accessorKey: "id",
-			header: ({ column }) => {
-				return (
-					<Button
-						className="px-0 whitespace-nowrap"
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Label #
-						<ArrowUpDown className="w-4 h-4 ml-2" />
-					</Button>
-				);
-			},
-			cell: ({ row }) => <span>{parseInt(row.id) + 1}</span>,
-			enableSorting: true,
-			enableHiding: true,
-		},
-		{
 			accessorKey: "remote_tracking_number",
 			header: ({ column }) => {
 				return (

@@ -29,7 +29,7 @@ export const pdfDownloadBatchQueue = async (batch: MessageBatch<QueueProps>, env
 				}
 
 				try {
-					await merger.add(buffer, ["1"]);
+					await merger.add(buffer, "0,1");
 				} catch (error) {
 					await merger.add(buffer);
 				}

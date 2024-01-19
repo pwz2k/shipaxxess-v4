@@ -116,6 +116,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 		if (res.success) {
 			api.showSuccessToast();
 			setIsLoading(false);
+			setCosts(0);
 			form.reset();
 			return;
 		}
