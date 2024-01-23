@@ -59,6 +59,7 @@ const TicketForm = ({
 					<FormField
 						control={form.control}
 						name="data_id"
+						disabled
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Label ID</FormLabel>
@@ -74,6 +75,7 @@ const TicketForm = ({
 					<FormField
 						control={form.control}
 						name="data_id"
+						disabled
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>Payment ID</FormLabel>

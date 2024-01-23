@@ -110,8 +110,6 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 	});
 
 	const onSubmit = async (data: Labels.BATCHZODSCHEMA) => {
-		console.log(data);
-		return;
 		setIsLoading(true);
 
 		const req = await api.url("/user/labels/batch").useAuth().post(data);
