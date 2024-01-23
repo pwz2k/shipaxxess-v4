@@ -40,6 +40,23 @@ export const addressesColumns = () =>
 			enableHiding: true,
 		},
 		{
+			accessorKey: "phone_number",
+			header: ({ column }) => {
+				return (
+					<Button
+						className="px-0 whitespace-nowrap"
+						variant="ghost"
+						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+						Phone Number
+						<ArrowUpDown className="w-4 h-4 ml-2" />
+					</Button>
+				);
+			},
+			cell: ({ row }) => <span className="whitespace-nowrap">{row.getValue("phone_number")}</span>,
+			enableSorting: true,
+			enableHiding: true,
+		},
+		{
 			accessorKey: "street_one",
 			header: ({ column }) => {
 				return (
