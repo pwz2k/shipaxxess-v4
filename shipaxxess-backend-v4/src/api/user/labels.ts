@@ -1,6 +1,7 @@
 import { config } from "@config";
 import { LabelManager } from "@lib/label";
 import { Model } from "@lib/model";
+import { addresses } from "@schemas/addresses";
 import { batchs } from "@schemas/batchs";
 import { labels } from "@schemas/labels";
 import { payments } from "@schemas/payments";
@@ -74,6 +75,27 @@ const Create = async (c: Context<App>) => {
 	c.executionCtx.waitUntil(manager.chargeUserForBatch(user, user_cost, total_labels));
 	c.executionCtx.waitUntil(manager.sendToBatchProcessQueue(batch.id));
 	log("User charged and batch sent to queue.");
+
+	const savedSender = async () => {
+		const model = new Model(c.env.DB);
+
+		return await model.insert(addresses, {
+			uuid: v4(),
+			user_id: user.id,
+			full_name: parse.sender.full_name,
+			company_name: parse.sender.company_name,
+			city: parse.sender.city,
+			zip: parse.sender.zip,
+			state: parse.sender.state,
+			street_one: parse.sender.street_one,
+			street_two: parse.sender.street_two,
+			country: parse.sender.country,
+		});
+	};
+
+	if (parse.saved_sender) {
+		c.executionCtx.waitUntil(savedSender());
+	}
 
 	return c.json({ success: true, message: "We are processing your batch. Please check back later." });
 };

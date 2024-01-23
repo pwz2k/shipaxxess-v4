@@ -22,6 +22,7 @@ export const COMMONSCHEMA = z.object({
 	saturday: z.boolean().optional(),
 	signature: z.boolean().optional(),
 	name: z.string().optional(),
+	saved_sender: z.boolean().default(false),
 });
 
 export type COMMONSCHEMA = z.infer<typeof COMMONSCHEMA>;

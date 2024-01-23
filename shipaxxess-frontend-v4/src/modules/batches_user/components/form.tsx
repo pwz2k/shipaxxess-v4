@@ -28,6 +28,7 @@ import CSVForm from "./csvform";
 import LabelsRecipentsTable from "./recipientsTable";
 import { useLoading } from "@client/hooks/useLoading";
 import { RadioGroup, RadioGroupItem } from "@client/components/ui/radio-group";
+import { Checkbox } from "@client/components/ui/checkbox";
 
 type BatchNewFormProps = {
 	addresses: UseQueryResult<AddressesSelectModel[]>;
@@ -89,6 +90,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 			},
 			saturday: false,
 			signature: false,
+			saved_sender: false,
 		},
 		resolver: zodResolver(Labels.BATCHZODSCHEMA),
 	});
@@ -108,6 +110,8 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 	});
 
 	const onSubmit = async (data: Labels.BATCHZODSCHEMA) => {
+		console.log(data);
+		return;
 		setIsLoading(true);
 
 		const req = await api.url("/user/labels/batch").useAuth().post(data);
@@ -255,12 +259,26 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [form.watch("package.weight")]);
 
+	React.useEffect(() => {
+		if (form.formState.errors) {
+			if (form.formState.errors.type) {
+				toast.error(`Delivery Type ${form.formState.errors.type.message}`);
+			}
+			if (form.formState.errors.shippingdate) {
+				toast.error(`Shipping Date ${form.formState.errors.shippingdate.message}`);
+			}
+			if (form.formState.errors.sender) {
+				toast.error(`Ship From Required`);
+			}
+		}
+	}, [form.formState.errors]);
+
 	return (
 		<>
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)}>
 					<Card>
-						<CardHeader></CardHeader>
+						<CardHeader />
 						<CardContent className="space-y-6">
 							<div className="grid grid-cols-3 grid-rows-1 gap-6">
 								<FormField
@@ -331,7 +349,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 									control={form.control}
 									name="shippingdate"
 									render={({ field }) => (
-										<FormItem>
+										<FormItem className="hidden">
 											<FormLabel>Shipping Date</FormLabel>
 											<FormControl>
 												<DatePicker field={field} />
@@ -377,7 +395,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 														</SelectTrigger>
 													</FormControl>
 													<SelectContent>
-														<SelectItem value="custom">Don't use saved from address</SelectItem>
+														<SelectItem value="custom">Don't use saved Ship From Address</SelectItem>
 														{addresses.data?.map((nod) => {
 															return (
 																<SelectItem key={nod.id} value={nod.id.toString()}>
@@ -514,6 +532,24 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 												)}
 											/>
 										</div>
+										<FormField
+											control={form.control}
+											name="saved_sender"
+											render={({ field }) => (
+												<FormItem className="flex flex-row items-start py-4 space-x-3 space-y-0">
+													<FormControl>
+														<Checkbox
+															defaultChecked={field.value}
+															checked={field.value}
+															onCheckedChange={field.onChange}
+														/>
+													</FormControl>
+													<div className="space-y-1 leading-none">
+														<FormLabel>Save Ship From Address</FormLabel>
+													</div>
+												</FormItem>
+											)}
+										/>
 									</div>
 								)}
 							</div>
