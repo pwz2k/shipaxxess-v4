@@ -1,0 +1,1 @@
+ALTER TABLE addresses ADD `phone_number` text;

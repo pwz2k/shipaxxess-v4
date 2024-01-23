@@ -13,6 +13,7 @@ export const addresses = sqliteTable("addresses", {
 	zip: text("zip").notNull(),
 	state: text("state").notNull(),
 	country: text("country").notNull(),
+	phone_number: text("phone_number"),
 	default: integer("default", { mode: "boolean" }).default(false).notNull(),
 	created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`),
 	updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),

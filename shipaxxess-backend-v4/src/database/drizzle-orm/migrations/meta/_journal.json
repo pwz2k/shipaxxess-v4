@@ -29,6 +29,13 @@
       "when": 1705627752151,
       "tag": "0003_real_shocker",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1706033259748,
+      "tag": "0004_blushing_wolfpack",
+      "breakpoints": true
     }
   ]
 }
