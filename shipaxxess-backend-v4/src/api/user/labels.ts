@@ -27,9 +27,14 @@ const Get = async (c: Context<App, "/:uuid">) => {
 
 	const model = new Model(c.env.DB);
 
+	const batch = await model.get(batchs, eq(batchs.uuid, batch_uuid));
+	if (!batch) {
+		throw exception({ message: "Batch not found.", code: 404 });
+	}
+
 	const batchLabels = await model.all(labels, eq(labels.batch_uuid, batch_uuid));
 
-	return c.json(batchLabels);
+	return c.json({ labels: batchLabels, batch: { name: batch.name } });
 };
 
 const Create = async (c: Context<App>) => {

@@ -67,6 +67,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 				state: "",
 				zip: "",
 				company_name: "",
+				phone: "",
 			},
 			recipient: [
 				{
@@ -79,6 +80,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 					zip: "",
 					company_name: "",
 					uuid: v4(),
+					phone: "",
 				},
 			],
 			package: {
@@ -384,6 +386,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 														form.setValue("sender.zip", item.zip);
 														form.setValue("sender.state", item.state);
 														form.setValue("sender.country", item.country);
+														form.setValue("sender.phone", item.phone_number || "");
 
 														field.onChange(id);
 													}}>
@@ -513,7 +516,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 												control={form.control}
 												name="sender.country"
 												render={({ field }) => (
-													<FormItem>
+													<FormItem className="hidden">
 														<FormLabel>Country</FormLabel>
 														<Select onValueChange={field.onChange} defaultValue={field.value}>
 															<FormControl>
@@ -529,7 +532,21 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 													</FormItem>
 												)}
 											/>
+											<FormField
+												control={form.control}
+												name="sender.phone"
+												render={({ field }) => (
+													<FormItem>
+														<FormLabel>Phone Number</FormLabel>
+														<FormControl>
+															<Input {...field} />
+														</FormControl>
+														<FormMessage />
+													</FormItem>
+												)}
+											/>
 										</div>
+
 										<FormField
 											control={form.control}
 											name="saved_sender"
@@ -862,7 +879,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 									control={form.control}
 									name="recipient.0.country"
 									render={({ field }) => (
-										<FormItem>
+										<FormItem className="hidden">
 											<FormLabel>Country</FormLabel>
 											<Select onValueChange={field.onChange} defaultValue={field.value}>
 												<FormControl>
@@ -874,6 +891,19 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 													<SelectItem value="United States">United States</SelectItem>
 												</SelectContent>
 											</Select>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="recipient.0.phone"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Phone Number</FormLabel>
+											<FormControl>
+												<Input {...field} />
+											</FormControl>
 											<FormMessage />
 										</FormItem>
 									)}

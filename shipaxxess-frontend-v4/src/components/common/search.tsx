@@ -68,7 +68,9 @@ const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQu
 												name="weight_query"
 												render={({ field }) => (
 													<FormItem>
-														<FormLabel>Weight</FormLabel>
+														<FormLabel>
+															Weight <span className="text-xs text-muted-foreground">(oz/lb)</span>
+														</FormLabel>
 														<FormControl>
 															<Input placeholder="Search by weight..." {...field} type="number" />
 														</FormControl>
@@ -108,6 +110,7 @@ const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQu
 																				</SelectItem>
 																			);
 																		})}
+																		<SelectItem value="undefined">None</SelectItem>
 																	</SelectContent>
 																</Select>
 																<FormMessage />
@@ -138,6 +141,7 @@ const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQu
 																	<SelectItem value="delivered">Delivered</SelectItem>
 																	<SelectItem value="completed">Complete</SelectItem>
 																	<SelectItem value="cancelled">Cancelled</SelectItem>
+																	<SelectItem value="undefined">None</SelectItem>
 																</SelectContent>
 															</Select>
 															<FormMessage />

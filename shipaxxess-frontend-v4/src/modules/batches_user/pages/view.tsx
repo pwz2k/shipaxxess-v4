@@ -23,7 +23,7 @@ const ViewBatchUserPage = () => {
 	const { CardTable, ToggleColumns } = useTable({
 		key: "batchs_labels",
 		columns: labelsColumns(timezone),
-		data: batchQuery.data,
+		data: batchQuery.data?.labels || [],
 		loading: batchQuery.isLoading,
 		sort: [{ id: "id", desc: true }],
 	});
@@ -79,7 +79,7 @@ const ViewBatchUserPage = () => {
 
 			<div className="px-4 py-8 space-y-8">
 				<Title
-					title="Labels Hisory"
+					title={batchQuery.data?.batch ? batchQuery.data.batch.name || "" : "Labels Hisory"}
 					render={
 						<>
 							<ToggleColumns />

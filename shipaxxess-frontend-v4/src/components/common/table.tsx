@@ -37,7 +37,7 @@ export const DataTable = <T,>({ columnsLength, table, isLoading, className }: Da
 					<TableBody>
 						{table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
-								<TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+								<TableRow key={row.index} data-state={row.getIsSelected() && "selected"}>
 									{row.getVisibleCells().map((cell) => (
 										<TableCell className="py-3 pl-12" key={cell.id}>
 											{flexRender(cell.column.columnDef.cell, cell.getContext())}
