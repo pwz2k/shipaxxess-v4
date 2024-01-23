@@ -24,7 +24,6 @@ const GetAll = async (c: Context<App>) => {
 };
 
 const Create = async (c: Context<App>) => {
-	// Validation
 	const body = await c.req.json();
 	const parse = Address.ZODSCHEMA.parse(body);
 
@@ -40,6 +39,7 @@ const Create = async (c: Context<App>) => {
 		zip: parse.zip,
 		company_name: parse.company_name,
 		street_two: parse.street_two,
+		phone_number: parse.phone,
 		user_id: c.get("jwtPayload").id,
 	});
 
@@ -47,7 +47,6 @@ const Create = async (c: Context<App>) => {
 };
 
 const Edit = async (c: Context<App>) => {
-	// Validation
 	const body = await c.req.json();
 	const parse = Address.IDZODSCHEMA.parse(body);
 
@@ -61,7 +60,6 @@ const Edit = async (c: Context<App>) => {
 };
 
 const Delete = async (c: Context<App>) => {
-	// Validation
 	const body = await c.req.json();
 	const parse = Id.ZODSCHEMA.parse(body);
 

@@ -29,6 +29,7 @@ const NewAddressUserPage = () => {
 			street_one: "",
 			street_two: "",
 			zip: "",
+			phone: "",
 		},
 	});
 
