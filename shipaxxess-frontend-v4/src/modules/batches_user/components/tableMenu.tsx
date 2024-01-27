@@ -85,7 +85,7 @@ const TableMenu = ({ row }: { row: Row<BatchsSelectModel> }) => {
 	return (
 		<div className="flex items-center gap-2">
 			{row.original.total_labels !== 1 && (
-				<Link to={`/batch/${row.original.uuid}`}>
+				<Link to={`/orders/${row.original.uuid}`}>
 					<Button variant="outline">View</Button>
 				</Link>
 			)}

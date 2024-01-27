@@ -85,9 +85,7 @@ const AddressForm = ({
 					name="phone"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>
-								Phone <span>(optional)</span>
-							</FormLabel>
+							<FormLabel>Phone</FormLabel>
 							<FormControl>
 								<Input {...field} />
 							</FormControl>

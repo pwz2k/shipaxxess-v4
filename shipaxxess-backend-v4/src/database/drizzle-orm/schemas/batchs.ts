@@ -20,6 +20,7 @@ export const batchs = sqliteTable("batchs", {
 	// Remote data
 	merge_pdf_key: text("pdf_r2_link"),
 	remote_id: integer("remote_id"),
+	tracking_number: text("tracking_number"),
 
 	// Sender
 	sender_full_name: text("sender_full_name").notNull(),

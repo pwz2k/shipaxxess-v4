@@ -35,6 +35,7 @@ const EditAddressPage = () => {
 			street_one: "",
 			street_two: "",
 			zip: "",
+			phone: "",
 		},
 	});
 
@@ -67,6 +68,7 @@ const EditAddressPage = () => {
 			form.setValue("zip", addressQuery.data.zip);
 			form.setValue("street_one", addressQuery.data.street_one);
 			form.setValue("street_two", addressQuery.data.street_two || "");
+			form.setValue("phone", addressQuery.data.phone_number || "");
 		}
 	}, [addressQuery.data, form]);
 

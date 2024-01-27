@@ -1,11 +1,12 @@
 import moment from "moment-timezone";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, Copy } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@client/components/ui/button";
 import { BatchsSelectModel } from "@db/batchs";
 import { app } from "@client/config/app";
 import { Badge } from "@client/components/ui/badge";
 import TableMenu from "../components/tableMenu";
+import { toast } from "sonner";
 
 export const batchColumns = (timezone: string) =>
 	[
@@ -22,7 +23,45 @@ export const batchColumns = (timezone: string) =>
 					</Button>
 				);
 			},
-			cell: ({ row }) => <span>{row.original.uuid}</span>,
+			cell: ({ row }) => (
+				<div
+					className="flex items-center cursor-pointer hover:text-blue-500"
+					onClick={() => {
+						navigator.clipboard.writeText(row.original.uuid);
+						toast.success("Copied to clipboard");
+					}}>
+					<p className="whitespace-nowrap w-[76px] text-ellipsis overflow-hidden">{row.original.uuid}</p>
+					<Copy size={14} />
+				</div>
+			),
+			enableSorting: true,
+			enableHiding: true,
+		},
+		{
+			accessorKey: "tracking_number",
+			header: ({ column }) => {
+				return (
+					<Button
+						className="px-0 whitespace-nowrap"
+						variant="ghost"
+						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+						Tracking Number
+						<ArrowUpDown className="w-4 h-4 ml-2" />
+					</Button>
+				);
+			},
+			cell: ({ row }) => (
+				<div
+					className="flex items-center cursor-pointer hover:text-blue-500"
+					onClick={() => {
+						if (!row.original.tracking_number) return;
+						navigator.clipboard.writeText(row.original.tracking_number);
+						toast.success("Copied to clipboard");
+					}}>
+					<p className="whitespace-nowrap w-[76px] text-ellipsis overflow-hidden">{row.original.tracking_number}</p>
+					{row.original.tracking_number && <Copy size={14} />}
+				</div>
+			),
 			enableSorting: true,
 			enableHiding: true,
 		},
@@ -97,25 +136,6 @@ export const batchColumns = (timezone: string) =>
 				);
 			},
 			cell: ({ row }) => <span className="whitespace-nowrap">${row.original.cost_user.toFixed(2)}</span>,
-			enableSorting: true,
-			enableHiding: true,
-		},
-		{
-			accessorKey: "shipping_date",
-			header: ({ column }) => {
-				return (
-					<Button
-						className="px-0 whitespace-nowrap"
-						variant="ghost"
-						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Ship Date
-						<ArrowUpDown className="w-4 h-4 ml-2" />
-					</Button>
-				);
-			},
-			cell: ({ row }) => (
-				<span className="whitespace-nowrap">{moment(row.original.shipping_date).format("DD MMM, YYYY")}</span>
-			),
 			enableSorting: true,
 			enableHiding: true,
 		},

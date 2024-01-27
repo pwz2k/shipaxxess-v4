@@ -28,8 +28,8 @@ export const sidebarItems: SidebarProps[] = [
 	},
 	{
 		icon: <Tags color="#fff" size={20} />,
-		label: "Order History",
-		slug: "/batch",
+		label: "Orders",
+		slug: "/orders",
 		badge: "new",
 	},
 	{

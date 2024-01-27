@@ -8,7 +8,7 @@ export const ZODSCHEMA = z.object({
 	city: z.string().min(1),
 	zip: z.string().min(1),
 	state: z.string().min(1),
-	phone: z.string().optional(),
+	phone: z.string(),
 	country: z.string().default("United States"),
 });
 
