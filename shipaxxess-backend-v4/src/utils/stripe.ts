@@ -5,8 +5,8 @@ export const webCrypto = Stripe.createSubtleCryptoProvider();
 
 type PayloadProps = { amount: number; topup_uuid: string; title: string; user_id: number };
 
-export const stripeCheckout = async (payload: PayloadProps) => {
-	const stripe = new Stripe(config.stripe.seckey, {
+export const stripeCheckout = async (secret: string, payload: PayloadProps) => {
+	const stripe = new Stripe(secret, {
 		apiVersion: "2023-10-16",
 	});
 

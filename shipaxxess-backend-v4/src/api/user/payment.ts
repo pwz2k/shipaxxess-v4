@@ -43,7 +43,10 @@ const Create = async (c: Context<App>) => {
 
 	// Handle card payment
 	if (parse.gateway === "card") {
-		const res = await stripeCheckout({
+		const settings = await getSettings(c.env.DB);
+		if (!settings["stripe_secret"]) throw exception({ message: "Stripe key not found", code: 404 });
+
+		const res = await stripeCheckout(settings["stripe_secret"], {
 			amount: parse.credit,
 			title: "Demo app topup",
 			topup_uuid: payment_uuid,
