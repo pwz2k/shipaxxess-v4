@@ -3,7 +3,6 @@ import { payments } from "@schemas/payments";
 import { users } from "@schemas/users";
 import { log } from "@utils/log";
 import { getSettings } from "@utils/settings";
-import { webCrypto } from "@utils/stripe";
 import { and, eq } from "drizzle-orm";
 import { Context } from "hono";
 import Stripe from "stripe";
@@ -25,13 +24,7 @@ export const StripeWebhook = async (c: Context<App>) => {
 		const sig = c.req.header("stripe-signature");
 		if (!sig) throw new Error("No signature");
 
-		const event = await stripe.webhooks.constructEventAsync(
-			body,
-			sig,
-			settings["stripe_webhook_secret"],
-			undefined,
-			webCrypto,
-		);
+		const event = await stripe.webhooks.constructEventAsync(body, sig, settings["stripe_webhook_secret"]);
 
 		switch (event.type) {
 			case "checkout.session.completed":
