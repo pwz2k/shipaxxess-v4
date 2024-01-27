@@ -10,19 +10,9 @@ export const config = {
 		admin: "5aee2c98-3094-4c90-8229-a8f0bc27aa22",
 	},
 	mail: "https://nodemailer-vercel-ten.vercel.app/api",
-	label: {
-		url: "https://api.labelaxxess.com",
-		headers: { "Content-Type": "application/json", "x-api-key": "RO-ujX-u50l-ANtj78rl-8vNHE69y-qY" },
-	},
 	packages: {
 		usps_max_girth: 108,
 		ups_max_girth: 160,
-	},
-	coinbase: {
-		apikey: "8a4015b9-6a3c-48d5-a424-5b989edd5ade",
-		baseurl: "https://api.commerce.coinbase.com",
-		redirect_url: "http://localhost:5173/payments",
-		cancel_url: "http://localhost:5173/payments?payment=canceled&method=crypto",
 	},
 	cloudflare: {
 		account_identifier: "554a824a7e17198451f2dd49f8d07636",
