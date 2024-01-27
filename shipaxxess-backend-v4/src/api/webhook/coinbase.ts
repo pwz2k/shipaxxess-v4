@@ -1,5 +1,5 @@
 import { Context } from "hono";
 
-export const CoinbaseWebhook = (c: Context<App>) => {
+export const CoinbaseWebhook = async (c: Context<App>) => {
 	return c.json({});
 };

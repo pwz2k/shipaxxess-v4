@@ -1,6 +1,8 @@
 import { config } from "@config";
 import Stripe from "stripe";
 
+export const webCrypto = Stripe.createSubtleCryptoProvider();
+
 type PayloadProps = { amount: number; topup_uuid: string; title: string; user_id: number };
 
 export const stripeCheckout = async (payload: PayloadProps) => {
