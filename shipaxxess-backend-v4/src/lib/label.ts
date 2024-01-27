@@ -446,6 +446,14 @@ export class LabelManager {
 		log("Email sent.");
 	}
 
+	async updateBatchFirstTrackingNumber(batch_uuid: string) {
+		return await drizzle(this.env.DB)
+			.update(batchs)
+			.set({ tracking_number: this.labels[0].remote_tracking_number })
+			.where(eq(batchs.uuid, batch_uuid))
+			.execute();
+	}
+
 	async updateLabelBatchStatus(batch_uuid: string) {
 		await drizzle(this.env.DB)
 			.update(batchs)

@@ -32,6 +32,10 @@ export const batchLabelQueue = async (batch: MessageBatch<MessageProps>, env: Bi
 			await manager.saveIntoLabelTableWithDrizzleBatch();
 			await manager.saveIntoCronTable();
 
+			if (batch.recipients.length === 1) {
+				await manager.updateBatchFirstTrackingNumber(batch.uuid);
+			}
+
 			log("label queue");
 		} catch (err) {
 			log(`label queue error: ${(err as Error).message}`);
