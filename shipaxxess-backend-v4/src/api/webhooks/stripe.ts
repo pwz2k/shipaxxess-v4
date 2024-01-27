@@ -20,7 +20,7 @@ export const StripeWebhook = async (c: Context<App>) => {
 			httpClient: Stripe.createFetchHttpClient(),
 		});
 
-		const body = await c.req.text();
+		const body = await c.req.raw.text();
 
 		const sig = c.req.header("stripe-signature");
 		if (!sig) throw new Error("No signature");
@@ -38,7 +38,7 @@ export const StripeWebhook = async (c: Context<App>) => {
 				const { metadata } = event.data.object;
 				if (!metadata) throw new Error("No metadata");
 
-				const topup_id = parseInt(metadata.topup_id);
+				const topup_uuid = metadata.topup_uuid;
 				const user_id = parseInt(metadata.user_id);
 
 				const model = new Model(c.env.DB);
@@ -46,7 +46,7 @@ export const StripeWebhook = async (c: Context<App>) => {
 				const user = await model.get(users, eq(users.id, user_id));
 				if (!user) throw new Error("User not found");
 
-				const topup = await model.get(payments, and(eq(payments.id, topup_id), eq(payments.user_id, user_id)));
+				const topup = await model.get(payments, and(eq(payments.uuid, topup_uuid), eq(payments.user_id, user_id)));
 				if (!topup) throw new Error("Topup not found");
 
 				await model.update(
@@ -62,7 +62,7 @@ export const StripeWebhook = async (c: Context<App>) => {
 					{
 						status: "confirmed",
 					},
-					eq(payments.id, topup_id),
+					eq(payments.uuid, topup_uuid),
 				);
 
 				log(`Stripe webhook: ${user.email_address} topped up ${topup.credit} credits`);
@@ -73,7 +73,7 @@ export const StripeWebhook = async (c: Context<App>) => {
 				const data = event.data.object;
 				if (!data.metadata) throw new Error("No metadata");
 
-				const topup_id2 = parseInt(data.metadata.topup_id);
+				const topup_uuid2 = data.metadata.topup_uuid;
 				const user_id2 = parseInt(data.metadata.user_id);
 
 				const model2 = new Model(c.env.DB);
@@ -81,7 +81,7 @@ export const StripeWebhook = async (c: Context<App>) => {
 				const user2 = await model2.get(users, eq(users.id, user_id2));
 				if (!user2) throw new Error("User not found");
 
-				const topup2 = await model2.get(payments, and(eq(payments.id, topup_id2), eq(payments.user_id, user_id2)));
+				const topup2 = await model2.get(payments, and(eq(payments.uuid, topup_uuid2), eq(payments.user_id, user_id2)));
 				if (!topup2) throw new Error("Topup not found");
 
 				await model2.update(
@@ -89,7 +89,7 @@ export const StripeWebhook = async (c: Context<App>) => {
 					{
 						status: "failed",
 					},
-					eq(payments.id, topup_id2),
+					eq(payments.uuid, topup_uuid2),
 				);
 
 				log(`Stripe webhook: ${user2.email_address} failed to top up ${topup2.credit} credits`);
