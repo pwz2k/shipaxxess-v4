@@ -69,16 +69,28 @@ const Email = async (c: Context<App>) => {
 	await drizzle(c.env.DB).batch([
 		drizzle(c.env.DB)
 			.update(adminSettings)
-			.set({ setting_value: parse.postalserver_apikey })
-			.where(eq(adminSettings.setting_id, "postalserver_apikey")),
+			.set({ setting_value: parse.email_smtp_host })
+			.where(eq(adminSettings.setting_id, "email_smtp_host")),
 		drizzle(c.env.DB)
 			.update(adminSettings)
-			.set({ setting_value: parse.postalserver_host })
-			.where(eq(adminSettings.setting_id, "postalserver_host")),
+			.set({ setting_value: String(parse.email_smtp_port) })
+			.where(eq(adminSettings.setting_id, "email_smtp_port")),
 		drizzle(c.env.DB)
 			.update(adminSettings)
-			.set({ setting_value: parse.postalserver_address })
-			.where(eq(adminSettings.setting_id, "postalserver_address")),
+			.set({ setting_value: parse.email_smtp_user })
+			.where(eq(adminSettings.setting_id, "email_smtp_user")),
+		drizzle(c.env.DB)
+			.update(adminSettings)
+			.set({ setting_value: parse.email_smtp_password })
+			.where(eq(adminSettings.setting_id, "email_smtp_password")),
+		drizzle(c.env.DB)
+			.update(adminSettings)
+			.set({ setting_value: parse.email_from_name })
+			.where(eq(adminSettings.setting_id, "email_from_name")),
+		drizzle(c.env.DB)
+			.update(adminSettings)
+			.set({ setting_value: parse.email_from_address })
+			.where(eq(adminSettings.setting_id, "email_from_address")),
 	]);
 
 	return c.json({ success: true });

@@ -26,9 +26,12 @@ const SettingsEmailTab = ({ query }: { query: UseQueryResult<AdminSettingsSelect
 	const form = useForm<Settings.EMAILTAB>({
 		resolver: zodResolver(Settings.EMAILTAB),
 		defaultValues: {
-			postalserver_apikey: "",
-			postalserver_host: "",
-			postalserver_address: "",
+			email_from_address: "",
+			email_from_name: "",
+			email_smtp_host: "",
+			email_smtp_password: "",
+			email_smtp_port: 587,
+			email_smtp_user: "",
 		},
 	});
 
@@ -51,19 +54,34 @@ const SettingsEmailTab = ({ query }: { query: UseQueryResult<AdminSettingsSelect
 
 	React.useEffect(() => {
 		if (query.data) {
-			const apikey = query.data.find((item) => item.setting_id === "postalserver_apikey");
+			const apikey = query.data.find((item) => item.setting_id === "email_from_address");
 			if (apikey) {
-				form.setValue("postalserver_apikey", apikey.setting_value);
+				form.setValue("email_from_address", apikey.setting_value);
 			}
 
-			const host = query.data.find((item) => item.setting_id === "postalserver_host");
+			const host = query.data.find((item) => item.setting_id === "email_from_name");
 			if (host) {
-				form.setValue("postalserver_host", host.setting_value);
+				form.setValue("email_from_name", host.setting_value);
 			}
 
-			const address = query.data.find((item) => item.setting_id === "postalserver_address");
+			const address = query.data.find((item) => item.setting_id === "email_smtp_host");
 			if (address) {
-				form.setValue("postalserver_address", address.setting_value);
+				form.setValue("email_smtp_host", address.setting_value);
+			}
+
+			const port = query.data.find((item) => item.setting_id === "email_smtp_port");
+			if (port) {
+				form.setValue("email_smtp_port", Number(port.setting_value));
+			}
+
+			const user = query.data.find((item) => item.setting_id === "email_smtp_user");
+			if (user) {
+				form.setValue("email_smtp_user", user.setting_value);
+			}
+
+			const password = query.data.find((item) => item.setting_id === "email_smtp_password");
+			if (password) {
+				form.setValue("email_smtp_password", password.setting_value);
 			}
 		}
 	}, [form, query.data]);
@@ -86,10 +104,10 @@ const SettingsEmailTab = ({ query }: { query: UseQueryResult<AdminSettingsSelect
 					<div className="flex flex-col gap-4 mb-4">
 						<FormField
 							control={form.control}
-							name="postalserver_apikey"
+							name="email_from_address"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Postalserver Api key</FormLabel>
+									<FormLabel>From Email</FormLabel>
 									<FormControl>
 										<Input {...field} />
 									</FormControl>
@@ -100,10 +118,10 @@ const SettingsEmailTab = ({ query }: { query: UseQueryResult<AdminSettingsSelect
 						/>
 						<FormField
 							control={form.control}
-							name="postalserver_host"
+							name="email_from_name"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Postalserver host</FormLabel>
+									<FormLabel>From Name</FormLabel>
 									<FormControl>
 										<Input {...field} />
 									</FormControl>
@@ -114,10 +132,52 @@ const SettingsEmailTab = ({ query }: { query: UseQueryResult<AdminSettingsSelect
 						/>
 						<FormField
 							control={form.control}
-							name="postalserver_address"
+							name="email_smtp_host"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Postalserver address</FormLabel>
+									<FormLabel>Smtp Host</FormLabel>
+									<FormControl>
+										<Input {...field} />
+									</FormControl>
+									<FormDescription />
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="email_smtp_port"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Smtp Port</FormLabel>
+									<FormControl>
+										<Input {...field} />
+									</FormControl>
+									<FormDescription />
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="email_smtp_user"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Smtp User</FormLabel>
+									<FormControl>
+										<Input {...field} />
+									</FormControl>
+									<FormDescription />
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="email_smtp_password"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Smtp Password</FormLabel>
 									<FormControl>
 										<Input {...field} />
 									</FormControl>
