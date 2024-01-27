@@ -167,6 +167,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 				zip: item[values.zip],
 				company_name: item[values.company_name!],
 				uuid: v4(),
+				phone: item[values.phone!],
 			})),
 		);
 		form.setValue("name", values.name);
