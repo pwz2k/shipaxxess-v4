@@ -39,7 +39,7 @@ export type PAYMENTTAB = z.infer<typeof PAYMENTTAB>;
 
 export const EMAILTAB = z.object({
 	email_smtp_host: z.string(),
-	email_smtp_port: z.number(),
+	email_smtp_port: z.string(),
 	email_smtp_user: z.string(),
 	email_smtp_password: z.string(),
 	email_from_name: z.string(),

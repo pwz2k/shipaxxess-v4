@@ -30,7 +30,7 @@ const SettingsEmailTab = ({ query }: { query: UseQueryResult<AdminSettingsSelect
 			email_from_name: "",
 			email_smtp_host: "",
 			email_smtp_password: "",
-			email_smtp_port: 587,
+			email_smtp_port: "587",
 			email_smtp_user: "",
 		},
 	});
@@ -71,7 +71,7 @@ const SettingsEmailTab = ({ query }: { query: UseQueryResult<AdminSettingsSelect
 
 			const port = query.data.find((item) => item.setting_id === "email_smtp_port");
 			if (port) {
-				form.setValue("email_smtp_port", Number(port.setting_value));
+				form.setValue("email_smtp_port", port.setting_value);
 			}
 
 			const user = query.data.find((item) => item.setting_id === "email_smtp_user");
@@ -151,7 +151,7 @@ const SettingsEmailTab = ({ query }: { query: UseQueryResult<AdminSettingsSelect
 								<FormItem>
 									<FormLabel>Smtp Port</FormLabel>
 									<FormControl>
-										<Input {...field} />
+										<Input {...field} type="number" />
 									</FormControl>
 									<FormDescription />
 									<FormMessage />
