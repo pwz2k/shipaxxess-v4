@@ -24,6 +24,7 @@ export const getWeight = async (db: D1Database, parse: Weights.FETCHSCHEMA) => {
 
 export const initSettings = async (db: D1Database) => {
 	return await drizzle(db).batch([
+		// Admin settings
 		drizzle(db).insert(adminSettings).values({ setting_id: "stripe_key", setting_value: "" }),
 		drizzle(db).insert(adminSettings).values({ setting_id: "stripe_secret", setting_value: "" }),
 		drizzle(db).insert(adminSettings).values({ setting_id: "stripe_webhook_secret", setting_value: "" }),
@@ -32,11 +33,18 @@ export const initSettings = async (db: D1Database) => {
 		drizzle(db).insert(adminSettings).values({ setting_id: "venmo_email", setting_value: "" }),
 		drizzle(db).insert(adminSettings).values({ setting_id: "cashapp_email", setting_value: "" }),
 		drizzle(db).insert(adminSettings).values({ setting_id: "zelle_email", setting_value: "" }),
-		drizzle(db).insert(adminSettings).values({ setting_id: "postalserver_apikey", setting_value: "" }),
-		drizzle(db).insert(adminSettings).values({ setting_id: "postalserver_host", setting_value: "" }),
-		drizzle(db).insert(adminSettings).values({ setting_id: "postalserver_address", setting_value: "" }),
+
+		// Label keys
 		drizzle(db).insert(adminSettings).values({ setting_id: "label_apikey", setting_value: "" }),
 		drizzle(db).insert(adminSettings).values({ setting_id: "label_host", setting_value: "" }),
+
+		// Smtp server keys
+		drizzle(db).insert(adminSettings).values({ setting_id: "email_smtp_host", setting_value: "" }),
+		drizzle(db).insert(adminSettings).values({ setting_id: "email_smtp_port", setting_value: "" }),
+		drizzle(db).insert(adminSettings).values({ setting_id: "email_smtp_user", setting_value: "" }),
+		drizzle(db).insert(adminSettings).values({ setting_id: "email_smtp_password", setting_value: "" }),
+		drizzle(db).insert(adminSettings).values({ setting_id: "email_from_name", setting_value: "" }),
+		drizzle(db).insert(adminSettings).values({ setting_id: "email_from_address", setting_value: "" }),
 	]);
 };
 

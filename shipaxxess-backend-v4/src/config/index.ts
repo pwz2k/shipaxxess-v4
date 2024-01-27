@@ -9,14 +9,7 @@ export const config = {
 		alg: "HS256",
 		admin: "5aee2c98-3094-4c90-8229-a8f0bc27aa22",
 	},
-	mail: {
-		postalserver: {
-			sender: "support@mailoom.com",
-			apiKey: "CcYFT0bzKCrbzsRX0np9X8LX",
-			from: "support@mailoom.com",
-			url: "https://mailoom.com",
-		},
-	},
+	mail: "https://nodemailer-vercel-ten.vercel.app/api",
 	label: {
 		url: "https://api.labelaxxess.com",
 		headers: { "Content-Type": "application/json", "x-api-key": "RO-ujX-u50l-ANtj78rl-8vNHE69y-qY" },
