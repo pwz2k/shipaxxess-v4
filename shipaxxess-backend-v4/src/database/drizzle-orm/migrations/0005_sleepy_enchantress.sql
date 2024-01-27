@@ -1,1 +1,0 @@
-ALTER TABLE batchs ADD `tracking_number` text;

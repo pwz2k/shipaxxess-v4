@@ -49,7 +49,7 @@ const SettingsCouponTab = ({ query }: { query: UseQueryResult<UsersSelectModel> 
 		<TabsContent value="coupons" className="space-y-8">
 			<div className="w-full">
 				<h1 className="text-2xl font-semibold text-primary">Coupons</h1>
-				<span className="text-base text-muted-foreground">You can add your coupon from here.</span>
+				<span className="text-base text-muted-foreground">Update Coupon button to Apply</span>
 			</div>
 			<Separator />
 			<Form {...form}>

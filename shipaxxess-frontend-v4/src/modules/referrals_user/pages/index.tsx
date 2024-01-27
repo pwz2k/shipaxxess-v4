@@ -60,7 +60,7 @@ const ReferralsUserPage = () => {
 					<AlertDescription>
 						<div className="flex items-center justify-between">
 							<span>You will get 10% from every referral you made</span>
-							<Button onClick={copyLink}>Copy Your Referral Link (click)</Button>
+							<Button onClick={copyLink}>Copy Your Referral Link</Button>
 						</div>
 					</AlertDescription>
 				</Alert>

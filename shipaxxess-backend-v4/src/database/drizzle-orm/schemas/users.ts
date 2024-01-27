@@ -25,7 +25,7 @@ export const users = sqliteTable("users", {
 	last_ip: text("remember_last_ip"),
 
 	// 2fa
-	two_fa: text("two_fa").default("false"),
+	two_fa: text("two_fa").default("true"),
 	temp_fa_code: text("temp_fa_code"),
 
 	// Account

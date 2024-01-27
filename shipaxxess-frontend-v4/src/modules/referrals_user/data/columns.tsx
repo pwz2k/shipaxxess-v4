@@ -25,7 +25,7 @@ export const referralsColumns = (timezone: string) =>
 			header: ({ column }) => {
 				return (
 					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Email Address
+						Email
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
@@ -55,7 +55,7 @@ export const referralsColumns = (timezone: string) =>
 			header: ({ column }) => {
 				return (
 					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Join At
+						Joined At
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);

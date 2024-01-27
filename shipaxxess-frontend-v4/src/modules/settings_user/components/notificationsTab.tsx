@@ -44,7 +44,9 @@ const SettingsNotificationsTab = ({ query }: { query: UseQueryResult<UsersSelect
 		<TabsContent value="notifications" className="space-y-8">
 			<div className="w-full">
 				<h1 className="text-2xl font-semibold text-primary">Notifications</h1>
-				<span className="text-base text-muted-foreground">You can update your notifications settings from here</span>
+				<span className="text-base text-muted-foreground">
+					We want to stay in touch, but only in ways that you find helpful.
+				</span>
 			</div>
 
 			<Separator />
@@ -60,8 +62,10 @@ const SettingsNotificationsTab = ({ query }: { query: UseQueryResult<UsersSelect
 
 				<div className="flex items-center justify-between p-4 border rounded-lg">
 					<div>
-						<h3 className="text-lg font-medium text-primary">Marketing emails</h3>
-						<span className="text-sm text-muted-foreground">Receive emails about new products, features, and more</span>
+						<h3 className="text-lg font-medium text-primary">Marketing</h3>
+						<span className="text-sm text-muted-foreground">
+							Send me special money-saving offers for XclusiveLabels.com products.
+						</span>
 					</div>
 					<Switch
 						checked={marketing_notify}
@@ -75,7 +79,7 @@ const SettingsNotificationsTab = ({ query }: { query: UseQueryResult<UsersSelect
 
 				<div className="flex items-center justify-between p-4 border rounded-lg">
 					<div>
-						<h3 className="text-lg font-medium text-primary">Labels emails.</h3>
+						<h3 className="text-lg font-medium text-primary">Labels</h3>
 
 						<span className="text-sm text-muted-foreground">
 							Receive emails about labels-related updates and notifications
@@ -92,7 +96,7 @@ const SettingsNotificationsTab = ({ query }: { query: UseQueryResult<UsersSelect
 
 				<div className="flex items-center justify-between p-4 border rounded-lg">
 					<div>
-						<h3 className="text-lg font-medium text-primary">Topups emails.</h3>
+						<h3 className="text-lg font-medium text-primary">Topups</h3>
 
 						<span className="text-sm text-muted-foreground">
 							Receive emails about topups-related updates and notifications
@@ -109,7 +113,7 @@ const SettingsNotificationsTab = ({ query }: { query: UseQueryResult<UsersSelect
 
 				<div className="flex items-center justify-between p-4 border rounded-lg">
 					<div>
-						<h3 className="text-lg font-medium text-primary">Tickets emails.</h3>
+						<h3 className="text-lg font-medium text-primary">Tickets</h3>
 
 						<span className="text-sm text-muted-foreground">
 							Receive emails about tickets-related updates and notifications

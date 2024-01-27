@@ -87,7 +87,7 @@ const SettingsProfileTab = ({ query }: { query: UseQueryResult<UsersSelectModel>
 								name="first_name"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>First name</FormLabel>
+										<FormLabel>First Name</FormLabel>
 										<FormControl>
 											<Input {...field} />
 										</FormControl>
@@ -103,7 +103,7 @@ const SettingsProfileTab = ({ query }: { query: UseQueryResult<UsersSelectModel>
 								name="last_name"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Last name</FormLabel>
+										<FormLabel>Last Name</FormLabel>
 										<FormControl>
 											<Input {...field} />
 										</FormControl>
@@ -120,7 +120,7 @@ const SettingsProfileTab = ({ query }: { query: UseQueryResult<UsersSelectModel>
 							name="email_address"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Email address</FormLabel>
+									<FormLabel>Email</FormLabel>
 									<FormControl>
 										<Input {...field} />
 									</FormControl>
