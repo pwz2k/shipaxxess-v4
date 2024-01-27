@@ -152,7 +152,7 @@ const SettingsPaymentTab = ({ query }: { query: UseQueryResult<AdminSettingsSele
 									<FormControl>
 										<Input {...field} />
 									</FormControl>
-									<FormDescription>Webhook URL: {app.prod_api}/webhook/stripe</FormDescription>
+									<FormDescription>Webhook URL: {app.prod_api}/webhooks/stripe</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -180,7 +180,7 @@ const SettingsPaymentTab = ({ query }: { query: UseQueryResult<AdminSettingsSele
 									<FormControl>
 										<Input {...field} />
 									</FormControl>
-									<FormDescription>Webhook URL: {app.prod_api}/webhook/coinbase</FormDescription>
+									<FormDescription>Webhook URL: {app.prod_api}/webhooks/coinbase</FormDescription>
 									<FormMessage />
 								</FormItem>
 							)}
