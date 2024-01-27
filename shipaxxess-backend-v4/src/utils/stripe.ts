@@ -11,8 +11,8 @@ export const stripeCheckout = async (secret: string, payload: PayloadProps) => {
 	});
 
 	const session = await stripe.checkout.sessions.create({
-		success_url: `${config.stripe.success_url}/topups?response=success&gateway=stripe`,
-		cancel_url: `${config.stripe.cancel_url}/topups?response=cancel&gateway=stripe`,
+		success_url: `${config.app.url}/payments?response=success&gateway=stripe`,
+		cancel_url: `${config.app.url}/payments?response=cancel&gateway=stripe`,
 		line_items: [
 			{
 				price_data: {

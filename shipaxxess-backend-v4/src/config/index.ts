@@ -18,14 +18,6 @@ export const config = {
 		usps_max_girth: 108,
 		ups_max_girth: 160,
 	},
-	stripe: {
-		pubkey:
-			"pk_test_51NWzojEUBhXVxoOBfBKOmakGEoongxYWGQ6yiGDgg4F4qK0Ne3xUuylAMfPhjDNcqKss4UM0LJeYBPw2BWlTn1FU00SfA3SFiV",
-		seckey:
-			"sk_test_51NWzojEUBhXVxoOBJZWPDYz3CPWmGNGxDWkCdVveD9YibuqIE1iHEu60OxggysmhH8YubFwI7Fslwp8ih6jMOihE00riK4M0vh",
-		success_url: "http://localhost:5173/payments",
-		cancel_url: "http://localhost:5173/payments?payment=canceled&method=card",
-	},
 	coinbase: {
 		apikey: "8a4015b9-6a3c-48d5-a424-5b989edd5ade",
 		baseurl: "https://api.commerce.coinbase.com",
