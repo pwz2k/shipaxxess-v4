@@ -1,3 +1,4 @@
+import { mailhandler } from "@handlers/mail";
 import { Hono } from "hono";
 import { FA } from "./2fa";
 import { ForgetPassword } from "./forget";
@@ -12,5 +13,6 @@ unprotected.post("/signin_user", SignInUser);
 unprotected.get("/forget_password", ForgetPassword);
 unprotected.post("/verify_email", VerifyUser);
 unprotected.post("/two_fa", FA.Post);
+unprotected.get("/test", mailhandler);
 
 export { unprotected };
