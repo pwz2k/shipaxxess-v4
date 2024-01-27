@@ -1,4 +1,5 @@
 import { config } from "@config";
+import { initSettings } from "@helpers/query";
 import { Model } from "@lib/model";
 import { users } from "@schemas/users";
 import { Signup } from "@shipaxxess/shipaxxess-zod-v4";
@@ -34,12 +35,13 @@ export const SignUpUser = async (c: Context<App>) => {
 	});
 
 	if (insert.id === 1) {
+		await initSettings(c.env.DB);
 		await model.update(users, { isadmin: true }, eq(users.id, insert.id));
 	}
 
 	c.executionCtx.waitUntil(
-		mail({
-			to: [parse.email_address],
+		mail(c.env.DB, {
+			to: parse.email_address,
 			subject: `Please verify your ${config.app.name} Account`,
 			html: `
 		<p>Thanks for signing up! Please verify this is your correct email by simply copying the code below. You can then log into your account.</p>

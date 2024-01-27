@@ -1,42 +1,36 @@
-import { config } from "@config";
-import { exception } from "./error";
+import nodemailer from "nodemailer";
+import { log } from "./log";
+import { getSettings } from "./settings";
 
-const postalserver = async (payload: Payload, apikey: string, sender: string) => {
+export const mail = async (db: D1Database, payload: Payload) => {
 	try {
-		const req = await fetch(`${config.mail.postalserver.url}/api/v1/send/message`, {
-			method: "POST",
-			headers: { "Content-Type": "application/json", "X-Server-API-Key": apikey },
-			body: JSON.stringify({
-				from: sender,
-				sender: sender,
-				to: payload.to,
-				subject: payload.subject,
-				html_body: payload.html,
-			}),
+		const settings = await getSettings(db);
+
+		if (!settings["email_smtp_host"]) throw new Error("SMTP host not set");
+		if (!settings["email_smtp_port"]) throw new Error("SMTP port not set");
+		if (!settings["email_smtp_user"]) throw new Error("SMTP user not set");
+		if (!settings["email_smtp_password"]) throw new Error("SMTP password not set");
+		if (!settings["email_from_name"]) throw new Error("From name not set");
+		if (!settings["email_from_address"]) throw new Error("From address not set");
+
+		const transporter = nodemailer.createTransport({
+			host: settings["email_smtp_host"],
+			port: Number(settings["email_smtp_port"]),
+			auth: {
+				user: settings["email_smtp_user"],
+				pass: settings["email_smtp_password"],
+			},
 		});
 
-		const parse = (await req.json()) as PostalserverResponse;
+		const info = await transporter.sendMail({
+			from: `"${settings["email_from_name"]}" <${settings["email_from_address"]}>`,
+			to: payload.to,
+			subject: payload.subject,
+			html: payload.html,
+		});
 
-		if (parse.status === "error") {
-			throw exception({ message: parse.data.message, code: 9000 });
-		}
-	} catch (err) {
-		throw err;
-	}
-};
-
-export const mail = async (payload: Payload, apiKey: string, sender: string) => {
-	switch (payload.gateway) {
-		case "sendgrid":
-			break;
-
-		case "mailjet":
-			break;
-
-		case "mailgun":
-			break;
-
-		default:
-			return await postalserver(payload, apiKey, sender);
+		log(`Message sent: ${info.messageId}`);
+	} catch (error) {
+		log(`Error sending email: ${(error as Error).message}`);
 	}
 };

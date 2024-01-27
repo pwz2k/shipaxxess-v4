@@ -74,8 +74,8 @@ export const SignInUser = async (c: Context<App>) => {
 		if (!update.success) throw exception({ message: "Failed to update the token", code: 8765 });
 
 		c.executionCtx.waitUntil(
-			mail({
-				to: [parse.email_address],
+			mail(c.env.DB, {
+				to: parse.email_address,
 				subject: `Your ${config.app.name} account verification code`,
 				html: `
             <p>Hi ${user.first_name},</p>
@@ -110,8 +110,8 @@ export const SignInUser = async (c: Context<App>) => {
 	// If ip not match email notify
 	if (user.current_ip !== request_ipv4) {
 		c.executionCtx.waitUntil(
-			mail({
-				to: [parse.email_address],
+			mail(c.env.DB, {
+				to: parse.email_address,
 				subject: `You just access your ${config.app.name} from different ip address`,
 				html: `
             <p>Hi ${user.first_name},</p>

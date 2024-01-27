@@ -10,9 +10,11 @@
 	},
 	"dependencies": {
 		"@shipaxxess/shipaxxess-zod-v4": "*",
+		"@types/nodemailer": "^6.4.14",
 		"@types/uuid": "^9.0.7",
 		"drizzle-orm": "^0.29.2",
 		"hono": "^3.11.2",
+		"nodemailer": "^6.9.8",
 		"pdf-merger-js": "^4.3.0",
 		"stripe": "^14.9.0",
 		"uuid": "^9.0.1",
