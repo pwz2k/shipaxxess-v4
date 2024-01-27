@@ -29,10 +29,10 @@ const SettingsPaymentTab = ({ query }: { query: UseQueryResult<AdminSettingsSele
 		defaultValues: {
 			stripe_key: "",
 			stripe_secret: "",
-			cashapp_email: "",
+			stripe_webhook_secret: "",
 			coinbase_key: "",
 			coinbase_webhook_secret: "",
-			stripe_webhook_secret: "",
+			cashapp_email: "",
 			venmo_email: "",
 			zelle_email: "",
 		},
@@ -57,15 +57,29 @@ const SettingsPaymentTab = ({ query }: { query: UseQueryResult<AdminSettingsSele
 
 	React.useEffect(() => {
 		if (query.data) {
-			const stripe = query.data.find((item) => item.setting_id === "stripe_key");
-			if (stripe) {
-				form.setValue("stripe_key", stripe.setting_value);
-				form.setValue("stripe_secret", stripe.setting_value);
+			const stripeKey = query.data.find((item) => item.setting_id === "stripe_key");
+			if (stripeKey) {
+				form.setValue("stripe_key", stripeKey.setting_value);
 			}
 
-			const coinbase = query.data.find((item) => item.setting_id === "coinbase_key");
-			if (coinbase) {
-				form.setValue("coinbase_key", coinbase.setting_value);
+			const stripeSecret = query.data.find((item) => item.setting_id === "stripe_secret");
+			if (stripeSecret) {
+				form.setValue("stripe_secret", stripeSecret.setting_value);
+			}
+
+			const stripeWebhookSecret = query.data.find((item) => item.setting_id === "stripe_webhook_secret");
+			if (stripeWebhookSecret) {
+				form.setValue("stripe_webhook_secret", stripeWebhookSecret.setting_value);
+			}
+
+			const coinbaseKey = query.data.find((item) => item.setting_id === "coinbase_key");
+			if (coinbaseKey) {
+				form.setValue("coinbase_key", coinbaseKey.setting_value);
+			}
+
+			const coinbaseWebhookSecret = query.data.find((item) => item.setting_id === "coinbase_webhook_secret");
+			if (coinbaseWebhookSecret) {
+				form.setValue("coinbase_webhook_secret", coinbaseWebhookSecret.setting_value);
 			}
 
 			const venmo = query.data.find((item) => item.setting_id === "venmo_email");
