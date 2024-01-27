@@ -1,7 +1,7 @@
 import { admin } from "@api/admin/routes";
 import { unprotected } from "@api/unprotected/routes";
 import { user } from "@api/user/routes";
-import { webhook } from "@api/webhook/routes";
+import { webhook } from "@api/webhooks/routes";
 import { WebSocketUser } from "@api/websocket";
 import { config } from "@config";
 import { Hono } from "hono";
