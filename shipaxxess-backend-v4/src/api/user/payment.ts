@@ -60,8 +60,8 @@ const Create = async (c: Context<App>) => {
 	// Hanlde crypto payment
 	if (parse.gateway === "crypto") {
 		const settings = await getSettings(c.env.DB);
-		if (!settings["coinbase_key"]) throw exception({ message: "Stripe key not found", code: 404 });
-		if (!settings["coinbase_webhook_secret"]) throw exception({ message: "Stripe webhook key not found", code: 404 });
+		if (!settings["coinbase_key"]) throw exception({ message: "Coinbase key not found", code: 404 });
+		if (!settings["coinbase_webhook_secret"]) throw exception({ message: "Coinbase webhook key not found", code: 404 });
 
 		const res = await coinbaseCharge(settings["coinbase_key"], {
 			amount: parse.credit,
