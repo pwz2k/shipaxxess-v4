@@ -20,7 +20,7 @@ const TableMenu = ({ row }: { row: Row<BatchsSelectModel> }) => {
 		async click() {
 			setIsLoading(true);
 
-			const req = await api.url("/user/labels/refund").useAuth().post({ id: row.original.id });
+			const req = await api.url("/user/labels/batch/refund").useAuth().post({ batch_uuid: row.original.uuid });
 			const res = await req.json<{ success: boolean }>();
 
 			if (res.success) {

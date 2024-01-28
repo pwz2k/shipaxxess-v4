@@ -1,10 +1,9 @@
-import { config } from "@config";
 import { LabelManager } from "@lib/label";
 import { Model } from "@lib/model";
 import { addresses } from "@schemas/addresses";
 import { batchs } from "@schemas/batchs";
 import { labels } from "@schemas/labels";
-import { payments } from "@schemas/payments";
+import { refunds } from "@schemas/refunds";
 import { users } from "@schemas/users";
 import { Id, Labels, Refund } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
@@ -109,81 +108,31 @@ const RefundAsBatch = async (c: Context<App>) => {
 	const body = await c.req.json();
 	const parse = Refund.ZODSCHEMA.parse(body);
 
-	for (const label of parse.batch) {
-		await fetch(`https://api.labelaxxess.com/api/admin/ex-recycle-label`, {
-			method: "POST",
-			headers: config.label.headers,
-			body: JSON.stringify({ id: label.id }),
-		});
-	}
-
-	return c.json({ success: true, body });
-};
-
-const RefundSingle = async (c: Context<App>) => {
-	const body = await c.req.json();
-	const parse = Id.ZODSCHEMA.parse(body);
-
 	const model = new Model(c.env.DB);
 
-	const label = await model.get(labels, eq(labels.id, parse.id));
-	if (!label) {
-		throw exception({ message: "Label not found.", code: 404 });
+	const batch = await model.get(batchs, eq(batchs.uuid, parse.batch_uuid));
+	if (!batch) {
+		throw exception({ message: "Batch not found.", code: 404 });
 	}
 
-	// if (label.status_label === "awaiting") {
-	// 	return c.json({ success: true, message: "Refund funds will be added in your balance within 2-3 days" });
-	// }
-
-	if (label.status_label === "refunded") {
-		throw exception({ message: "Label already refunded.", code: 404 });
-	}
-
-	const req = await fetch(`https://api.labelaxxess.com/api/admin/ex-recycle-label`, {
-		method: "POST",
-		headers: config.label.headers,
-		body: JSON.stringify({ id: label.remote_id }),
-	});
-
-	const res = (await req.json()) as { message: string };
-
-	if (!req.ok) throw exception({ message: res.message, code: 404 });
-
-	await model.update(labels, { status_label: "refunded" }, eq(labels.id, label.id));
-
-	const user = await model.get(users, eq(users.id, label.user_id));
+	const user = await model.get(users, eq(users.id, c.get("jwtPayload").id));
 	if (!user) {
 		throw exception({ message: "User not found.", code: 404 });
 	}
 
-	c.executionCtx.waitUntil(
-		model.update(
-			users,
-			{
-				current_balance: user.current_balance + label.cost_user,
-				total_refund: user.total_refund + label.cost_user,
-				total_labels: user.total_labels - 1,
-				total_spent: user.total_spent - label.cost_user,
-			},
-			eq(users.id, label.user_id),
-		),
-	);
+	await model.insert(refunds, {
+		email_address: user.email_address,
+		first_name: user.first_name,
+		last_name: user.last_name,
+		user_id: c.get("jwtPayload").id,
+		uuid: v4(),
+		batch_uuid: batch.uuid,
+		waiting_for: 3,
+	});
 
-	c.executionCtx.waitUntil(
-		model.insert(payments, {
-			credit: label.cost_user,
-			current_balance: user.current_balance,
-			gateway: "Refund",
-			new_balance: user.current_balance + label.cost_user,
-			user_email: user.email_address,
-			user_id: user.id,
-			user_name: `${user.first_name} ${user.last_name}`,
-			status: "confirmed",
-			uuid: v4(),
-		}),
-	);
+	await model.update(batchs, { status_label: "refunded" }, eq(batchs.uuid, batch.uuid));
 
-	return c.json({ success: true });
+	return c.json({ success: true, message: "We are processing your refund. might take 3-4 days to get the refund" });
 };
 
 const DownloadSingle = async (c: Context<App>) => {
@@ -241,4 +190,4 @@ const DownloadBatch = async (c: Context<App>) => {
 	});
 };
 
-export const LabelsUser = { GetAll, Create, RefundAsBatch, Get, DownloadSingle, RefundSingle, DownloadBatch };
+export const LabelsUser = { GetAll, Create, RefundAsBatch, Get, DownloadSingle, DownloadBatch };

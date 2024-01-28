@@ -22,7 +22,6 @@ user.get("/status", StatusUser);
 user.get("/dashboard", DashboardUser);
 
 // Labels routes
-user.post("/labels/refund", LabelsUser.RefundSingle);
 user.post("/labels/download", LabelsUser.DownloadSingle);
 
 user.get("/labels/batch", LabelsUser.GetAll);
