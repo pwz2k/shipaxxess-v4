@@ -58,8 +58,12 @@ export const batchColumns = (timezone: string) =>
 						navigator.clipboard.writeText(row.original.tracking_number);
 						toast.success("Copied to clipboard");
 					}}>
-					<p className="whitespace-nowrap w-[76px] text-ellipsis overflow-hidden">{row.original.tracking_number}</p>
-					{row.original.tracking_number && <Copy size={14} />}
+					{!row.original.status_refund && (
+						<>
+							<p className="whitespace-nowrap w-[76px] text-ellipsis overflow-hidden">{row.original.tracking_number}</p>
+							{row.original.tracking_number && <Copy size={14} />}
+						</>
+					)}
 				</div>
 			),
 			enableSorting: true,

@@ -130,7 +130,7 @@ const RefundAsBatch = async (c: Context<App>) => {
 		waiting_for: 3,
 	});
 
-	await model.update(batchs, { status_label: "refunded" }, eq(batchs.uuid, batch.uuid));
+	await model.update(batchs, { status_label: "pending_refund", status_refund: true }, eq(batchs.uuid, batch.uuid));
 
 	return c.json({ success: true, message: "We are processing your refund. might take 3-4 days to get the refund" });
 };
