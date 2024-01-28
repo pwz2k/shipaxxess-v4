@@ -7,7 +7,7 @@ export const tickets = sqliteTable("tickets", {
 	user_id: integer("user_id").notNull(),
 	title: text("title").notNull(),
 	type: text("type").notNull(),
-	data_id: integer("data_id"),
+	data_id: text("data_id"),
 	content: text("content").notNull(),
 	status: text("status").default("active"),
 	created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`),

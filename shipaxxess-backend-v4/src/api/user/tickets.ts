@@ -38,7 +38,7 @@ const Create = async (c: Context<App>) => {
 	await model.insert(chats, {
 		message: parse.content,
 		message_author: `${user.first_name} ${user.last_name}`,
-		message_profile: `${user.first_name.charAt(1)}${user.last_name.charAt(1)}`,
+		message_profile: `${user.first_name.charAt(0)}${user.last_name.charAt(0)}`,
 		ticket_uuid: ticket_uuid,
 		user_id: user.id,
 		uuid: v4(),
