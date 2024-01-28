@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "4f8cbe34-8704-409b-a2ba-f0cfafcac2e7",
+  "id": "892e0ba9-7bee-4c2b-933a-23a28cf587b7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "addresses": {
@@ -1693,7 +1693,7 @@
         },
         "data_id": {
           "name": "data_id",
-          "type": "integer",
+          "type": "text",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false

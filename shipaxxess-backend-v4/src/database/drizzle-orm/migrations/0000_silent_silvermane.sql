@@ -256,7 +256,7 @@ CREATE TABLE `tickets` (
 	`user_id` integer NOT NULL,
 	`title` text NOT NULL,
 	`type` text NOT NULL,
-	`data_id` integer,
+	`data_id` text,
 	`content` text NOT NULL,
 	`status` text DEFAULT 'active',
 	`created_at` text DEFAULT CURRENT_TIMESTAMP,
