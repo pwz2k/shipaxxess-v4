@@ -6,7 +6,7 @@ import { api } from "@client/lib/api";
 import { BatchsSelectModel } from "@db/batchs";
 import { useQueryClient } from "@tanstack/react-query";
 import { Row } from "@tanstack/react-table";
-import { BadgeDollarSign, FileDown, LifeBuoy } from "lucide-react";
+import { BadgeDollarSign, EyeIcon, FileDown, LifeBuoy } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
@@ -92,13 +92,15 @@ const TableMenu = ({ row }: { row: Row<BatchsSelectModel> }) => {
 
 			{row.original.total_labels <= 1 && (
 				<>
-					<Button
-						variant="outline"
-						size="icon"
-						disabled={row.original.is_downloaded === false}
-						onClick={downloadSinglePDF}>
-						<FileDown />
-					</Button>
+					{!row.original.status_refund && (
+						<Button
+							variant="outline"
+							size="icon"
+							disabled={row.original.is_downloaded === false}
+							onClick={downloadSinglePDF}>
+							<FileDown />
+						</Button>
+					)}
 
 					{row.original.type === "usps" && (
 						<AlertWrapper
@@ -120,6 +122,10 @@ const TableMenu = ({ row }: { row: Row<BatchsSelectModel> }) => {
 							<LifeBuoy />
 						</Button>
 					</Link>
+
+					<Button variant="outline" size="icon" disabled>
+						<EyeIcon />
+					</Button>
 				</>
 			)}
 		</div>
