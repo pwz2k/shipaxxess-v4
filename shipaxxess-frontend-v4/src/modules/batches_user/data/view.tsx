@@ -24,8 +24,12 @@ export const labelsColumns = (timezone: string) =>
 			},
 			cell: ({ row }) => (
 				<div className="flex items-center gap-1 whitespace-nowrap">
-					<span id={`copy_${row.index}`}>{row.getValue("remote_tracking_number")}</span>
-					{row.original.remote_tracking_number && <CopyIcon size={16} className="cursor-copy" onClick={() => {}} />}
+					{!row.original.status_refund && (
+						<>
+							<span id={`copy_${row.index}`}>{row.getValue("remote_tracking_number")}</span>
+							{row.original.remote_tracking_number && <CopyIcon size={16} className="cursor-copy" onClick={() => {}} />}
+						</>
+					)}
 				</div>
 			),
 			enableSorting: true,

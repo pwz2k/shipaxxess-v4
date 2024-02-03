@@ -12,9 +12,17 @@ import { useParams } from "react-router-dom";
 import Loading from "@client/components/common/loading";
 import { app } from "@client/config/app";
 import { toast } from "sonner";
+import { api } from "@client/lib/api";
+import { useLoading } from "@client/hooks/useLoading";
+import { useQueryClient } from "@tanstack/react-query";
+import AlertWrapper from "@client/components/common/alert";
 
 const ViewBatchUserPage = () => {
 	const params = useParams();
+
+	const queryClient = useQueryClient();
+
+	const [refund, setRefund] = React.useState(false);
 
 	const batchQuery = useBatchQuery({ uuid: params.uuid! });
 
@@ -28,9 +36,27 @@ const ViewBatchUserPage = () => {
 		sort: [{ id: "id", desc: true }],
 	});
 
-	if (batchQuery.isLoading) {
-		return <Loading />;
-	}
+	const { button: RefundSubmitButton, setIsLoading } = useLoading({
+		label: "Refund The Label",
+		async click() {
+			setIsLoading(true);
+
+			const req = await api.url("/user/labels/batch/refund").useAuth().post({ batch_uuid: params.uuid });
+			const res = await req.json<{ success: boolean }>();
+
+			if (res.success) {
+				api.showSuccessToast();
+				setIsLoading(false);
+				setRefund(false);
+				queryClient.invalidateQueries({ queryKey: ["batches", params.uuid] });
+				return;
+			}
+
+			api.showErrorToast();
+			setIsLoading(false);
+			setRefund(false);
+		},
+	});
 
 	const batchDownload = async () => {
 		const download = () =>
@@ -73,6 +99,10 @@ const ViewBatchUserPage = () => {
 		});
 	};
 
+	if (batchQuery.isLoading) {
+		return <Loading />;
+	}
+
 	return (
 		<>
 			<Meta title="Labels" />
@@ -83,10 +113,20 @@ const ViewBatchUserPage = () => {
 					render={
 						<>
 							<ToggleColumns />
-							<Button variant="outline" className="gap-1" disabled>
-								<BadgeDollarSign size={16} />
-								Batch Refund
-							</Button>
+							<AlertWrapper
+								description="Are you sure you want to refund this label? This action cannot be undone."
+								title="Are you sure you want to refund this label?"
+								action={RefundSubmitButton}
+								open={refund}
+								setOpen={setRefund}
+								trigger={
+									<Button variant="outline" className="gap-2" disabled={batchQuery.data?.batch.status_refund === true}>
+										<BadgeDollarSign size={18} />
+										Refund Batch
+									</Button>
+								}
+							/>
+
 							<Button variant="outline" className="gap-1" onClick={batchDownload}>
 								<FileDown size={16} />
 								Batch Download

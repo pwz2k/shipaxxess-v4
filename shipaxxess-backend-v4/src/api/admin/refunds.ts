@@ -98,6 +98,15 @@ const Recycle = async (c: Context<App, "/:uuid">) => {
 			log("Error recycling label");
 			continue;
 		}
+
+		await model.update(
+			labels,
+			{
+				status_label: "refunded",
+				status_refund: true,
+			},
+			eq(labels.id, label.id),
+		);
 	}
 
 	await model.update(
