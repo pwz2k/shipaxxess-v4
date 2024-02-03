@@ -58,6 +58,8 @@ const Refund = async (c: Context<App, "/:uuid">) => {
 
 	await model.update(refunds, { is_refunded: true }, eq(refunds.batch_uuid, batch.uuid));
 
+	await model.update(batchs, { status_label: "refunded" }, eq(batchs.uuid, batch.uuid));
+
 	return c.json({ success: true, message: "Refunded successfully" });
 };
 
