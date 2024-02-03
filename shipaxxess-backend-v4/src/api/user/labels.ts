@@ -10,6 +10,7 @@ import { exception } from "@utils/error";
 import { log } from "@utils/log";
 import { getSettings } from "@utils/settings";
 import { eq } from "drizzle-orm";
+import { drizzle } from "drizzle-orm/d1";
 import { Context } from "hono";
 import { v4 } from "uuid";
 
@@ -190,6 +191,28 @@ const DownloadBatch = async (c: Context<App>) => {
 	});
 };
 
-const Search = async (c: Context<App>) => {};
+const Search = async (c: Context<App>) => {
+	const body = await c.req.json();
+	const { search_type, delivery_id, end_date, from_date, name, status, uuid, weight, weight_unit_query } =
+		Labels.SEARCHZODSCHEMA.parse(body);
+
+	// Label search
+	if (search_type === "label") {
+		if (uuid) {
+			const data = await drizzle(c.env.DB).select().from(labels).where(eq(labels.uuid, uuid)).all();
+			return c.json(data);
+		}
+	}
+
+	if (search_type === "batch" && uuid) {
+		const data = await drizzle(c.env.DB).select().from(batchs).where(eq(batchs.uuid, uuid)).all();
+		return c.json(data);
+	}
+
+	if (search_type === "label" && name) {
+	}
+
+	return c.json({});
+};
 
 export const LabelsUser = { GetAll, Create, RefundAsBatch, Get, DownloadSingle, DownloadBatch, Search };

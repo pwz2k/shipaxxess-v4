@@ -21,6 +21,7 @@ const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQu
 			name: undefined,
 			uuid: undefined,
 			weight: undefined,
+			search_type: "label",
 		},
 		resolver: zodResolver(Labels.SEARCHZODSCHEMA),
 	});
@@ -45,12 +46,34 @@ const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQu
 								<div className="space-y-4">
 									<FormField
 										control={form.control}
+										name="search_type"
+										render={({ field }) => {
+											return (
+												<FormItem>
+													<FormLabel>Search type</FormLabel>
+													<Select value={field.value} onValueChange={field.onChange}>
+														<FormControl>
+															<SelectTrigger>
+																<SelectValue placeholder="Search type" />
+															</SelectTrigger>
+														</FormControl>
+														<SelectContent>
+															<SelectItem value="label">Label</SelectItem>
+															<SelectItem value="batch">Batch</SelectItem>
+														</SelectContent>
+													</Select>
+													<FormMessage />
+												</FormItem>
+											);
+										}}
+									/>
+
+									<FormField
+										control={form.control}
 										name="uuid"
 										render={({ field }) => (
 											<FormItem>
-												<FormLabel>
-													UUID <span className="text-xs text-muted-foreground">(Label/Batch)</span>
-												</FormLabel>
+												<FormLabel>{form.watch("search_type") === "label" ? "Label ID" : "Batch ID"}</FormLabel>
 												<FormControl>
 													<Input placeholder="375ef169-ec23-445f-9c6e-3f580cc4fcbc" {...field} />
 												</FormControl>
@@ -62,27 +85,10 @@ const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQu
 										<>
 											<FormField
 												control={form.control}
-												name="name"
-												render={({ field }) => (
-													<FormItem>
-														<FormLabel>
-															Name <span className="text-xs text-muted-foreground">(From/To/Batch/Package)</span>
-														</FormLabel>
-														<FormControl>
-															<Input placeholder="Search by name..." {...field} />
-														</FormControl>
-														<FormMessage />
-													</FormItem>
-												)}
-											/>
-											<FormField
-												control={form.control}
 												name="weight"
 												render={({ field }) => (
 													<FormItem>
-														<FormLabel>
-															Weight <span className="text-xs text-muted-foreground">(oz/lb)</span>
-														</FormLabel>
+														<FormLabel>Weight</FormLabel>
 														<FormControl>
 															<Input placeholder="Search by weight..." {...field} type="number" />
 														</FormControl>
@@ -131,7 +137,7 @@ const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQu
 																<Select value={field.value} onValueChange={field.onChange}>
 																	<FormControl>
 																		<SelectTrigger>
-																			<SelectValue placeholder="Search by type" />
+																			<SelectValue placeholder="Search by delivery type" />
 																		</SelectTrigger>
 																	</FormControl>
 																	<SelectContent>
@@ -207,13 +213,7 @@ const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQu
 																</FormControl>
 															</PopoverTrigger>
 															<PopoverContent className="w-full p-0" align="start">
-																<Calendar
-																	mode="single"
-																	selected={field.value}
-																	onSelect={field.onChange}
-																	disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
-																	initialFocus
-																/>
+																<Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
 															</PopoverContent>
 														</Popover>
 
@@ -242,13 +242,7 @@ const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQu
 																</FormControl>
 															</PopoverTrigger>
 															<PopoverContent className="w-full p-0" align="start">
-																<Calendar
-																	mode="single"
-																	selected={field.value}
-																	onSelect={field.onChange}
-																	disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
-																	initialFocus
-																/>
+																<Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
 															</PopoverContent>
 														</Popover>
 
@@ -259,7 +253,7 @@ const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQu
 										</>
 									)}
 
-									<Button className="w-full">Submit</Button>
+									<Button className="w-full">Search</Button>
 								</div>
 							</form>
 						</Form>

@@ -57,6 +57,7 @@ export const SEARCHZODSCHEMA = z.object({
 	status: z.string().optional(),
 	from_date: z.date().optional(),
 	end_date: z.date().optional(),
+	search_type: z.enum(["label", "batch"]),
 });
 
 export type SEARCHZODSCHEMA = z.infer<typeof SEARCHZODSCHEMA>;
