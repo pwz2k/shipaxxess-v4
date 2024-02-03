@@ -171,7 +171,7 @@ const RefundAsSingle = async (c: Context<App>) => {
 		waiting_for: 3,
 	});
 
-	await model.update(labels, { status_refund: true, status_label: "refunded" }, eq(labels.uuid, label.uuid));
+	await model.update(labels, { status_refund: true, status_label: "refunded" }, eq(labels.id, label.id));
 
 	await model.update(
 		batchs,

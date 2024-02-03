@@ -20,11 +20,19 @@ export const batchLabelQueue = async (batch: MessageBatch<MessageProps>, env: Bi
 
 			if (batch.type === "usps") {
 				for (const recipient of batch.recipients) {
-					await manager.generateUSPSLabelFromBatch(batch, recipient);
+					// @ts-ignore lazy to change the type from zod lol :)
+					await manager.generateUSPSLabelFromBatch(batch, recipient, {
+						reseller: batch.cost_reseller / batch.total_labels,
+						user: batch.cost_user / batch.total_labels,
+					});
 				}
 			} else {
 				for (const recipient of batch.recipients) {
-					await manager.generateUPSLabelFromBatch(batch, recipient);
+					// @ts-ignore lazy to change the type from zod lol :)
+					await manager.generateUPSLabelFromBatch(batch, recipient, {
+						reseller: batch.cost_reseller / batch.total_labels,
+						user: batch.cost_user / batch.total_labels,
+					});
 				}
 			}
 

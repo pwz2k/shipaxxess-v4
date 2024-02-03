@@ -206,7 +206,11 @@ export class LabelManager {
 		return payload;
 	}
 
-	async generateUSPSLabelFromBatch(batch: BatchsSelectModel, recipient: Address.UUIDSCHEMA) {
+	async generateUSPSLabelFromBatch(
+		batch: BatchsSelectModel,
+		recipient: Address.UUIDSCHEMA,
+		costs: { user: number; reseller: number },
+	) {
 		const req = await fetch(`${this.settings["label_host"]}/api/label/generate`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json", "x-api-key": this.settings["label_apikey"] },
@@ -247,13 +251,18 @@ export class LabelManager {
 			this.crons.push({ uuid: recipient.uuid, message: payload.message });
 		}
 
-		this.pushLabelToPrivateArray(batch, recipient, {
-			code: req.ok && payload.payload.code ? payload.payload.code : null,
-			id: req.ok && payload.payload.id ? payload.payload.id : null,
-			pdf: req.ok && payload.payload.pdf ? payload.payload.pdf.split("/")[4] : "",
-			status: req.ok ? "awaiting" : "pending",
-			message: payload.message,
-		});
+		this.pushLabelToPrivateArray(
+			batch,
+			recipient,
+			{
+				code: req.ok && payload.payload.code ? payload.payload.code : null,
+				id: req.ok && payload.payload.id ? payload.payload.id : null,
+				pdf: req.ok && payload.payload.pdf ? payload.payload.pdf.split("/")[4] : "",
+				status: req.ok ? "awaiting" : "pending",
+				message: payload.message,
+			},
+			costs,
+		);
 
 		log("Pushed label to private array.");
 	}
@@ -305,7 +314,11 @@ export class LabelManager {
 		return payload;
 	}
 
-	async generateUPSLabelFromBatch(batch: BatchsSelectModel, recipient: Address.UUIDSCHEMA) {
+	async generateUPSLabelFromBatch(
+		batch: BatchsSelectModel,
+		recipient: Address.UUIDSCHEMA,
+		costs: { user: number; reseller: number },
+	) {
 		const req = await fetch(`${this.settings["label_host"]}/api/label/generate-ups`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json", "x-api-key": this.settings["label_apikey"] },
@@ -347,46 +360,22 @@ export class LabelManager {
 		}
 		log("Parsed UPS label. Payload: " + JSON.stringify(payload));
 
-		await this.env.BATCH_KV.put(recipient.uuid, JSON.stringify(payload));
-		await this.env.BATCH_KV.put(
-			`${recipient.uuid}_body`,
-			JSON.stringify({
-				type: batch.type_value,
-				weight: batch.package_weight,
-				height: batch.package_height,
-				width: batch.package_width,
-				length: batch.package_length,
-				saturday: batch.saturday,
-				signature: batch.signature,
-				date: batch.shipping_date,
-				fromName: batch.sender_full_name,
-				fromCompany: batch.sender_company_name,
-				fromStreetNumber: batch.sender_street_one,
-				fromStreetNumber2: batch.sender_street_two,
-				fromZip: batch.sender_zip,
-				fromCity: batch.sender_city,
-				fromState: batch.sender_state,
-				toName: recipient.full_name,
-				toCompany: recipient.company_name,
-				toStreetNumber: recipient.street_one,
-				toStreetNumber2: recipient.street_two,
-				toZip: recipient.zip,
-				toCity: recipient.city,
-				toState: recipient.state,
-			}),
-		);
-
 		if (!req.ok) {
 			this.crons.push({ uuid: recipient.uuid, message: payload.message });
 		}
 
-		this.pushLabelToPrivateArray(batch, recipient, {
-			code: req.ok && payload.payload.tracking ? payload.payload.tracking : null,
-			id: req.ok && payload.payload.id ? payload.payload.id : null,
-			pdf: req.ok && payload.payload.pdf ? payload.payload.pdf.split("/")[5] : "",
-			status: req.ok ? "awaiting" : "pending",
-			message: payload.message,
-		});
+		this.pushLabelToPrivateArray(
+			batch,
+			recipient,
+			{
+				code: req.ok && payload.payload.tracking ? payload.payload.tracking : null,
+				id: req.ok && payload.payload.id ? payload.payload.id : null,
+				pdf: req.ok && payload.payload.pdf ? payload.payload.pdf.split("/")[5] : "",
+				status: req.ok ? "awaiting" : "pending",
+				message: payload.message,
+			},
+			costs,
+		);
 		log("Pushed label to private array.");
 	}
 
@@ -486,12 +475,13 @@ export class LabelManager {
 		batch: BatchsSelectModel,
 		recipient: Address.UUIDSCHEMA,
 		payload: { code?: string | null; id?: number | null; pdf?: string; status: string; message: string },
+		costs: { user: number; reseller: number },
 	) {
 		this.labels.push({
 			shipping_date: batch.shipping_date,
 
-			cost_reseller: batch.cost_reseller,
-			cost_user: batch.cost_user,
+			cost_reseller: costs.reseller,
+			cost_user: costs.user,
 
 			// Package
 			package_height: batch.package_height,

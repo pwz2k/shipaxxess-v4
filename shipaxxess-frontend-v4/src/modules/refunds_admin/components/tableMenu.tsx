@@ -37,9 +37,9 @@ const TableMenu = ({ row }: { row: Row<RefundsSelectModel> }) => {
 		let req: APIManger;
 
 		if (row.original.batch_uuid) {
-			req = await api.url(`/admin/refunds/batch/${row.original.batch_uuid}`).useAuth().get();
+			req = await api.url(`/admin/refunds/user/batch/${row.original.batch_uuid}`).useAuth().get();
 		} else {
-			req = await api.url(`/admin/refunds/${row.original.label_uuid}`).useAuth().get();
+			req = await api.url(`/admin/refunds/user/${row.original.label_uuid}`).useAuth().get();
 		}
 
 		const res = await req.json<{ success: boolean; message: string }>();

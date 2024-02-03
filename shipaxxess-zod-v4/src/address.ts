@@ -33,3 +33,7 @@ export type PHONEOPTIONALSCHEMA = z.infer<typeof PHONEOPTIONALSCHEMA>;
 export const ONLYPHONEOPTIONALSCHEMA = ZODSCHEMA.merge(z.object({ phone: z.string().optional() }));
 
 export type ONLYPHONEOPTIONALSCHEMA = z.infer<typeof ONLYPHONEOPTIONALSCHEMA>;
+
+export const PHONEOPTIONALWITHUUIDSCHEMA = PHONEOPTIONALSCHEMA.merge(z.object({ uuid: z.string() }));
+
+export type PHONEOPTIONALWITHUUIDSCHEMA = z.infer<typeof PHONEOPTIONALWITHUUIDSCHEMA>;
