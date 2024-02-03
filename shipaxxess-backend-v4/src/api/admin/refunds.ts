@@ -124,6 +124,11 @@ const Recycle = async (c: Context<App, "/:uuid">) => {
 			continue;
 		}
 
+		if (label.status_refund) {
+			log("Label already refunded");
+			continue;
+		}
+
 		if (!label.remote_id) {
 			log("Label not synced");
 			continue;
