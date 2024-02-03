@@ -17,6 +17,7 @@ import {
 	Weight,
 	CircleDotDashed,
 	LifeBuoy,
+	CircleDollarSign,
 } from "lucide-react";
 
 // Sidebar items
@@ -117,6 +118,12 @@ export const adminSidebarItems: SidebarProps[] = [
 		icon: <CircleDotDashed color="#fff" size={20} />,
 		label: "Crons",
 		slug: "/admin/crons",
+		badge: "new",
+	},
+	{
+		icon: <CircleDollarSign color="#fff" size={20} />,
+		label: "Refunds",
+		slug: "/admin/refunds",
 		badge: "new",
 	},
 	{

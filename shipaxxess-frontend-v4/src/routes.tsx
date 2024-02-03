@@ -22,6 +22,7 @@ import PaymentsAdminRoutes from "@client/modules/payments_admin/routes";
 import WeightsAdminRoutes from "@client/modules/weights_admin/routes";
 import TypesAdminRoutes from "@client/modules/types_admin/routes";
 import BatchsAdminRoutes from "@client/modules/batches_admin/routes";
+import RefundAdminRoutes from "@client/modules/refunds_admin/routes";
 
 export const router = createBrowserRouter([
 	...LandingRoutes,
@@ -54,6 +55,7 @@ export const router = createBrowserRouter([
 			...WeightsAdminRoutes,
 			...TypesAdminRoutes,
 			...BatchsAdminRoutes,
+			...RefundAdminRoutes,
 		],
 	},
 ]);

@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { CronsAdmin } from "./crons";
 import { LabelsAdmin } from "./labels";
 import { PaymentsAdmin } from "./payments";
+import { RefundAdmin } from "./refunds";
 import { AdminSettings } from "./settings";
 import { StatusAdmin } from "./status";
 import { TicketsAdmin } from "./tickets";
@@ -65,5 +66,8 @@ admin.post("/settings/label", AdminSettings.Label);
 admin.get("/crons", CronsAdmin.GetAll);
 admin.post("/crons", CronsAdmin.Reprocess);
 admin.delete("/crons", CronsAdmin.Remove);
+
+// Refunds
+admin.get("/refunds", RefundAdmin.GetAll);
 
 export { admin };
