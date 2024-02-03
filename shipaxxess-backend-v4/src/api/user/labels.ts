@@ -136,6 +136,56 @@ const RefundAsBatch = async (c: Context<App>) => {
 	return c.json({ success: true, message: "We are processing your refund. might take 3-4 days to get the refund" });
 };
 
+const RefundAsSingle = async (c: Context<App>) => {
+	const body = await c.req.json();
+	const parse = Refund.IDUUIDSCHEMA.parse(body);
+
+	const model = new Model(c.env.DB);
+
+	const label = await model.get(labels, eq(labels.uuid, parse.id));
+	if (!label) {
+		throw exception({ message: "Label not found.", code: 404 });
+	}
+
+	if (!label.batch_uuid) {
+		throw exception({ message: "Label not found.", code: 404 });
+	}
+
+	const batch = await model.get(batchs, eq(batchs.uuid, label.batch_uuid));
+	if (!batch) {
+		throw exception({ message: "Batch not found.", code: 404 });
+	}
+
+	const user = await model.get(users, eq(users.id, c.get("jwtPayload").id));
+	if (!user) {
+		throw exception({ message: "User not found.", code: 404 });
+	}
+
+	await model.insert(refunds, {
+		email_address: user.email_address,
+		first_name: user.first_name,
+		last_name: user.last_name,
+		user_id: c.get("jwtPayload").id,
+		uuid: v4(),
+		label_uuid: label.uuid,
+		waiting_for: 3,
+	});
+
+	await model.update(labels, { status_refund: true, status_label: "refunded" }, eq(labels.uuid, label.uuid));
+
+	await model.update(
+		batchs,
+		{
+			cost_user: batch.cost_user - label.cost_user,
+			cost_reseller: batch.cost_reseller - label.cost_reseller,
+			total_labels: batch.total_labels - 1,
+		},
+		eq(batchs.id, batch.id),
+	);
+
+	return c.json({ success: true, message: "We are processing your refund. might take 3-4 days to get the refund" });
+};
+
 const DownloadSingle = async (c: Context<App>) => {
 	const body = await c.req.json();
 	const parse = Id.ZODSCHEMA.parse(body);
@@ -215,4 +265,4 @@ const Search = async (c: Context<App>) => {
 	return c.json({});
 };
 
-export const LabelsUser = { GetAll, Create, RefundAsBatch, Get, DownloadSingle, DownloadBatch, Search };
+export const LabelsUser = { GetAll, Create, RefundAsBatch, Get, DownloadSingle, DownloadBatch, Search, RefundAsSingle };
