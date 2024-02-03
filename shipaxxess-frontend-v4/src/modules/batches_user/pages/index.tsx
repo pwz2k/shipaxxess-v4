@@ -18,7 +18,7 @@ const BatchsUserPage = () => {
 	const typesQuery = useTypesQuery();
 
 	const { CardTable, ToggleColumns } = useTable({
-		key: "addresses",
+		key: "batches",
 		columns: batchColumns(timezone),
 		data: batchesQuery.data,
 		loading: batchesQuery.isLoading,
