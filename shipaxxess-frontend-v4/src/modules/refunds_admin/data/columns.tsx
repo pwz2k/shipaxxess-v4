@@ -4,6 +4,7 @@ import { Button } from "@client/components/ui/button";
 import { RefundsSelectModel } from "@db/refunds";
 import moment from "moment-timezone";
 import { app } from "@client/config/app";
+import TableMenu from "../components/tableMenu";
 
 export const refundsColumns = (timezone: string) =>
 	[
@@ -78,5 +79,9 @@ export const refundsColumns = (timezone: string) =>
 			),
 			enableSorting: true,
 			enableHiding: true,
+		},
+		{
+			id: "action",
+			cell: ({ row }) => <TableMenu row={row} />,
 		},
 	] as ColumnDef<RefundsSelectModel>[];

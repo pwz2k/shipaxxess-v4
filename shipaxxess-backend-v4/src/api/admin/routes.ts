@@ -69,5 +69,7 @@ admin.delete("/crons", CronsAdmin.Remove);
 
 // Refunds
 admin.get("/refunds", RefundAdmin.GetAll);
+admin.get("/refunds/recycle/:uuid", RefundAdmin.Recycle);
+admin.get("/refunds/user/:uuid", RefundAdmin.Refund);
 
 export { admin };

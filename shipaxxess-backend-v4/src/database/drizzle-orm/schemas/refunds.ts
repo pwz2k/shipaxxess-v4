@@ -11,6 +11,8 @@ export const refunds = sqliteTable("refunds", {
 	batch_uuid: text("batch_uuid"),
 	label_uuid: text("label_uuid"),
 	waiting_for: integer("waiting_for").default(3),
+	is_refunded: integer("is_refunded", { mode: "boolean" }).default(false),
+	is_recycled: integer("is_recycled", { mode: "boolean" }).default(false),
 	created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`),
 	updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
 });
