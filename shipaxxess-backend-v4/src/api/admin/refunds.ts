@@ -1,12 +1,15 @@
 import { Model } from "@lib/model";
 import { batchs } from "@schemas/batchs";
 import { labels } from "@schemas/labels";
+import { payments } from "@schemas/payments";
 import { refunds } from "@schemas/refunds";
+import { users } from "@schemas/users";
 import { exception } from "@utils/error";
 import { log } from "@utils/log";
 import { getSettings } from "@utils/settings";
 import { eq } from "drizzle-orm";
 import { Context } from "hono";
+import { v4 } from "uuid";
 
 const GetAll = async (c: Context<App>) => {
 	const model = new Model(c.env.DB);
@@ -16,7 +19,43 @@ const GetAll = async (c: Context<App>) => {
 	return c.json(rt);
 };
 
-const Refund = async (c: Context<App>) => {};
+const Refund = async (c: Context<App, "/:uuid">) => {
+	const model = new Model(c.env.DB);
+
+	const batch = await model.get(batchs, eq(batchs.uuid, c.req.param("uuid")));
+	if (!batch) {
+		throw exception({ message: "Batch not found", code: 404 });
+	}
+
+	const user = await model.get(users, eq(users.id, batch.user_id));
+	if (!user) {
+		throw exception({ message: "User not found", code: 404 });
+	}
+
+	await model.update(
+		users,
+		{
+			current_balance: user.current_balance + batch.cost_user,
+			total_labels: user.total_labels - batch.total_labels,
+			total_spent: user.total_spent - batch.cost_user,
+			total_refund: user.total_refund + batch.cost_user,
+		},
+		eq(users.id, user.id),
+	);
+
+	await model.insert(payments, {
+		credit: batch.cost_user,
+		user_id: user.id,
+		status: "confirmed",
+		current_balance: user.current_balance,
+		gateway: "Refund",
+		new_balance: user.current_balance + batch.cost_user,
+		user_email: user.email_address,
+		user_name: user.first_name + " " + user.last_name,
+		uuid: v4(),
+		data_id: batch.id,
+	});
+};
 
 const Recycle = async (c: Context<App, "/:uuid">) => {
 	const model = new Model(c.env.DB);
