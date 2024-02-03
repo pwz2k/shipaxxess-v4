@@ -20,7 +20,7 @@ const ViewTableMenu = ({ row, batch_refund }: { row: Row<LabelsSelectModel>; bat
 		async click() {
 			setIsLoading(true);
 
-			const req = await api.url("/user/labels/refund").useAuth().post({ id: row.original.id });
+			const req = await api.url("/user/labels/refund").useAuth().post({ id: row.original.uuid });
 			const res = await req.json<{ success: boolean }>();
 
 			if (res.success) {
@@ -86,13 +86,15 @@ const ViewTableMenu = ({ row, batch_refund }: { row: Row<LabelsSelectModel>; bat
 		<div className="flex items-center gap-2">
 			{!batch_refund && (
 				<>
-					<Button
-						variant="outline"
-						size="icon"
-						disabled={row.original.is_downloaded === false}
-						onClick={downloadSinglePDF}>
-						<FileDown />
-					</Button>
+					{!row.original.status_refund && (
+						<Button
+							variant="outline"
+							size="icon"
+							disabled={row.original.is_downloaded === false}
+							onClick={downloadSinglePDF}>
+							<FileDown />
+						</Button>
+					)}
 
 					{row.original.type === "usps" && (
 						<AlertWrapper
@@ -102,7 +104,7 @@ const ViewTableMenu = ({ row, batch_refund }: { row: Row<LabelsSelectModel>; bat
 							open={refund}
 							setOpen={setRefund}
 							trigger={
-								<Button variant="outline" size="icon">
+								<Button variant="outline" size="icon" disabled={row.original.status_refund === true}>
 									<BadgeDollarSign />
 								</Button>
 							}
