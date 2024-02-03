@@ -35,7 +35,9 @@ export const ZODSCHEMA = COMMONSCHEMA.merge(
 
 export type ZODSCHEMA = z.infer<typeof ZODSCHEMA>;
 
-export const RECIPIENTSCHEMAARRAY = z.array(Address.ZODSCHEMA.merge(z.object({ uuid: z.string().uuid() }))).min(1);
+export const RECIPIENTSCHEMAARRAY = z
+	.array(Address.ZODSCHEMA.merge(z.object({ uuid: z.string().uuid(), phone: z.string().optional() })))
+	.min(1);
 
 export type RECIPIENTSCHEMAARRAY = z.infer<typeof RECIPIENTSCHEMAARRAY>;
 

@@ -3,7 +3,7 @@ import { Address } from "@shipaxxess/shipaxxess-zod-v4";
 import { Row } from "@tanstack/react-table";
 import { Edit } from "lucide-react";
 
-const RecipientEditTableMenu = ({ row }: { row: Row<Address.ZODSCHEMA> }) => {
+const RecipientEditTableMenu = ({ row }: { row: Row<Address.ONLYPHONEOPTIONALSCHEMA> }) => {
 	return (
 		<>
 			<Button

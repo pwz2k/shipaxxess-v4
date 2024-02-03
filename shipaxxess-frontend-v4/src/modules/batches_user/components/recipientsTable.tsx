@@ -2,7 +2,7 @@ import { Address } from "@shipaxxess/shipaxxess-zod-v4";
 import { recipentsColumns } from "../data/recipients";
 import useTable from "@client/hooks/useTable";
 
-const LabelsRecipentsTable = ({ recipients }: { recipients: Address.ZODSCHEMA[] }) => {
+const LabelsRecipentsTable = ({ recipients }: { recipients: Address.ONLYPHONEOPTIONALSCHEMA[] }) => {
 	const { CardTable, ToggleColumns } = useTable({
 		key: "labels_recipents",
 		columns: recipentsColumns,

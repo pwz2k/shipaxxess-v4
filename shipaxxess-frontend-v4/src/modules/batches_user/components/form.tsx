@@ -96,7 +96,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 		},
 		resolver: zodResolver(Labels.BATCHZODSCHEMA),
 	});
-	const csvform = useForm<Address.WITHNAMESCHEMA>({
+	const csvform = useForm<Address.PHONEOPTIONALSCHEMA>({
 		defaultValues: {
 			name: "",
 			full_name: "",
@@ -108,7 +108,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 			state: "",
 			country: "United States",
 		},
-		resolver: zodResolver(Address.WITHNAMESCHEMA),
+		resolver: zodResolver(Address.PHONEOPTIONALSCHEMA),
 	});
 
 	const onSubmit = async (data: Labels.BATCHZODSCHEMA) => {
@@ -154,7 +154,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 		};
 	};
 
-	const onCSVSubmit = (values: Address.WITHNAMESCHEMA) => {
+	const onCSVSubmit = (values: Address.PHONEOPTIONALSCHEMA) => {
 		form.setValue(
 			"recipient",
 			csvdata.map((item) => ({

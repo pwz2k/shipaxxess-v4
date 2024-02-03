@@ -25,3 +25,11 @@ export type UUIDSCHEMA = z.infer<typeof UUIDSCHEMA>;
 export const WITHNAMESCHEMA = ZODSCHEMA.merge(z.object({ name: z.string() }));
 
 export type WITHNAMESCHEMA = z.infer<typeof WITHNAMESCHEMA>;
+
+export const PHONEOPTIONALSCHEMA = WITHNAMESCHEMA.merge(z.object({ phone: z.string().optional() }));
+
+export type PHONEOPTIONALSCHEMA = z.infer<typeof PHONEOPTIONALSCHEMA>;
+
+export const ONLYPHONEOPTIONALSCHEMA = ZODSCHEMA.merge(z.object({ phone: z.string().optional() }));
+
+export type ONLYPHONEOPTIONALSCHEMA = z.infer<typeof ONLYPHONEOPTIONALSCHEMA>;

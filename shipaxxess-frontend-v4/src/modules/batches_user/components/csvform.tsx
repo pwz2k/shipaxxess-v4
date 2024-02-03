@@ -10,10 +10,10 @@ import { UseFormReturn } from "react-hook-form";
 type CSVFormProps = {
 	dialog: boolean;
 	setDialog: React.Dispatch<React.SetStateAction<boolean>>;
-	form: UseFormReturn<Address.WITHNAMESCHEMA>;
+	form: UseFormReturn<Address.PHONEOPTIONALSCHEMA>;
 	headers: string[];
 	setHeaders: React.Dispatch<React.SetStateAction<string[]>>;
-	onsubmit: (values: Address.WITHNAMESCHEMA) => void;
+	onsubmit: (values: Address.PHONEOPTIONALSCHEMA) => void;
 };
 
 const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) => {
@@ -46,6 +46,9 @@ const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) =
 				}
 				if (header.toLocaleLowerCase() === "street2") {
 					form.setValue("street_two", header);
+				}
+				if (header.toLocaleLowerCase() === "phone") {
+					form.setValue("phone", header);
 				}
 			}
 		}
@@ -259,6 +262,36 @@ const CSVForm = ({ dialog, form, setDialog, headers, onsubmit }: CSVFormProps) =
 									<FormControl>
 										<SelectTrigger>
 											<SelectValue placeholder="Assign field for zip" />
+										</SelectTrigger>
+									</FormControl>
+									<SelectContent>
+										{headers.map((header, index) => {
+											return (
+												<SelectItem key={index} value={header}>
+													{header}
+												</SelectItem>
+											);
+										})}
+									</SelectContent>
+								</Select>
+								<FormMessage />
+							</FormItem>
+						);
+					}}
+				/>
+				<FormField
+					control={form.control}
+					name="phone"
+					render={({ field }) => {
+						return (
+							<FormItem>
+								<FormLabel>
+									Phone <span className="text-xs text-muted-foreground">(optional)</span>
+								</FormLabel>
+								<Select defaultValue={field.value} onValueChange={field.onChange}>
+									<FormControl>
+										<SelectTrigger>
+											<SelectValue placeholder="Assign field for phone" />
 										</SelectTrigger>
 									</FormControl>
 									<SelectContent>
