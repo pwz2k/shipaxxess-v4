@@ -55,6 +55,10 @@ const Refund = async (c: Context<App, "/:uuid">) => {
 		uuid: v4(),
 		data_id: batch.id,
 	});
+
+	await model.update(refunds, { is_refunded: true }, eq(refunds.batch_uuid, batch.uuid));
+
+	return c.json({ success: true, message: "Refunded successfully" });
 };
 
 const Recycle = async (c: Context<App, "/:uuid">) => {

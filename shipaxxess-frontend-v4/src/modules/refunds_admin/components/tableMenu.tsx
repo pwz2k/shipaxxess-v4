@@ -26,6 +26,17 @@ const TableMenu = ({ row }: { row: Row<RefundsSelectModel> }) => {
 
 	const refund = async () => {
 		setRefundLoading(true);
+
+		const req = await api.url(`/admin/refunds/user/${row.original.batch_uuid}`).useAuth().get();
+		const res = await req.json<{ success: boolean; message: string }>();
+
+		if (res.success) {
+			setRefundLoading(false);
+			return api.showSuccessToast();
+		}
+
+		api.showErrorToast();
+		setRefundLoading(false);
 	};
 
 	return (
