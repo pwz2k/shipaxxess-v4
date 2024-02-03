@@ -34,7 +34,7 @@ const Get = async (c: Context<App, "/:uuid">) => {
 
 	const batchLabels = await model.all(labels, eq(labels.batch_uuid, batch_uuid));
 
-	return c.json({ labels: batchLabels, batch: { name: batch.name } });
+	return c.json({ labels: batchLabels, batch: { name: batch.name, status_refund: batch.status_refund } });
 };
 
 const Create = async (c: Context<App>) => {

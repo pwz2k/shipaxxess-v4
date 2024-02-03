@@ -11,7 +11,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
-const ViewTableMenu = ({ row }: { row: Row<LabelsSelectModel> }) => {
+const ViewTableMenu = ({ row, batch_refund }: { row: Row<LabelsSelectModel>; batch_refund: boolean }) => {
 	const queryClient = useQueryClient();
 
 	const [refund, setRefund] = React.useState(false);
@@ -84,23 +84,31 @@ const ViewTableMenu = ({ row }: { row: Row<LabelsSelectModel> }) => {
 
 	return (
 		<div className="flex items-center gap-2">
-			<Button variant="outline" size="icon" disabled={row.original.is_downloaded === false} onClick={downloadSinglePDF}>
-				<FileDown />
-			</Button>
+			{!batch_refund && (
+				<>
+					<Button
+						variant="outline"
+						size="icon"
+						disabled={row.original.is_downloaded === false}
+						onClick={downloadSinglePDF}>
+						<FileDown />
+					</Button>
 
-			{row.original.type === "usps" && (
-				<AlertWrapper
-					description="Are you sure you want to refund this label? This action cannot be undone."
-					title="Are you sure you want to refund this label?"
-					action={RefundSubmitButton}
-					open={refund}
-					setOpen={setRefund}
-					trigger={
-						<Button variant="outline" size="icon" disabled={row.original.status_refund === true}>
-							<BadgeDollarSign />
-						</Button>
-					}
-				/>
+					{row.original.type === "usps" && (
+						<AlertWrapper
+							description="Are you sure you want to refund this label? This action cannot be undone."
+							title="Are you sure you want to refund this label?"
+							action={RefundSubmitButton}
+							open={refund}
+							setOpen={setRefund}
+							trigger={
+								<Button variant="outline" size="icon">
+									<BadgeDollarSign />
+								</Button>
+							}
+						/>
+					)}
+				</>
 			)}
 
 			<Link to={`/tickets/new?type=label&id=${row.original.uuid}`}>

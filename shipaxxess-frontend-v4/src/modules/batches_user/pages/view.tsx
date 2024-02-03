@@ -30,7 +30,7 @@ const ViewBatchUserPage = () => {
 
 	const { CardTable, ToggleColumns } = useTable({
 		key: "batchs_labels",
-		columns: labelsColumns(timezone),
+		columns: labelsColumns(timezone, batchQuery.data?.batch.status_refund || false),
 		data: batchQuery.data?.labels || [],
 		loading: batchQuery.isLoading,
 		sort: [{ id: "id", desc: true }],
@@ -127,7 +127,11 @@ const ViewBatchUserPage = () => {
 								}
 							/>
 
-							<Button variant="outline" className="gap-1" onClick={batchDownload}>
+							<Button
+								variant="outline"
+								className="gap-1"
+								onClick={batchDownload}
+								disabled={batchQuery.data?.batch.status_refund === true}>
 								<FileDown size={16} />
 								Batch Download
 							</Button>

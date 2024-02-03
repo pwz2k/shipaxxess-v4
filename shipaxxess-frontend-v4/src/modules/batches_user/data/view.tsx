@@ -7,7 +7,7 @@ import { LabelsSelectModel } from "@db/labels";
 import { app } from "@client/config/app";
 import ViewTableMenu from "../components/viewTableMenu";
 
-export const labelsColumns = (timezone: string) =>
+export const labelsColumns = (timezone: string, batch_refund: boolean) =>
 	[
 		{
 			accessorKey: "remote_tracking_number",
@@ -24,7 +24,7 @@ export const labelsColumns = (timezone: string) =>
 			},
 			cell: ({ row }) => (
 				<div className="flex items-center gap-1 whitespace-nowrap">
-					{!row.original.status_refund && (
+					{!batch_refund && (
 						<>
 							<span id={`copy_${row.index}`}>{row.getValue("remote_tracking_number")}</span>
 							{row.original.remote_tracking_number && <CopyIcon size={16} className="cursor-copy" onClick={() => {}} />}
@@ -172,7 +172,7 @@ export const labelsColumns = (timezone: string) =>
 					</Button>
 				);
 			},
-			cell: ({ row }) => <Badge>{row.original.status_label}</Badge>,
+			cell: ({ row }) => <>{batch_refund ? <Badge>refunded</Badge> : <Badge>{row.original.status_label}</Badge>}</>,
 			enableSorting: true,
 			enableHiding: true,
 		},
@@ -201,6 +201,6 @@ export const labelsColumns = (timezone: string) =>
 			id: "action",
 			enableSorting: false,
 			enableHiding: false,
-			cell: ({ row }) => <ViewTableMenu row={row} />,
+			cell: ({ row }) => <ViewTableMenu row={row} batch_refund={batch_refund} />,
 		},
 	] as ColumnDef<LabelsSelectModel>[];
