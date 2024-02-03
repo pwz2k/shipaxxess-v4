@@ -102,6 +102,8 @@ const LabelRefund = async (c: Context<App, "/:uuid">) => {
 
 	await model.update(labels, { status_label: "refunded", status_refund: true }, eq(labels.id, label.id));
 
+	await model.update(refunds, { is_refunded: true }, eq(refunds.label_uuid, label.uuid));
+
 	return c.json({ success: true, message: "Refunded successfully" });
 };
 
@@ -192,6 +194,14 @@ const LabelRecycle = async (c: Context<App, "/:uuid">) => {
 			status_refund: true,
 		},
 		eq(labels.id, label.id),
+	);
+
+	await model.update(
+		refunds,
+		{
+			is_recycled: true,
+		},
+		eq(refunds.label_uuid, label.uuid),
 	);
 
 	return c.json({ success: true, message: "Recycled successfully" });
