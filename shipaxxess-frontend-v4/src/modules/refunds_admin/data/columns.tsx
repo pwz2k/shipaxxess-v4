@@ -10,7 +10,7 @@ import { Badge } from "@client/components/ui/badge";
 export const refundsColumns = (timezone: string) =>
 	[
 		{
-			id: "refund_id",
+			accessorKey: "id",
 			header: ({ column }) => {
 				return (
 					<Button
