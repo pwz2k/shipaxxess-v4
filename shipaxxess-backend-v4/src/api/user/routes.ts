@@ -29,6 +29,7 @@ user.post("/labels/batch", LabelsUser.Create);
 user.post("/labels/batch/download", LabelsUser.DownloadBatch);
 user.get("/labels/batch/:uuid", LabelsUser.Get);
 user.post("/labels/batch/refund", LabelsUser.RefundAsBatch);
+user.post("/labels/batch/search", LabelsUser.Search);
 
 // Addresses routes
 user.get("/addresses", AddressesUser.GetAll);

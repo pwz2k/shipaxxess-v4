@@ -190,4 +190,6 @@ const DownloadBatch = async (c: Context<App>) => {
 	});
 };
 
-export const LabelsUser = { GetAll, Create, RefundAsBatch, Get, DownloadSingle, DownloadBatch };
+const Search = async (c: Context<App>) => {};
+
+export const LabelsUser = { GetAll, Create, RefundAsBatch, Get, DownloadSingle, DownloadBatch, Search };

@@ -11,11 +11,23 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { format } from "date-fns";
 import { cn } from "@client/lib/utils";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Labels } from "@shipaxxess/shipaxxess-zod-v4";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQueryResult<TypesSelectModel[]> }) => {
-	const form = useForm();
+	const form = useForm<Labels.SEARCHZODSCHEMA>({
+		defaultValues: {
+			name: undefined,
+			uuid: undefined,
+			weight: undefined,
+		},
+		resolver: zodResolver(Labels.SEARCHZODSCHEMA),
+	});
 
-	const submit = async () => {};
+	const submit = async (values: Labels.SEARCHZODSCHEMA) => {
+		console.log(values);
+	};
 
 	return (
 		<Dialog>
@@ -33,7 +45,7 @@ const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQu
 								<div className="space-y-4">
 									<FormField
 										control={form.control}
-										name="uuid_query"
+										name="uuid"
 										render={({ field }) => (
 											<FormItem>
 												<FormLabel>
@@ -50,7 +62,7 @@ const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQu
 										<>
 											<FormField
 												control={form.control}
-												name="name_query"
+												name="name"
 												render={({ field }) => (
 													<FormItem>
 														<FormLabel>
@@ -65,7 +77,7 @@ const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQu
 											/>
 											<FormField
 												control={form.control}
-												name="weight_query"
+												name="weight"
 												render={({ field }) => (
 													<FormItem>
 														<FormLabel>
@@ -79,19 +91,44 @@ const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQu
 												)}
 											/>
 
+											<FormField
+												control={form.control}
+												name="weight_unit_query"
+												render={({ field }) => (
+													<FormItem className="space-y-3">
+														<FormControl>
+															<RadioGroup
+																onValueChange={field.onChange}
+																defaultValue={field.value}
+																className="flex items-center">
+																<FormItem className="flex items-center space-x-3 space-y-0">
+																	<FormControl>
+																		<RadioGroupItem value="lb" />
+																	</FormControl>
+																	<FormLabel className="m-0 font-normal">lb</FormLabel>
+																</FormItem>
+																<FormItem className="flex items-center space-x-3 space-y-0">
+																	<FormControl>
+																		<RadioGroupItem value="oz" />
+																	</FormControl>
+																	<FormLabel className="m-0 font-normal">oz</FormLabel>
+																</FormItem>
+															</RadioGroup>
+														</FormControl>
+														<FormMessage />
+													</FormItem>
+												)}
+											/>
+
 											{typesQuery && (
 												<FormField
 													control={form.control}
-													name="type_query"
+													name="delivery_id"
 													render={({ field }) => {
 														return (
 															<FormItem>
 																<FormLabel>Delivery Type</FormLabel>
-																<Select
-																	defaultValue={field.value}
-																	onValueChange={(value) => {
-																		field.onChange(value);
-																	}}>
+																<Select value={field.value} onValueChange={field.onChange}>
 																	<FormControl>
 																		<SelectTrigger>
 																			<SelectValue placeholder="Search by type" />
@@ -122,12 +159,12 @@ const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQu
 
 											<FormField
 												control={form.control}
-												name="status_query"
+												name="status"
 												render={({ field }) => {
 													return (
 														<FormItem>
 															<FormLabel>Status</FormLabel>
-															<Select defaultValue={field.value} onValueChange={field.onChange}>
+															<Select value={field.value} onValueChange={field.onChange}>
 																<FormControl>
 																	<SelectTrigger>
 																		<SelectValue placeholder="Search by status" />
@@ -151,7 +188,7 @@ const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQu
 											/>
 											<FormField
 												control={form.control}
-												name="from_date_query"
+												name="from_date"
 												render={({ field }) => (
 													<FormItem className="flex flex-col">
 														<FormLabel>From Date</FormLabel>
@@ -186,7 +223,7 @@ const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQu
 											/>
 											<FormField
 												control={form.control}
-												name="to_date_query"
+												name="end_date"
 												render={({ field }) => (
 													<FormItem className="flex flex-col">
 														<FormLabel>To Date</FormLabel>
@@ -222,9 +259,7 @@ const Search = ({ type, typesQuery }: { type?: string | null; typesQuery?: UseQu
 										</>
 									)}
 
-									<Button className="w-full" disabled>
-										Submit
-									</Button>
+									<Button className="w-full">Submit</Button>
 								</div>
 							</form>
 						</Form>

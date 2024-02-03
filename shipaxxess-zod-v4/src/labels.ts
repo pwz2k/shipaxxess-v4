@@ -47,3 +47,16 @@ export const BATCHZODSCHEMA = COMMONSCHEMA.merge(
 );
 
 export type BATCHZODSCHEMA = z.infer<typeof BATCHZODSCHEMA>;
+
+export const SEARCHZODSCHEMA = z.object({
+	uuid: z.string().optional(),
+	name: z.string().optional(),
+	weight: z.string().optional(),
+	delivery_id: z.string().optional(),
+	weight_unit_query: z.string().optional(),
+	status: z.string().optional(),
+	from_date: z.date().optional(),
+	end_date: z.date().optional(),
+});
+
+export type SEARCHZODSCHEMA = z.infer<typeof SEARCHZODSCHEMA>;
