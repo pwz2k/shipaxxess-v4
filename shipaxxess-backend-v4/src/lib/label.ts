@@ -3,13 +3,12 @@ import { getWeight } from "@helpers/query";
 import { BatchsSelectModel, batchs } from "@schemas/batchs";
 import { crons } from "@schemas/crons";
 import { LabelsInsertModel, LabelsSelectModel, labels } from "@schemas/labels";
-import { notifications } from "@schemas/notifications";
+import { payments } from "@schemas/payments";
 import { UsersSelectModel, users } from "@schemas/users";
 import { Address, Labels } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
 import { girth } from "@utils/girth";
 import { log } from "@utils/log";
-import { mail } from "@utils/mail";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import PDFMerger from "pdf-merger-js";
@@ -139,6 +138,20 @@ export class LabelManager {
 			.where(eq(users.id, user.id))
 			.execute();
 		log("Charged user for batch.");
+
+		await drizzle(this.env.DB)
+			.insert(payments)
+			.values({
+				credit: user_cost,
+				user_id: user.id,
+				status: "confirmed",
+				current_balance: user.current_balance,
+				gateway: "Label",
+				new_balance: user.current_balance - user_cost,
+				user_email: user.email_address,
+				user_name: user.first_name + " " + user.last_name,
+				uuid: v4(),
+			});
 	}
 
 	async sendToBatchProcessQueue(batch_id: number) {
@@ -408,43 +421,7 @@ export class LabelManager {
 		return buffer;
 	}
 
-	async notifyBatchDownloadCompleteEvent(batch_uuid: string) {
-		const batch = await drizzle(this.env.DB).select().from(batchs).where(eq(batchs.uuid, batch_uuid)).get();
-		if (!batch) throw exception({ message: "Batch not found.", code: 404 });
-		log("Batch found.");
-
-		const user = await this.getUserData(batch.user_id);
-		if (!user) throw exception({ message: "User not found.", code: 404 });
-		log("User found.");
-
-		const subject = `Batch #${batch.id} is ready to download`;
-		const body = `Hi ${user.first_name}, Your batch #${batch.id} is ready to download. please check the batch page to download the labels.`;
-
-		await drizzle(this.env.DB).insert(notifications).values({
-			description: body,
-			title: subject,
-			user_id: batch.user_id,
-			uuid: v4(),
-		});
-		log("Notification saved.");
-
-		if (!user.labels_email_notify) return;
-		if (!this.settings["postalserver_address"]) return;
-		if (!this.settings["postalserver_apikey"]) return;
-		if (!this.settings["postalserver_address"]) return;
-
-		await mail(
-			{
-				to: [user.email_address],
-				from: this.settings["postalserver_address"],
-				subject,
-				html: body,
-			},
-			this.settings["postalserver_apikey"],
-			this.settings["postalserver_address"],
-		);
-		log("Email sent.");
-	}
+	async notifyBatchDownloadCompleteEvent(batch_uuid: string) {}
 
 	async updateBatchFirstTrackingNumber(batch_uuid: string) {
 		return await drizzle(this.env.DB)

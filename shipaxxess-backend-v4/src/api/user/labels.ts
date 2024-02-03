@@ -3,9 +3,7 @@ import { Model } from "@lib/model";
 import { addresses } from "@schemas/addresses";
 import { batchs } from "@schemas/batchs";
 import { labels } from "@schemas/labels";
-import { refunds } from "@schemas/refunds";
-import { users } from "@schemas/users";
-import { Id, Labels, Refund } from "@shipaxxess/shipaxxess-zod-v4";
+import { Id, Labels } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
 import { log } from "@utils/log";
 import { getSettings } from "@utils/settings";
@@ -104,37 +102,6 @@ const Create = async (c: Context<App>) => {
 	return c.json({ success: true, message: "We are processing your batch. Please check back later." });
 };
 
-const RefundAsBatch = async (c: Context<App>) => {
-	const body = await c.req.json();
-	const parse = Refund.ZODSCHEMA.parse(body);
-
-	const model = new Model(c.env.DB);
-
-	const batch = await model.get(batchs, eq(batchs.uuid, parse.batch_uuid));
-	if (!batch) {
-		throw exception({ message: "Batch not found.", code: 404 });
-	}
-
-	const user = await model.get(users, eq(users.id, c.get("jwtPayload").id));
-	if (!user) {
-		throw exception({ message: "User not found.", code: 404 });
-	}
-
-	await model.insert(refunds, {
-		email_address: user.email_address,
-		first_name: user.first_name,
-		last_name: user.last_name,
-		user_id: c.get("jwtPayload").id,
-		uuid: v4(),
-		batch_uuid: batch.uuid,
-		waiting_for: 3,
-	});
-
-	await model.update(batchs, { status_label: "pending_refund", status_refund: true }, eq(batchs.uuid, batch.uuid));
-
-	return c.json({ success: true, message: "We are processing your refund. might take 3-4 days to get the refund" });
-};
-
 const DownloadSingle = async (c: Context<App>) => {
 	const body = await c.req.json();
 	const parse = Id.ZODSCHEMA.parse(body);
@@ -190,4 +157,4 @@ const DownloadBatch = async (c: Context<App>) => {
 	});
 };
 
-export const LabelsUser = { GetAll, Create, RefundAsBatch, Get, DownloadSingle, DownloadBatch };
+export const LabelsUser = { GetAll, Create, Get, DownloadSingle, DownloadBatch };
