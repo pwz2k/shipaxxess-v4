@@ -67,9 +67,35 @@ export const paymentsColumns = (timezone: string) =>
 			},
 			cell: ({ row }) => (
 				<>
-					{row.original.gateway === "payment" ? (
+					{row.original.gateway.toLocaleLowerCase() === "payment" && (
 						<span className="text-red-600">-${numberWithCommas(row.original.credit)}</span>
-					) : (
+					)}
+
+					{row.original.gateway.toLocaleLowerCase() === "refund" && (
+						<span className="text-green-600">+${numberWithCommas(row.original.credit)}</span>
+					)}
+
+					{row.original.gateway.toLocaleLowerCase() === "label" && (
+						<span className="text-red-600">-${numberWithCommas(row.original.credit)}</span>
+					)}
+
+					{row.original.gateway.toLocaleLowerCase() === "venmo" && (
+						<span className="text-green-600">+${numberWithCommas(row.original.credit)}</span>
+					)}
+
+					{row.original.gateway.toLocaleLowerCase() === "cashapp" && (
+						<span className="text-green-600">+${numberWithCommas(row.original.credit)}</span>
+					)}
+
+					{row.original.gateway.toLocaleLowerCase() === "zelle" && (
+						<span className="text-green-600">+${numberWithCommas(row.original.credit)}</span>
+					)}
+
+					{row.original.gateway.toLocaleLowerCase() === "card" && (
+						<span className="text-green-600">+${numberWithCommas(row.original.credit)}</span>
+					)}
+
+					{row.original.gateway.toLocaleLowerCase() === "crypto" && (
 						<span className="text-green-600">+${numberWithCommas(row.original.credit)}</span>
 					)}
 				</>
