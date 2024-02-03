@@ -1,5 +1,5 @@
 import { Button } from "@client/components/ui/button";
-import { api } from "@client/lib/api";
+import { APIManger, api } from "@client/lib/api";
 import { RefundsSelectModel } from "@db/refunds";
 import { Row } from "@tanstack/react-table";
 import { Loader2 } from "lucide-react";
@@ -12,7 +12,14 @@ const TableMenu = ({ row }: { row: Row<RefundsSelectModel> }) => {
 	const recycle = async () => {
 		setRecycleLoading(true);
 
-		const req = await api.url(`/admin/refunds/recycle/${row.original.batch_uuid}`).useAuth().get();
+		let req: APIManger;
+
+		if (row.original.batch_uuid) {
+			req = await api.url(`/admin/refunds/recycle/batch/${row.original.batch_uuid}`).useAuth().get();
+		} else {
+			req = await api.url(`/admin/refunds/recycle/${row.original.label_uuid}`).useAuth().get();
+		}
+
 		const res = await req.json<{ success: boolean; message: string }>();
 
 		if (res.success) {
@@ -27,7 +34,14 @@ const TableMenu = ({ row }: { row: Row<RefundsSelectModel> }) => {
 	const refund = async () => {
 		setRefundLoading(true);
 
-		const req = await api.url(`/admin/refunds/user/${row.original.batch_uuid}`).useAuth().get();
+		let req: APIManger;
+
+		if (row.original.batch_uuid) {
+			req = await api.url(`/admin/refunds/batch/${row.original.batch_uuid}`).useAuth().get();
+		} else {
+			req = await api.url(`/admin/refunds/${row.original.label_uuid}`).useAuth().get();
+		}
+
 		const res = await req.json<{ success: boolean; message: string }>();
 
 		if (res.success) {

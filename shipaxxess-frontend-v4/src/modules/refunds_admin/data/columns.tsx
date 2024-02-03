@@ -5,23 +5,35 @@ import { RefundsSelectModel } from "@db/refunds";
 import moment from "moment-timezone";
 import { app } from "@client/config/app";
 import TableMenu from "../components/tableMenu";
+import { Badge } from "@client/components/ui/badge";
 
 export const refundsColumns = (timezone: string) =>
 	[
 		{
-			accessorKey: "batch_uuid",
+			id: "refund_id",
 			header: ({ column }) => {
 				return (
 					<Button
 						className="px-0 whitespace-nowrap"
 						variant="ghost"
 						onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						Batch Id
+						Id
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
 			},
-			cell: ({ row }) => <span className="whitespace-nowrap">{row.getValue("batch_uuid")}</span>,
+			cell: ({ row }) =>
+				row.original.label_uuid ? (
+					<>
+						<span className="whitespace-nowrap">{row.original.label_uuid}</span>
+						<Badge className="ml-2 text-xs">label</Badge>
+					</>
+				) : (
+					<>
+						<span className="whitespace-nowrap">{row.original.batch_uuid}</span>
+						<Badge className="ml-2 text-xs">batch</Badge>
+					</>
+				),
 			enableSorting: true,
 			enableHiding: true,
 		},

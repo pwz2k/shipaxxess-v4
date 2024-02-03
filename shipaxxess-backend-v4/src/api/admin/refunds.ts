@@ -63,6 +63,48 @@ const Refund = async (c: Context<App, "/:uuid">) => {
 	return c.json({ success: true, message: "Refunded successfully" });
 };
 
+const LabelRefund = async (c: Context<App, "/:uuid">) => {
+	const model = new Model(c.env.DB);
+
+	const label = await model.get(labels, eq(labels.uuid, c.req.param("uuid")));
+	if (!label) {
+		throw exception({ message: "Label not found", code: 404 });
+	}
+
+	const user = await model.get(users, eq(users.id, label.user_id));
+	if (!user) {
+		throw exception({ message: "User not found", code: 404 });
+	}
+
+	await model.update(
+		users,
+		{
+			current_balance: user.current_balance + label.cost_user,
+			total_labels: user.total_labels - 1,
+			total_spent: user.total_spent - label.cost_user,
+			total_refund: user.total_refund + label.cost_user,
+		},
+		eq(users.id, user.id),
+	);
+
+	await model.insert(payments, {
+		credit: label.cost_user,
+		user_id: user.id,
+		status: "confirmed",
+		current_balance: user.current_balance,
+		gateway: "Refund",
+		new_balance: user.current_balance + label.cost_user,
+		user_email: user.email_address,
+		user_name: user.first_name + " " + user.last_name,
+		uuid: v4(),
+		data_id: label.id,
+	});
+
+	await model.update(labels, { status_label: "refunded", status_refund: true }, eq(labels.id, label.id));
+
+	return c.json({ success: true, message: "Refunded successfully" });
+};
+
 const Recycle = async (c: Context<App, "/:uuid">) => {
 	const model = new Model(c.env.DB);
 
@@ -120,4 +162,39 @@ const Recycle = async (c: Context<App, "/:uuid">) => {
 	return c.json({ success: true, message: "Recycled successfully" });
 };
 
-export const RefundAdmin = { GetAll, Refund, Recycle };
+const LabelRecycle = async (c: Context<App, "/:uuid">) => {
+	const model = new Model(c.env.DB);
+
+	const settings = await getSettings(c.env.DB);
+
+	const label = await model.get(labels, eq(labels.uuid, c.req.param("uuid")));
+	if (!label) {
+		throw exception({ message: "Label not found", code: 404 });
+	}
+
+	const req = await fetch(`${settings["label_host"]}/api/admin/ex-recycle-label`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			"x-api-key": settings["label_apikey"],
+		},
+		body: JSON.stringify({ id: label.remote_id }),
+	});
+
+	if (!req.ok) {
+		throw exception({ message: "Error recycling label", code: 500 });
+	}
+
+	await model.update(
+		labels,
+		{
+			status_label: "refunded",
+			status_refund: true,
+		},
+		eq(labels.id, label.id),
+	);
+
+	return c.json({ success: true, message: "Recycled successfully" });
+};
+
+export const RefundAdmin = { GetAll, Refund, Recycle, LabelRecycle, LabelRefund };
