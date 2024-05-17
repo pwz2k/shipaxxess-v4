@@ -25,3 +25,11 @@ binding = "BATCH_QUEUE"
 [[queues.consumers]]
 queue = "batch-labels"
 max_batch_size = 100
+
+[[queues.producers]]
+queue = "batch-pdf-downloads"
+binding = "BATCH_PDF_QUEUE"
+
+[[queues.consumers]]
+queue = "batch-pdf-downloads"
+max_batch_size = 100
