@@ -1,28 +1,27 @@
-name = "shipaxxess-backend"
+name = "shipaxxess-backend-v4"
 compatibility_date = "2023-12-01"
 
 [vars]
-FRONTEND_URL = ""
-BATCH_PDF_QUEUE = ""
-SUPER_PASSWD = ""
+FRONTEND_URL = "http://localhost:3000"
+SUPER_PASSWD = "super"
 
 [[kv_namespaces]]
 binding = "BATCH_KV"
-id = ""
+id = "286cdb9ad9e14440a96b712afc625ecb"
 
 [[r2_buckets]]
 binding = "LABELS_BUCKET"
-bucket_name = "my-bucket"
+bucket_name = "labels"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "database-name"
-database_id = "YOUR_DATABASE_ID"
+database_name = "shipaxxess-backend-d1"
+database_id = "a9505c6f-c120-4984-a853-eaa9655ec5d8"
 
 [[queues.producers]]
-queue = "YOUR_QUEUE_NAME"
+queue = "batch-labels"
 binding = "BATCH_QUEUE"
 
 [[queues.consumers]]
-queue = "<YOUR_QUEUE_NAME>"
+queue = "batch-labels"
 max_batch_size = 100
