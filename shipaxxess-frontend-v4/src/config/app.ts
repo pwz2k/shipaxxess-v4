@@ -5,7 +5,7 @@ export const app = {
 	api: "http://localhost:8787/v1",
 	prod_api: "https://shipaxxess-backend-v4.pwz2k.workers.dev/v1",
 	mode: import.meta.env.VITE_MODE,
-	version: "v4.0-dev",
+	version: "v4.1-dev",
 	support: "support@xclusivelabels.com",
 	time: {
 		format: "dddd, M/D/YY hh:mm A",
