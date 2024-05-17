@@ -1,21 +1,28 @@
 name = "shipaxxess-backend"
 compatibility_date = "2023-12-01"
 
-# [vars]
-# MY_VAR = "my-variable"
+[vars]
+FRONTEND_URL: string;
+BATCH_PDF_QUEUE: Queue;
+SUPER_PASSWD: string;
 
-# [[kv_namespaces]]
-# binding = "MY_KV_NAMESPACE"
-# id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+[[kv_namespaces]]
+binding = "BATCH_KV"
+id = ""
 
-# [[r2_buckets]]
-# binding = "MY_BUCKET"
-# bucket_name = "my-bucket"
+[[r2_buckets]]
+binding = "LABELS_BUCKET"
+bucket_name = "my-bucket"
 
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "my-database"
-# database_id = ""
+[[d1_databases]]
+binding = "DB"
+database_name = "database-name"
+database_id = "YOUR_DATABASE_ID"
 
-# [ai]
-# binding = "AI"
+[[queues.producers]]
+queue = "YOUR_QUEUE_NAME"
+binding = "BATCH_QUEUE"
+
+[[queues.consumers]]
+queue = "<YOUR_QUEUE_NAME>"
+max_batch_size = 100
