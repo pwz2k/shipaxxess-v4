@@ -18,6 +18,7 @@ bucket_name = "labels"
 binding = "DB"
 database_name = "shipaxxess-backend-d1"
 database_id = "a9505c6f-c120-4984-a853-eaa9655ec5d8"
+migrations_dir = "./src/database/drizzle-orm/migrations"
 
 [[queues.producers]]
 queue = "batch-labels"
