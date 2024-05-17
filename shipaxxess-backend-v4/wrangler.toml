@@ -1,5 +1,6 @@
 name = "shipaxxess-backend-v4"
 compatibility_date = "2023-12-01"
+account_id = "554a824a7e17198451f2dd49f8d07636"
 
 [vars]
 FRONTEND_URL = "http://localhost:3000"
