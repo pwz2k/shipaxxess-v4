@@ -2,9 +2,9 @@ name = "shipaxxess-backend"
 compatibility_date = "2023-12-01"
 
 [vars]
-FRONTEND_URL: string;
-BATCH_PDF_QUEUE: Queue;
-SUPER_PASSWD: string;
+FRONTEND_URL = ""
+BATCH_PDF_QUEUE = ""
+SUPER_PASSWD = ""
 
 [[kv_namespaces]]
 binding = "BATCH_KV"
