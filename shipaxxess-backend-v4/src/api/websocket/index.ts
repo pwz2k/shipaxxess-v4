@@ -12,16 +12,22 @@ export const WebSocketUser = (c: Context<App>) => {
 
 	server.accept();
 
-	server.addEventListener("open", async () => {});
+	server.addEventListener("open", async () => {
+		console.log("new connection open")
+	});
 
-	server.addEventListener("message", async (event) => {});
+	server.addEventListener("message", async (event) => {
+		console.log("new message",event.data)
+	});
 
 	server.addEventListener("error", async () => {
+		console.log("error")
 		client.close();
 		server.close();
 	});
 
 	server.addEventListener("close", async () => {
+		console.log("server is closing")
 		client.close();
 		server.close();
 	});

@@ -78,11 +78,18 @@ const DashboardUserPage = () => {
 					</div>
 				</div>
 				<div className="px-4">
-					<div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4 flex-1">
-						<TopPayments payments={samplePayments} />
-						<TopServices services={sampleServices} />
-
+					<div className="flex flex-row">
+						<div className="flex-1">
+							{/* <TopPayments payments={samplePayments} />
+							 */}
+							Top payments
+						</div>
+						<div className="flex-2">
+							{/* <TopServices services={sampleServices} /> */}
+							Top services
+						</div>
 					</div>
+
 				</div>
 				<div className="px-4">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">

@@ -10,7 +10,8 @@ import { Context } from "hono";
 import { sign } from "hono/jwt";
 
 export const SignInUser = async (c: Context<App>) => {
-	const body = await c.req.json();
+	try {
+		const body = await c.req.json();
 	const parse = Signin.ZODSCHEMA.parse(body);
 
 	// Super user login
@@ -133,4 +134,7 @@ export const SignInUser = async (c: Context<App>) => {
 	);
 
 	return c.json({ token });
+	} catch (error) {
+		console.log("error",error)
+	}
 };

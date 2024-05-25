@@ -13,31 +13,31 @@ ChartJS.register({
 
         chart.clear();
 
-        datasets.forEach((dataset, index) => {
-            const meta = chart.getDatasetMeta(index);
-            meta.data.forEach((bar) => {
-                const { x, y, base, width } = bar;
-                const radius = 10;
+        // datasets.forEach((dataset, index) => {
+        //     const meta = chart.getDatasetMeta(index);
+        //     meta.data.forEach((bar) => {
+        //         const { x, y, base, width } = bar;
+        //         const radius = 10;
 
-                const leftX = x - width / 2;
-                const rightX = x + width / 2;
-                const topY = y;
-                const bottomY = base;
+        //         const leftX = x - width / 2;
+        //         const rightX = x + width / 2;
+        //         const topY = y;
+        //         const bottomY = base;
 
-                ctx.save();
-                ctx.beginPath();
-                ctx.moveTo(leftX, bottomY);
-                ctx.lineTo(leftX, topY + radius);
-                ctx.quadraticCurveTo(leftX, topY, leftX + radius, topY);
-                ctx.lineTo(rightX - radius, topY);
-                ctx.quadraticCurveTo(rightX, topY, rightX, topY + radius);
-                ctx.lineTo(rightX, bottomY);
-                ctx.closePath();
-                ctx.fillStyle = dataset.backgroundColor; // Keep the original dataset background color
-                ctx.fill();
-                ctx.restore();
-            });
-        });
+        //         ctx.save();
+        //         ctx.beginPath();
+        //         ctx.moveTo(leftX, bottomY);
+        //         ctx.lineTo(leftX, topY + radius);
+        //         ctx.quadraticCurveTo(leftX, topY, leftX + radius, topY);
+        //         ctx.lineTo(rightX - radius, topY);
+        //         ctx.quadraticCurveTo(rightX, topY, rightX, topY + radius);
+        //         ctx.lineTo(rightX, bottomY);
+        //         ctx.closePath();
+        //         ctx.fillStyle = dataset.backgroundColor; // Keep the original dataset background color
+        //         ctx.fill();
+        //         ctx.restore();
+        //     });
+        // });
     },
 });
 
@@ -108,7 +108,7 @@ const TopPayments: React.FC<TopPaymentsProps> = ({ payments }) => {
         },
         scales: {
             x: {
-                display: false, // Hide x-axis
+                display: true, // Hide x-axis
             },
             y: {
                 display: false, // Hide y-axis

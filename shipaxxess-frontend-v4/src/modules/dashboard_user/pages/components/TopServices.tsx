@@ -42,7 +42,7 @@ const TopServices: React.FC<TopServicesProps> = ({ services }) => {
         },
         scales: {
             x: {
-                display: false, // Hide x-axis
+                display: true, // Hide x-axis
             },
             y: {
                 display: false, // Hide y-axis

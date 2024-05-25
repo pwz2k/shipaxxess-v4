@@ -24,7 +24,7 @@ export class APIManger {
 			this.path = `${host}${path}`;
 		}
 
-		this.path = app.mode === "dev" ? `${app.api}${path}` : `${app.prod_api}${path}`;
+		this.path = app.mode === "dev" ? `${app.api}${path}` : `${app.api}${path}`;
 
 		return this;
 	}
