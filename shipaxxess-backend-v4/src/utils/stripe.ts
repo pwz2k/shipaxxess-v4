@@ -9,10 +9,11 @@ export const stripeCheckout = async (secret: string, payload: PayloadProps) => {
 	const stripe = new Stripe(secret, {
 		apiVersion: "2023-10-16",
 	});
+	
 
 	const session = await stripe.checkout.sessions.create({
-		success_url: `${config.app.url}/payments?response=success&gateway=stripe`,
-		cancel_url: `${config.app.url}/payments?response=cancel&gateway=stripe`,
+		success_url: `${config.app.local}/payments?response=success&gateway=stripe`,
+		cancel_url: `${config.app.local}/payments?response=cancel&gateway=stripe`,
 		line_items: [
 			{
 				price_data: {

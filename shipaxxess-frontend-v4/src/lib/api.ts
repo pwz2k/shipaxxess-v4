@@ -7,6 +7,10 @@ export class APIManger {
 	private errorToast: string | null = null;
 	private req: Response | null = null;
 	private headers: HeadersInit | null = { "Content-Type": "application/json" };
+	    // WebSocket properties
+	private webSocket: WebSocket | null = null;
+	private notificationCallback: ((message: string) => void) | null = null;
+	
 
 	/**
 	 *
@@ -24,7 +28,7 @@ export class APIManger {
 			this.path = `${host}${path}`;
 		}
 
-		this.path = app.mode === "dev" ? `${app.api}${path}` : `${app.api}${path}`;
+		this.path = app.mode === "dev" ? `${app.api}${path}` : `${app.prod_api}${path}`;
 
 		return this;
 	}
@@ -155,6 +159,55 @@ export class APIManger {
 
 		return this;
 	}
+	
+    /**
+     * Initialize WebSocket connection for notifications
+     * @param wsUrl WebSocket URL
+     * @param onNotification Callback function to handle incoming notifications
+     */
+    initWebSocket(onNotification: (message: string) => void) {
+        this.webSocket = new WebSocket(app.websocket_api);
+
+        this.webSocket.onopen = () => {
+            console.log('WebSocket connection established');
+			this.webSocket?.send("test")
+        };
+
+        this.webSocket.onmessage = (event) => {
+            onNotification(event.data);
+        };
+
+        this.webSocket.onerror = (error) => {
+            console.error('WebSocket error:', error);
+        };
+
+        this.webSocket.onclose = () => {
+            console.log('WebSocket connection closed');
+        };
+
+        this.notificationCallback = onNotification;
+		return this
+    }
+
+    /**
+     * Close WebSocket connection
+     */
+    closeWebSocket() {
+        if (this.webSocket) {
+            this.webSocket.close();
+            this.webSocket = null;
+            this.notificationCallback = null;
+        }
+    }
+
+    /**
+     * Show WebSocket notification toast
+     * @param message Notification message
+     */
+    showWebSocketNotification(message: string) {
+		console.log("callbackmessage")
+        toast.info(message);
+    }
 }
 
 export const api = new APIManger();

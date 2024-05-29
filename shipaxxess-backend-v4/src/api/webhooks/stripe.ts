@@ -1,7 +1,9 @@
+import { config } from "@config";
 import { Model } from "@lib/model";
 import { payments } from "@schemas/payments";
 import { users } from "@schemas/users";
 import { log } from "@utils/log";
+import { mail } from "@utils/mail";
 import { getSettings } from "@utils/settings";
 import { and, eq } from "drizzle-orm";
 import { Context } from "hono";
@@ -10,6 +12,7 @@ import Stripe from "stripe";
 export const StripeWebhook = async (c: Context<App>) => {
 	try {
 		const settings = await getSettings(c.env.DB);
+		
 
 		if (!settings["stripe_key"] || !settings["stripe_secret"] || !settings["stripe_webhook_secret"]) {
 			throw new Error("Can not initialize Stripe without STRIPE_KEY");
@@ -20,7 +23,8 @@ export const StripeWebhook = async (c: Context<App>) => {
 		});
 
 		const body = await c.req.raw.text();
-
+	
+	
 		const sig = c.req.header("stripe-signature");
 		if (!sig) throw new Error("No signature");
 
@@ -28,6 +32,7 @@ export const StripeWebhook = async (c: Context<App>) => {
 
 		switch (event.type) {
 			case "checkout.session.completed":
+				console.log("seesion complete")
 				const { metadata } = event.data.object;
 				if (!metadata) throw new Error("No metadata");
 
@@ -59,7 +64,19 @@ export const StripeWebhook = async (c: Context<App>) => {
 				);
 
 				log(`Stripe webhook: ${user.email_address} topped up ${topup.credit} credits`);
-
+				c.executionCtx.waitUntil(
+					mail(c.env.DB, {
+						to: user.email_address, // Use user's email address
+						subject: `Payment Confirmation - ${config.app.name}`,
+						html: `
+							<p>Hi ${user.first_name},</p>
+							<p>Your payment of ${topup.credit} credits has been confirmed.</p>
+							<p>Thank you for your purchase!</p>
+							<p>Best regards,</p>
+							<p>The ${config.app.name} Team</p>
+							<p>${config.app.support}</p>`
+					})
+				);
 				return c.json({ success: true });
 
 			case "checkout.session.async_payment_failed":
@@ -84,7 +101,19 @@ export const StripeWebhook = async (c: Context<App>) => {
 					},
 					eq(payments.uuid, topup_uuid2),
 				);
-
+				c.executionCtx.waitUntil(
+					mail(c.env.DB, {
+						to: user2.email_address, // Use user's email address
+						subject: `Payment Faild - ${config.app.name}`,
+						html: `
+							<p>Hi ${user2.first_name},</p>
+							<p>Your payment of ${topup2.credit} credits has been Failed.</p>
+							<p>Thank you for your purchase!</p>
+							<p>Best regards,</p>
+							<p>The ${config.app.name} Team</p>
+							<p>${config.app.support}</p>`
+					})
+				);
 				log(`Stripe webhook: ${user2.email_address} failed to top up ${topup2.credit} credits`);
 
 				break;

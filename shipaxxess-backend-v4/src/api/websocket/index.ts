@@ -13,11 +13,13 @@ export const WebSocketUser = (c: Context<App>) => {
 	server.accept();
 
 	server.addEventListener("open", async () => {
-		console.log("new connection open")
+		
+		server.send("hellow this is message")
 	});
 
 	server.addEventListener("message", async (event) => {
-		console.log("new message",event.data)
+		
+		server.send("message"+ event.data)
 	});
 
 	server.addEventListener("error", async () => {

@@ -22,13 +22,20 @@ import { UsersSelectModel } from "@db/users";
 import { UseQueryResult } from "@tanstack/react-query";
 import { useNotificationsQuery } from "@client/hooks/useNotificationsQuery";
 import { Link, useNavigate } from "react-router-dom";
+import { api } from "@client/lib/api";
+import React from "react";
 
 const Header = ({ items, user }: { items: HeaderProps[]; user: UseQueryResult<UsersSelectModel> }) => {
+	React.useEffect(() => {
+		api.initWebSocket((message) => {
+			api.showWebSocketNotification(message)
+		})
+	}, [])
+
 	return (
 		<header
-			className={`sticky h-16 border-b border-primary/5 shadow bg-white flex items-center px-4 justify-between z-40 ${
-				app.mode === "dev" ? "top-9" : "top-0"
-			}`}>
+			className={`sticky h-16 border-b border-primary/5 shadow bg-white flex items-center px-4 justify-between z-40 ${app.mode === "dev" ? "top-9" : "top-0"
+				}`}>
 			<ProfileDropDownMenu items={items} userQuery={user} />
 
 			<NotificationsComponent userQuery={user} />
@@ -193,3 +200,7 @@ const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<Users
 		</div>
 	);
 };
+function useEffect(arg0: () => () => void, arg1: never[]) {
+	throw new Error("Function not implemented.");
+}
+

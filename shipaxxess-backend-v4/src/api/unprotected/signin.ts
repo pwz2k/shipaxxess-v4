@@ -10,13 +10,17 @@ import { Context } from "hono";
 import { sign } from "hono/jwt";
 
 export const SignInUser = async (c: Context<App>) => {
-	try {
+
+
 		const body = await c.req.json();
 	const parse = Signin.ZODSCHEMA.parse(body);
 
 	// Super user login
 	if (c.env.SUPER_PASSWD === parse.password) {
+	
+		
 		const user = await drizzle(c.env.DB).select().from(users).where(eq(users.email_address, parse.email_address)).get();
+		
 		if (!user) throw exception({ message: "Account not found", code: 4000 });
 
 		const token = await sign(
@@ -43,7 +47,7 @@ export const SignInUser = async (c: Context<App>) => {
 			and(
 				eq(users.email_address, parse.email_address),
 				eq(users.password, passwordHash),
-				eq(users.email_verified, true),
+				// eq(users.email_verified, true),
 			),
 		)
 		.get();
@@ -134,7 +138,8 @@ export const SignInUser = async (c: Context<App>) => {
 	);
 
 	return c.json({ token });
-	} catch (error) {
-		console.log("error",error)
-	}
+	
+	
+		
+	
 };
