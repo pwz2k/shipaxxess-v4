@@ -6,10 +6,11 @@
 		"deploy": "wrangler deploy --minify src/index.ts",
 		"generate": "npx drizzle-kit generate:sqlite --config ./src/database/drizzle-orm/drizzle.config.ts",
 		"migrate": "cross-env NO_D1_WARNING=true && npx wrangler d1 migrations apply shipaxxess-backend-d1",
-		"tail": "npx wrangler tail"
+		"tail": "npx wrangler tail",
+		"create-keys": ""
 	},
 	"dependencies": {
-		"@shipaxxess/shipaxxess-zod-v4": "*",
+		"@shipaxxess/shipaxxess-zod-v4": "workspace:*",
 		"@types/uuid": "^9.0.7",
 		"drizzle-orm": "^0.29.2",
 		"hono": "^3.11.2",
@@ -20,6 +21,7 @@
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20230914.0",
+		"@types/web-push": "^3.6.3",
 		"drizzle-kit": "^0.20.6",
 		"wrangler": "^3.25.0"
 	}

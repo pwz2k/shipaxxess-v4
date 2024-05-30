@@ -5,7 +5,9 @@
 		"clean": "npx lerna clean",
 		"frontend:build": "cd ./shipaxxess-frontend-v4 && pnpm build"
 	},
-	"dependencies": {},
+	"dependencies": {
+		
+	},
 	"devDependencies": {
 		"lerna": "^8.0.1"
 	}
