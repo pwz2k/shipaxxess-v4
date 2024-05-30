@@ -3,6 +3,7 @@ import { AddressesUser } from "./addresses";
 import { DashboardUser } from "./dashboard";
 import { EbayUser } from "./ebay";
 import { LabelsUser } from "./labels";
+import { NotificationUsers } from "./notifications";
 import { PackagesUser } from "./packages";
 import { PaymentUser } from "./payment";
 import { ReferralsUser } from "./referrals";
@@ -78,5 +79,10 @@ user.post("/weights", WeightsUser.Post);
 
 // Types routes
 user.get("/types", TypeUser.GetAll);
+// notificaitons routes
+user.get("/notifications",NotificationUsers.Get)
+user.put("/notifications/mark-read",NotificationUsers.MarkAllRead)
+
 
 export { user };
+

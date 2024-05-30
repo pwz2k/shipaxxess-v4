@@ -35,3 +35,4 @@ export const stripeCheckout = async (secret: string, payload: PayloadProps) => {
 
 	return session;
 };
+ 

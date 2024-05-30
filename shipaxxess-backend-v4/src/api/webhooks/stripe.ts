@@ -1,3 +1,4 @@
+import { INotification, NotificationUsers } from "@api/user/notifications";
 import { config } from "@config";
 import { Model } from "@lib/model";
 import { payments } from "@schemas/payments";
@@ -77,6 +78,11 @@ export const StripeWebhook = async (c: Context<App>) => {
 							<p>${config.app.support}</p>`
 					})
 				);
+			const notification:INotification={
+				title:"Funds Added",
+				description:`Your payment of ${topup.credit} credits has been confirmed.`
+			}
+				await NotificationUsers.Add(notification,c.env.DB,user_id)
 				return c.json({ success: true });
 
 			case "checkout.session.async_payment_failed":
@@ -107,9 +113,9 @@ export const StripeWebhook = async (c: Context<App>) => {
 						subject: `Payment Faild - ${config.app.name}`,
 						html: `
 							<p>Hi ${user2.first_name},</p>
-							<p>Your payment of ${topup2.credit} credits has been Failed.</p>
-							<p>Thank you for your purchase!</p>
-							<p>Best regards,</p>
+							<p>Your payment of ${topup2.credit} credits has been Failed! .</p>
+							<p>Please try again!</p>
+						
 							<p>The ${config.app.name} Team</p>
 							<p>${config.app.support}</p>`
 					})
@@ -117,6 +123,17 @@ export const StripeWebhook = async (c: Context<App>) => {
 				log(`Stripe webhook: ${user2.email_address} failed to top up ${topup2.credit} credits`);
 
 				break;
+			case "payment_intent.payment_failed":
+				const data4=event.object
+
+				if (!data4) throw new Error("No metadata");
+				
+			
+			
+				
+				
+				
+
 
 			default:
 				console.log(`Unhandled event type ${event.type}`);
@@ -126,3 +143,4 @@ export const StripeWebhook = async (c: Context<App>) => {
 		return c.json({ error: (err as Error).message }, 500);
 	}
 };
+

@@ -142,6 +142,19 @@ export class APIManger {
 
 		return this;
 	}
+	async put(body?: object) {
+		this.required();
+
+		const req = await fetch(this.path!, {
+			method: "PUT",
+			headers: this.headers!,
+			body: JSON.stringify(body),
+		});
+
+		this.req = req;
+
+		return this;
+	}
 
 	/**
 	 *
@@ -205,8 +218,7 @@ export class APIManger {
      * @param message Notification message
      */
     showWebSocketNotification(message: string) {
-		console.log("callbackmessage")
-        toast.info(message);
+		return message
     }
 }
 

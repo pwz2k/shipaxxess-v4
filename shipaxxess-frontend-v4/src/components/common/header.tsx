@@ -23,14 +23,24 @@ import { UseQueryResult } from "@tanstack/react-query";
 import { useNotificationsQuery } from "@client/hooks/useNotificationsQuery";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "@client/lib/api";
-import React from "react";
+import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState } from "react";
+
 
 const Header = ({ items, user }: { items: HeaderProps[]; user: UseQueryResult<UsersSelectModel> }) => {
-	React.useEffect(() => {
+	const [bellRing, setBellRing] = useState<any>()
+	useEffect(() => {
 		api.initWebSocket((message) => {
-			api.showWebSocketNotification(message)
+			setBellRing(message)
+
+
+
 		})
 	}, [])
+	const resetBell = async () => {
+		setBellRing(null)
+		const req = await api.url("/user/notifications/mark-read").useAuth().put();
+		console.log(req);
+	}
 
 	return (
 		<header
@@ -38,7 +48,7 @@ const Header = ({ items, user }: { items: HeaderProps[]; user: UseQueryResult<Us
 				}`}>
 			<ProfileDropDownMenu items={items} userQuery={user} />
 
-			<NotificationsComponent userQuery={user} />
+			<NotificationsComponent userQuery={user} bellRing={bellRing} resetRing={resetBell} />
 		</header>
 	);
 };
@@ -124,11 +134,13 @@ const ProfileDropDownMenu = ({
 	);
 };
 
-const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<UsersSelectModel> }) => {
-	const notifications: NotificationProps[] = [];
-
+const NotificationsComponent = ({ userQuery, bellRing, resetRing }: { userQuery: UseQueryResult<UsersSelectModel>, bellRing: any, resetRing: any }) => {
+	const notifications: NotificationProps[] = []
 	const notificationsQuery = useNotificationsQuery();
+	const { data, error, isLoading } = useNotificationsQuery();
 
+
+	console.log("data", data)
 	return (
 		<div className="flex items-center gap-4">
 			{userQuery.data?.isadmin === false && (
@@ -149,24 +161,24 @@ const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<Users
 
 			<DropdownMenu>
 				<DropdownMenuTrigger className="p-2 rounded outline-none bg-primary/5 hover:ring-2 hover:ring-primary/10">
-					<div className="relative">{notifications.length === 0 ? <Bell /> : <BellDot />}</div>
+					<div className="relative">{data?.length === 0 ? bellRing ? <BellDot /> : <Bell /> : <BellDot />}</div>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent className="absolute p-0 -right-5 ">
 					<Card className="w-[400px] rounded-lg overflow-hidden">
 						<CardHeader>
 							<CardTitle>Notifications</CardTitle>
-							<CardDescription>You have {notifications.length} unread messages.</CardDescription>
+							<CardDescription>You have {data?.length} unread messages.</CardDescription>
 						</CardHeader>
 						<CardContent className="grid gap-4">
 							<PushNotificationComponent />
 							<ScrollArea className="max-h-[300px] mt-2">
-								{notificationsQuery.isLoading && (
+								{isLoading && (
 									<>
 										<Skeleton className="w-full h-5" />
 										<Skeleton className="w-full h-10" />
 									</>
 								)}
-								{notifications.map((notification, index) => (
+								{data?.map((notification: { title: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; created_at: moment.MomentInput; description: string | number | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | null | undefined; }, index: Key | null | undefined) => (
 									<div
 										key={index}
 										className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0 hover:bg-primary/5 py-4 px-3 rounded-lg">
@@ -183,14 +195,14 @@ const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<Users
 									</div>
 								))}
 							</ScrollArea>
-							{notifications.length === 0 && (
+							{data?.length === 0 && (
 								<div className="flex items-center justify-center py-8">
 									<img src="/svg/empty.svg" height={200} width={200} alt="empty svg" />
 								</div>
 							)}
 						</CardContent>
 						<CardFooter>
-							<Button className="w-full">
+							<Button onClick={resetRing} className="w-full">
 								<Check className="w-4 h-4 mr-2" /> Mark all as read
 							</Button>
 						</CardFooter>
@@ -200,7 +212,3 @@ const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<Users
 		</div>
 	);
 };
-function useEffect(arg0: () => () => void, arg1: never[]) {
-	throw new Error("Function not implemented.");
-}
-
