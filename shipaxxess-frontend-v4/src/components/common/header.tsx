@@ -120,6 +120,7 @@ const ProfileDropDownMenu = ({
 const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<UsersSelectModel> }) => {
 	const notifications: NotificationProps[] = [];
 	const notificationsQuery = useNotificationsQuery();
+	const [unreadNotifcationCount, setUnreadNotificationCount] = useState(0);
 	const markAsReadMutation = useMarkAsReadMutation();
 	const [showBellDot, setShowBellDot] = useState(false);
 	notificationsQuery.data?.forEach((notification: { title: any; description: any; created_at: any; read: any; }) => {
@@ -147,7 +148,24 @@ const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<Users
 	const markAllAsRead = async () => {
 		await markAsReadMutation.mutateAsync();
 		setShowBellDot(false);
+		// update the notification locally
+		notificationsQuery.data?.forEach((notification: { read: boolean; }) => {
+			notification.read = true;
+		});
+
+
+
 	}
+
+	// count unread notifications
+	useEffect(() => {
+		if (notificationsQuery.isSuccess) {
+			const unreadNotifications = notificationsQuery.data?.filter((notification: { read: any; }) => !notification.read);
+			setUnreadNotificationCount(unreadNotifications?.length || 0);
+		}
+	}, [notificationsQuery.data]);
+
+
 
 
 
@@ -178,7 +196,8 @@ const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<Users
 					<Card className="w-[400px] rounded-lg overflow-hidden">
 						<CardHeader>
 							<CardTitle>Notifications</CardTitle>
-							<CardDescription>You have {notifications.length} unread messages.</CardDescription>
+
+							<CardDescription>You have {unreadNotifcationCount} unread messages.</CardDescription>
 						</CardHeader>
 						<CardContent className="grid gap-4">
 							<PushNotificationComponent />
@@ -193,7 +212,7 @@ const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<Users
 									<div
 										key={index}
 										className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0 hover:bg-primary/5 py-4 px-3 rounded-lg">
-										<span className="flex w-2 h-2 translate-y-1 rounded-full bg-primary" />
+										{!notification.read == true ? <span className="flex w-2 h-2 translate-y-1 rounded-full bg-primary" /> : <span className="flex w-2 h-2 translate-y-1 rounded-full" />}
 										<div className="space-y-1">
 											<p className="flex items-center justify-between text-sm font-medium leading-none">
 												<span>{notification.title}</span>
