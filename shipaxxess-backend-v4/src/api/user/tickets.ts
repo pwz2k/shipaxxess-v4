@@ -48,7 +48,8 @@ const Create = async (c: Context<App>) => {
 
 	// Send email to admin
 	const admins = await model.all(users, eq(users.isadmin, true));
-	console.log("admins", admins);
+	
+	
 	if (admins.length > 0) {
 		const adminEmails= admins.map((a) => a.email_address);
 		c.executionCtx.waitUntil(
@@ -102,6 +103,17 @@ const PostMessage = async (c: Context<App, "/:ticket_id">) => {
 	});
 
 	const chat = await model.get(chats, eq(chats.uuid, chat_uuid));
+
+
+	
+	// Send email to admin about new message using email with the ticket id
+
+	const ticket = await model.get(tickets, eq(tickets.uuid, c.req.param("ticket_id")));
+	const admins = await model.all(users, eq(users.isadmin, true));
+	
+	
+
+	
 
 	return c.json(chat);
 };
