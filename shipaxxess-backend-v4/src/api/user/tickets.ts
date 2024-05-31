@@ -93,7 +93,7 @@ const Create = async (c: Context<App>) => {
 	}
 
 
-
+	console.log("adminEmails", adminEmails)
 	if (admins.length > 0) {
 
 		c.executionCtx.waitUntil(
