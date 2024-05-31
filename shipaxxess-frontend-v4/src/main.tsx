@@ -14,6 +14,35 @@ const queryClient = new QueryClient({
 		},
 	}),
 });
+// app.js or main entry file
+if ('serviceWorker' in navigator) {
+	navigator.serviceWorker.register('/service-worker.js')
+		.then(registration => {
+			console.log('Service Worker registered with scope:', registration.scope);
+			const userId = 6;
+
+			if (registration.active) {
+				registration.active.postMessage({
+					type: 'INIT_WEBSOCKET',
+					userId: userId
+				});
+			}
+		})
+		.catch(error => {
+			console.error('Service Worker registration failed:', error);
+		});
+
+	navigator.serviceWorker.ready.then(registration => {
+		const userId = 6;
+		if (registration.active) {
+			registration.active.postMessage({
+				type: 'INIT_WEBSOCKET',
+				userId: userId
+			});
+		}
+	});
+}
+
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<React.StrictMode>

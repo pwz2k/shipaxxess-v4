@@ -4,10 +4,12 @@ import { payments } from "@schemas/payments";
 import { users } from "@schemas/users";
 import { log } from "@utils/log";
 import { mail } from "@utils/mail";
+import { INOtifcation, SaveNotifcaiton } from "@utils/notification";
 import { getSettings } from "@utils/settings";
 import { and, eq } from "drizzle-orm";
 import { Context } from "hono";
 import Stripe from "stripe";
+import { v4 } from "uuid";
 
 export const StripeWebhook = async (c: Context<App>) => {
 	try {
@@ -76,7 +78,13 @@ export const StripeWebhook = async (c: Context<App>) => {
 							<p>${config.app.support}</p>`
 					})
 				);
-				
+				const notification:INOtifcation = {
+					user_id: user_id,
+					title: "Top-up Successful",
+					description: `Your account has been successfully topped up with ${topup.credit} credits.`,
+					uuid: v4(),
+				}
+				await SaveNotifcaiton(c.env.DB, notification);
 				return c.json({ success: true });
 
 			

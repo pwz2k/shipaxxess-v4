@@ -1,5 +1,7 @@
 import { Context } from "hono";
 
+const clients = new Map<number, WebSocket>();
+
 export const WebSocketUser = (c: Context<App>) => {
 	const upgradeHeader = c.req.header("Upgrade");
 
@@ -13,22 +15,35 @@ export const WebSocketUser = (c: Context<App>) => {
 	server.accept();
 
 	server.addEventListener("open", async () => {
-		console.log("new connection open")
+		// Here, you should authenticate the user and get their user ID
+		const userId = await authenticateAndGetUserId(c); // Implement this function
+
+		// Store the WebSocket connection with the user ID
+		clients.set(userId, server);
+		console.log(`User ${userId} connected`);
 	});
 
 	server.addEventListener("message", async (event) => {
-		console.log("new message",event.data)
+		console.log("new message", event.data);
 	});
 
-	server.addEventListener("error", async () => {
-		console.log("error")
-		client.close();
+	server.addEventListener("error", () => {
+		console.log("error");
+		clients.forEach((client, userId) => {
+			if (client === server) {
+				clients.delete(userId);
+			}
+		});
 		server.close();
 	});
 
-	server.addEventListener("close", async () => {
-		console.log("server is closing")
-		client.close();
+	server.addEventListener("close", () => {
+		console.log("server is closing");
+		clients.forEach((client, userId) => {
+			if (client === server) {
+				clients.delete(userId);
+			}
+		});
 		server.close();
 	});
 
@@ -37,3 +52,12 @@ export const WebSocketUser = (c: Context<App>) => {
 		webSocket: client,
 	});
 };
+
+// Example function to authenticate and get user ID
+async function authenticateAndGetUserId(c: Context<App>): Promise<number> {
+	
+	return c.get("jwtPayload").id
+}
+
+export { clients };
+
