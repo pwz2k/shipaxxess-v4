@@ -145,18 +145,31 @@ const PostMessage = async (c: Context<App, "/:ticket_id">) => {
 	const chat = await model.get(chats, eq(chats.uuid, chat_uuid));
 
 	const admins = await model.all(users, eq(users.isadmin, true));
+	// add message from user to admin 
+
+
+
+	let emailBody = `
+	<p>Hi Admin,</p>
+	<p>A new message has been posted by ${user.first_name} ${user.last_name} </p>
+	<p>Reply: ${parse.message}</p>
+	
+	<p>Thanks!</p>
+	<p>The ${config.app.name} Team</p>
+	`;
+	let emailSubject = `
+	New message from ${user.first_name} ${user.last_name}
+
+	`;
+
 
 	if (admins.length > 0) {
 		const adminEmails = admins.map((a) => a.email_address);
 		c.executionCtx.waitUntil(
 			mail(c.env.DB, {
 				to: adminEmails[0],
-				subject: `New message from ${user.first_name} ${user.last_name} `,
-				html: `
-			< p > ${parse.message} </p>
-				< p > Thanks! < /p>
-				< p > The ${config.app.name} Team < /p>
-					`,
+				subject: emailSubject,
+				html: emailBody
 			}),
 		);
 	}
