@@ -138,8 +138,8 @@ export const SignInUser = async (c: Context<App>) => {
 	);
 
 	return c.json({ token });
-	
-	
-		
-	
+	} catch (error) {
+		console.log("error",error)
+		return c.json({ error: "Internal Server Error" }, 500);
+	}
 };

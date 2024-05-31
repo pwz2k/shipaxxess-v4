@@ -12,6 +12,7 @@ export type HeaderProps = {
 };
 
 export type NotificationProps = {
+	[x: string]: boolean;
 	title: string;
 	description: string;
 	created_at: string;

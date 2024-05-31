@@ -3,7 +3,8 @@ import { AddressesUser } from "./addresses";
 import { DashboardUser } from "./dashboard";
 import { EbayUser } from "./ebay";
 import { LabelsUser } from "./labels";
-import { NotificationUsers } from "./notifications";
+
+import { UserNotification } from "./notification";
 import { PackagesUser } from "./packages";
 import { PaymentUser } from "./payment";
 import { ReferralsUser } from "./referrals";
@@ -79,9 +80,11 @@ user.post("/weights", WeightsUser.Post);
 
 // Types routes
 user.get("/types", TypeUser.GetAll);
-// notificaitons routes
-user.get("/notifications",NotificationUsers.Get)
-user.put("/notifications/mark-read",NotificationUsers.MarkAllRead)
+// retunrn all user notifcations
+user.get("/notifications", UserNotification.Get);
+// mark all user notifcations as read
+user.patch("/notifications", UserNotification.MarkAsRead);
+
 
 
 export { user };

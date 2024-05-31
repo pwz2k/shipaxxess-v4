@@ -1,7 +1,6 @@
 import { Context } from "hono";
 
-// Global storage for WebSocket connections
-const connections = new Set<WebSocket>();
+const clients = new Map<number, WebSocket>();
 
 export const WebSocketUser = (c: Context<App>) => {
     const upgradeHeader = c.req.header("Upgrade");
@@ -15,22 +14,38 @@ export const WebSocketUser = (c: Context<App>) => {
 
     server.accept();
 
-    // Add the connection to the global storage
-    connections.add(server);
+	server.addEventListener("open", async () => {
+		// Here, you should authenticate the user and get their user ID
+		const userId = await authenticateAndGetUserId(c); // Implement this function
 
-    server.addEventListener("open", async () => {
-        server.send("Hello, this is a message");
-    });
+		// Store the WebSocket connection with the user ID
+		clients.set(userId, server);
+		console.log(`User ${userId} connected`);
+	});
 
-    server.addEventListener("message", async (event) => {
-        server.send("Message: " + event.data);
-    });
+	server.addEventListener("message", async (event) => {
+		console.log("new message", event.data);
+	});
 
-    server.addEventListener("error", async () => {
-        console.log("Error");
-        connections.delete(server);
-        server.close();
-    });
+	server.addEventListener("error", () => {
+		console.log("error");
+		clients.forEach((client, userId) => {
+			if (client === server) {
+				clients.delete(userId);
+			}
+		});
+		server.close();
+	});
+
+	server.addEventListener("close", () => {
+		console.log("server is closing");
+		clients.forEach((client, userId) => {
+			if (client === server) {
+				clients.delete(userId);
+			}
+		});
+		server.close();
+	});
 
     server.addEventListener("close", async () => {
         console.log("Server is closing");
@@ -44,12 +59,11 @@ export const WebSocketUser = (c: Context<App>) => {
     });
 };
 
-// Function to send notifications to all connected clients
-export const sendNotificationToAll = (message: string | ArrayBuffer | ArrayBufferView) => {
-	console.log("sending notifictons")
-    connections.forEach((socket) => {
-        if (socket.readyState === WebSocket.READY_STATE_OPEN) {
-            socket.send(message);
-        }
-    });
-};
+// Example function to authenticate and get user ID
+async function authenticateAndGetUserId(c: Context<App>): Promise<number> {
+	
+	return c.get("jwtPayload").id
+}
+
+export { clients };
+

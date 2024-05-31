@@ -3,7 +3,7 @@ export const config = {
 		name: "Xclusivelabels",
 		support: "support@xclusivelabels.com",
 		url: "https://xclusivelabels.com",
-		local:"http://localhost:5173"
+		loclhost:"http://localhost:5173"
 	},
 	jwt: {
 		secret: "KRqub7QWY8nczJ9rGNYYcte6IevIcu9m",

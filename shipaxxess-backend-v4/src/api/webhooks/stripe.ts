@@ -1,14 +1,15 @@
-import { INotification, NotificationUsers } from "@api/user/notifications";
 import { config } from "@config";
 import { Model } from "@lib/model";
 import { payments } from "@schemas/payments";
 import { users } from "@schemas/users";
 import { log } from "@utils/log";
 import { mail } from "@utils/mail";
+import { INOtifcation, SaveNotifcaiton } from "@utils/notification";
 import { getSettings } from "@utils/settings";
 import { and, eq } from "drizzle-orm";
 import { Context } from "hono";
 import Stripe from "stripe";
+import { v4 } from "uuid";
 
 export const StripeWebhook = async (c: Context<App>) => {
 	try {
@@ -30,24 +31,27 @@ export const StripeWebhook = async (c: Context<App>) => {
 		if (!sig) throw new Error("No signature");
 
 		const event = await stripe.webhooks.constructEventAsync(body, sig, settings["stripe_webhook_secret"]);
+		let user;
+		const model = new Model(c.env.DB);
+		let user_id
+		let topup
+		let topup_uuid
+		let data
 
+	
 		switch (event.type) {
 			case "checkout.session.completed":
 				console.log("seesion complete")
 				const { metadata } = event.data.object;
+				
 				if (!metadata) throw new Error("No metadata");
+				topup_uuid = metadata.topup_uuid;
+				user_id = parseInt(metadata.user_id);
 
-				const topup_uuid = metadata.topup_uuid;
-				const user_id = parseInt(metadata.user_id);
-
-				const model = new Model(c.env.DB);
-
-				const user = await model.get(users, eq(users.id, user_id));
+				user = await model.get(users, eq(users.id, user_id));
 				if (!user) throw new Error("User not found");
-
-				const topup = await model.get(payments, and(eq(payments.uuid, topup_uuid), eq(payments.user_id, user_id)));
+				topup = await model.get(payments, and(eq(payments.uuid, topup_uuid), eq(payments.user_id, user_id)));
 				if (!topup) throw new Error("Topup not found");
-
 				await model.update(
 					users,
 					{
@@ -55,7 +59,6 @@ export const StripeWebhook = async (c: Context<App>) => {
 					},
 					eq(users.id, user_id),
 				);
-
 				await model.update(
 					payments,
 					{
@@ -65,78 +68,76 @@ export const StripeWebhook = async (c: Context<App>) => {
 				);
 
 				log(`Stripe webhook: ${user.email_address} topped up ${topup.credit} credits`);
+			
+				const notification:INOtifcation = {
+					user_id: user_id,
+					title: "Top-up Successful",
+					description: `Your account has been successfully topped up with ${topup.credit} credits.`,
+					uuid: v4(),
+				}
+				await SaveNotifcaiton(c.env.DB, notification);
 				c.executionCtx.waitUntil(
 					mail(c.env.DB, {
-						to: user.email_address, // Use user's email address
-						subject: `Payment Confirmation - ${config.app.name}`,
+						to: user.email_address,
+						subject: `Top-up Successful`,
 						html: `
 							<p>Hi ${user.first_name},</p>
-							<p>Your payment of ${topup.credit} credits has been confirmed.</p>
-							<p>Thank you for your purchase!</p>
-							<p>Best regards,</p>
+							<p>Your account has been successfully topped up with ${topup.credit} credits.</p>
+							<p>Thank you for using ${config.app.name}.</p>
+							<p>Best Regards</p>
 							<p>The ${config.app.name} Team</p>
 							<p>${config.app.support}</p>`
 					})
 				);
-			const notification:INotification={
-				title:"Funds Added",
-				description:`Your payment of ${topup.credit} credits has been confirmed.`
-			}
-				await NotificationUsers.Add(notification,c.env.DB,user_id)
 				return c.json({ success: true });
 
-			case "checkout.session.async_payment_failed":
-				const data = event.data.object;
-				if (!data.metadata) throw new Error("No metadata");
-
-				const topup_uuid2 = data.metadata.topup_uuid;
-				const user_id2 = parseInt(data.metadata.user_id);
-
-				const model2 = new Model(c.env.DB);
-
-				const user2 = await model2.get(users, eq(users.id, user_id2));
-				if (!user2) throw new Error("User not found");
-
-				const topup2 = await model2.get(payments, and(eq(payments.uuid, topup_uuid2), eq(payments.user_id, user_id2)));
-				if (!topup2) throw new Error("Topup not found");
-
-				await model2.update(
-					payments,
-					{
-						status: "failed",
-					},
-					eq(payments.uuid, topup_uuid2),
-				);
-				c.executionCtx.waitUntil(
-					mail(c.env.DB, {
-						to: user2.email_address, // Use user's email address
-						subject: `Payment Faild - ${config.app.name}`,
-						html: `
-							<p>Hi ${user2.first_name},</p>
-							<p>Your payment of ${topup2.credit} credits has been Failed! .</p>
-							<p>Please try again!</p>
-						
-							<p>The ${config.app.name} Team</p>
-							<p>${config.app.support}</p>`
-					})
-				);
-				log(`Stripe webhook: ${user2.email_address} failed to top up ${topup2.credit} credits`);
-
-				break;
-			case "payment_intent.payment_failed":
-				const data4=event.object
-
-				if (!data4) throw new Error("No metadata");
-				
 			
-			
+
+				case "checkout.session.async_payment_failed":
+					data = event.data.object;
+					if (!data.metadata) throw new Error("No metadata");
+					topup_uuid = data.metadata.topup_uuid;
+					user_id = parseInt(data.metadata.user_id);
+					user = await model.get(users, eq(users.id, user_id));
+					if (!user) throw new Error("User not found");
 				
+					topup = await model.get(payments, and(eq(payments.uuid, topup_uuid), eq(payments.user_id, user_id)));
+					if (!topup) throw new Error("Topup not found");
 				
+					await model.update(
+						payments,
+						{
+							status: "failed",
+						},
+						eq(payments.uuid, topup_uuid),
+					);
 				
+					log(`Stripe webhook: ${user.email_address} failed to top up ${topup.credit} credits`);
+				
+					c.executionCtx.waitUntil(
+						mail(c.env.DB, {
+							to: user.email_address,
+							subject: `Top-up Failed`,
+							html: `
+								<p>Hi ${user.first_name},</p>
+								<p>We're sorry to inform you that your recent attempt to top up ${topup.credit} credits failed.</p>
+								<p>Please ensure that you have sufficient funds in your account and try again.</p>
+								<p>If you continue to experience issues, please contact support at ${config.app.support}.</p>
+								<p>Thank you for using ${config.app.name}.</p>
+								<p>Best regards,</p>
+								<p>The ${config.app.name} Team</p>`
+						})
+					);
+				
+					return c.json({ success: true });
+			case "charge.failed":
+				break
 
 
 			default:
-				console.log(`Unhandled event type ${event.type}`);
+				return c.json({ success: true });
+			
+				
 		}
 	} catch (err) {
 		log(`Stripe webhook error: ${(err as Error).message}`);
