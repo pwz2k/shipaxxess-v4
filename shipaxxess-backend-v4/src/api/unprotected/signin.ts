@@ -27,7 +27,7 @@ export const SignInUser = async (c: Context<App>) => {
 					first_name: user.first_name,
 					last_name: user.last_name,
 				},
-				config.jwt.secret,
+				config.jwt.admin,
 				config.jwt.alg as "HS256",
 			);
 
@@ -136,6 +136,5 @@ export const SignInUser = async (c: Context<App>) => {
 		return c.json({ token });
 	} catch (error) {
 		console.log("error", error)
-		return c.json({ error: "Internal Server Error" }, 500);
 	}
 };

@@ -3,7 +3,7 @@ export const config = {
 		name: "Xclusivelabels",
 		support: "support@xclusivelabels.com",
 		url: "https://xclusivelabels.com",
-		loclhost:"http://localhost:5173"
+		loclhost: "http://localhost:5173"
 	},
 	jwt: {
 		secret: "KRqub7QWY8nczJ9rGNYYcte6IevIcu9m",
@@ -25,7 +25,7 @@ export const config = {
 			baseurl: "https://api.sandbox.ebay.com",
 			authurl: "https://auth.sandbox.ebay.com",
 			client_id: "Corneliu-Saveneur-SBX-a94db0756-1ec480c7",
-			client_secret: "SBX-94e46b3523b1-8058-4c95-b68c-57af",
+			client_secret: "SBX-94e46b3523b1-8058-4c95-b68c-5	7af",
 			hex_code:
 				"Q29ybmVsaXUtU2F2ZW5ldXItU0JYLWE5NGRiMDc1Ni0xZWM0ODBjNzpTQlgtOTRlNDZiMzUyM2IxLTgwNTgtNGM5NS1iNjhjLTU3YWY=",
 			redirect_uri: "Cornelius_Wilso-Corneliu-Savene-votick",
