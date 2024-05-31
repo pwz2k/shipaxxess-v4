@@ -34,10 +34,11 @@ export const StripeWebhook = async (c: Context<App>) => {
 		let topup_uuid
 		let data
 
-		console.log("type",event.type)
+	
 		switch (event.type) {
 			case "checkout.session.completed":
 				const { metadata } = event.data.object;
+				
 				if (!metadata) throw new Error("No metadata");
 				topup_uuid = metadata.topup_uuid;
 				user_id = parseInt(metadata.user_id);
@@ -117,46 +118,8 @@ export const StripeWebhook = async (c: Context<App>) => {
 					);
 				
 					return c.json({ success: true });
-			case "payment_intent.payment_failed":
-				console.log("datafoudn",event)
-				data = event.data.object;
-				if (!data.metadata) throw new Error("No metadata");
-				topup_uuid = data.metadata.topup_uuid;
-				user_id = parseInt(data.metadata.user_id);
-				user = await model.get(users, eq(users.id, user_id));
-				if (!user) throw new Error("User not found");
-			
-				topup = await model.get(payments, and(eq(payments.uuid, topup_uuid), eq(payments.user_id, user_id)));
-				if (!topup) throw new Error("Topup not found");
-			
-				await model.update(
-					payments,
-					{
-						status: "failed",
-					},
-					eq(payments.uuid, topup_uuid),
-				);
-			
-				log(`Stripe webhook: ${user.email_address} failed to top up ${topup.credit} credits`);
-			
-				c.executionCtx.waitUntil(
-					mail(c.env.DB, {
-						to: user.email_address,
-						subject: `Top-up Failed`,
-						html: `
-							<p>Hi ${user.first_name},</p>
-							<p>We're sorry to inform you that your recent attempt to top up ${topup.credit} credits failed.</p>
-							<p>${data.cancellation_reason}</p>
-							<p>If you continue to experience issues, please contact support at ${config.app.support}.</p>
-							<p>Thank you for using ${config.app.name}.</p>
-							<p>Best regards,</p>
-							<p>The ${config.app.name} Team</p>`
-					})
-				);
-			
-				return c.json({ success: true });
-				
-			
+			case "charge.failed":
+				break
 
 
 			default:
