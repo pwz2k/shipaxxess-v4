@@ -1,3 +1,4 @@
+import { config } from "@config";
 import { Model } from "@lib/model";
 import { chats } from "@schemas/chats";
 import { tickets } from "@schemas/tickets";
@@ -65,7 +66,11 @@ const PostMessage = async (c: Context<App>) => {
 	emailBody = `	<p>Hi ${ticketOwner.first_name},</p>
 <p>${user.first_name} ${user.last_name} has replied to your ticket</p>
 <p>Message: ${parse.message}</p>
-<p>Thanks</p>`;
+
+<p>Thanks</p>
+<p>The ${config.app.name} Team</p>
+
+`;
 	emailSubject = `New message from Support on your ticket `;
 
 	c.executionCtx.waitUntil(mail(c.env.DB, {
@@ -116,7 +121,10 @@ const Close = async (c: Context<App>) => {
 	let emailSubject = ``;
 	emailBody = `	<p>Hi ${ticketOwner.first_name},</p>
 <p>Your ticket has been closed</p>
-<p>Thanks</p>`;
+<p>Thanks</p>
+<p>The ${config.app.name} Team</p>
+
+`;
 	emailSubject = `Ticket closed by Support`;
 
 	c.executionCtx.waitUntil(mail(c.env.DB, {
