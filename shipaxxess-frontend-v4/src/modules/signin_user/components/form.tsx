@@ -29,7 +29,7 @@ const SignInFormComponent = ({ setCode }: { setCode: React.Dispatch<React.SetSta
 
 		const req = await api.url("/signin_user").post(data);
 		const res = await req.json<{ token: string; two_fa: boolean; admin: boolean }>();
-
+		console.log("res", res)
 		if (res.admin) {
 			localStorage.setItem("token", res.token);
 			api.showSuccessToast("Welcome back, admin!");
