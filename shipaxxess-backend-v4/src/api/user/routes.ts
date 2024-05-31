@@ -81,7 +81,9 @@ user.post("/weights", WeightsUser.Post);
 // Types routes
 user.get("/types", TypeUser.GetAll);
 // retunrn all user notifcations
-user.get("/notifications/user", UserNotification.Get);
+user.get("/notifications", UserNotification.Get);
+// mark all user notifcations as read
+user.patch("/notifications", UserNotification.MarkAsRead);
 
 
 

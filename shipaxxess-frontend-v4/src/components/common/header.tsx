@@ -20,15 +20,15 @@ import moment from "moment-timezone";
 import PushNotificationComponent from "./push";
 import { UsersSelectModel } from "@db/users";
 import { UseQueryResult } from "@tanstack/react-query";
-import { useNotificationsQuery } from "@client/hooks/useNotificationsQuery";
+import { useNotificationsQuery, useMarkAsReadMutation } from "@client/hooks/useNotificationsQuery";
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const Header = ({ items, user }: { items: HeaderProps[]; user: UseQueryResult<UsersSelectModel> }) => {
 	return (
 		<header
-			className={`sticky h-16 border-b border-primary/5 shadow bg-white flex items-center px-4 justify-between z-40 ${
-				app.mode === "dev" ? "top-9" : "top-0"
-			}`}>
+			className={`sticky h-16 border-b border-primary/5 shadow bg-white flex items-center px-4 justify-between z-40 ${app.mode === "dev" ? "top-9" : "top-0"
+				}`}>
 			<ProfileDropDownMenu items={items} userQuery={user} />
 
 			<NotificationsComponent userQuery={user} />
@@ -119,8 +119,38 @@ const ProfileDropDownMenu = ({
 
 const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<UsersSelectModel> }) => {
 	const notifications: NotificationProps[] = [];
-
 	const notificationsQuery = useNotificationsQuery();
+	const markAsReadMutation = useMarkAsReadMutation();
+	const [showBellDot, setShowBellDot] = useState(false);
+	notificationsQuery.data?.forEach((notification: { title: any; description: any; created_at: any; read: any; }) => {
+		notifications.push({
+			title: notification.title,
+			description: notification.description,
+			created_at: notification.created_at,
+			read: notification.read,
+		});
+	});
+
+	useEffect(() => {
+		if (notificationsQuery.isSuccess) {
+			const unreadNotifications = notificationsQuery.data?.filter((notification: { read: any; }) => !notification.read);
+			if (unreadNotifications?.length) {
+				setShowBellDot(true);
+			} else {
+				setShowBellDot(false);
+			}
+		}
+	}, [notificationsQuery.data]);
+
+
+
+	const markAllAsRead = async () => {
+		await markAsReadMutation.mutateAsync();
+		setShowBellDot(false);
+	}
+
+
+
 
 	return (
 		<div className="flex items-center gap-4">
@@ -142,7 +172,7 @@ const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<Users
 
 			<DropdownMenu>
 				<DropdownMenuTrigger className="p-2 rounded outline-none bg-primary/5 hover:ring-2 hover:ring-primary/10">
-					<div className="relative">{notifications.length === 0 ? <Bell /> : <BellDot />}</div>
+					<div className="relative">{showBellDot ? <BellDot /> : <Bell />}</div>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent className="absolute p-0 -right-5 ">
 					<Card className="w-[400px] rounded-lg overflow-hidden">
@@ -159,7 +189,7 @@ const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<Users
 										<Skeleton className="w-full h-10" />
 									</>
 								)}
-								{notifications.map((notification, index) => (
+								{notifications?.map((notification, index) => (
 									<div
 										key={index}
 										className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0 hover:bg-primary/5 py-4 px-3 rounded-lg">
@@ -183,7 +213,7 @@ const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<Users
 							)}
 						</CardContent>
 						<CardFooter>
-							<Button className="w-full">
+							<Button className="w-full" onClick={markAllAsRead}>
 								<Check className="w-4 h-4 mr-2" /> Mark all as read
 							</Button>
 						</CardFooter>
