@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { CronsAdmin } from "./crons";
 import { LabelsAdmin } from "./labels";
+import { AdminNotification } from "./notifcaitons";
 import { PaymentsAdmin } from "./payments";
 import { RefundAdmin } from "./refunds";
 import { AdminSettings } from "./settings";
@@ -73,5 +74,9 @@ admin.get("/refunds/recycle/:uuid", RefundAdmin.LabelRecycle);
 admin.get("/refunds/recycle/batch/:uuid", RefundAdmin.Recycle);
 admin.get("/refunds/user/:uuid", RefundAdmin.LabelRefund);
 admin.get("/refunds/user/batch/:uuid", RefundAdmin.Refund);
+// Notifications
+admin.get("/notifications", AdminNotification.Get);
+admin.patch("/notifications", AdminNotification.MarkAsRead);
 
 export { admin };
+

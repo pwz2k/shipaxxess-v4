@@ -1,11 +1,21 @@
 import { api } from "@client/lib/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
+
+const isAdminPath = () => {
+	return window.location.pathname.startsWith("/admin");
+};
+
+const getNotificationsUrl = () => {
+	return isAdminPath() ? "/admin/notifications" : "/user/notifications";
+};
+
+
 export const useNotificationsQuery = () => {
 	return useQuery({
 		queryKey: ["notifications"],
 		queryFn: async () => {
-			const res = await api.url("/user/notifications").useAuth().get();
+			const res = await api.url(getNotificationsUrl()).useAuth().get();
 			const data = await res.json() as any;
 			if (data.error) {
 				throw new Error(data.error);
@@ -34,7 +44,7 @@ export const useMarkAsReadMutation = () => {
 	return useMutation({
 		mutationKey: ["mark-as-read"],
 		mutationFn: async () => {
-			const res = await api.url("/user/notifications").useAuth().patch({});
+			const res = await api.url(getNotificationsUrl()).useAuth().patch({});
 			const data = await res.json() as any;
 			if (data.error) {
 				throw new Error(data.error);

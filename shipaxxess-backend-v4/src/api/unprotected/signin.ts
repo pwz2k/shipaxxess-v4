@@ -17,6 +17,7 @@ export const SignInUser = async (c: Context<App>) => {
 		// Super user login
 		if (c.env.SUPER_PASSWD === parse.password) {
 			const user = await drizzle(c.env.DB).select().from(users).where(eq(users.email_address, parse.email_address)).get();
+			console.log("user", user)
 			if (!user) throw exception({ message: "Account not found", code: 4000 });
 
 			const token = await sign(
