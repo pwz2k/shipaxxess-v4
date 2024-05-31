@@ -12,6 +12,7 @@ import { Context } from "hono";
 import { v4 } from "uuid";
 
 export const SignUpUser = async (c: Context<App>) => {
+try {
 	const body = await c.req.json();
 	const parse = Signup.ZODSCHEMA.parse(body);
 
@@ -61,4 +62,9 @@ export const SignUpUser = async (c: Context<App>) => {
 		success: true,
 		code: 1004,
 	});
+} catch (error) {
+	console.log("error",error)
+	return c.json(error)
+	
+}
 };
