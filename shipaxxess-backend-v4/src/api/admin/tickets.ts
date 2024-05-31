@@ -66,7 +66,7 @@ const PostMessage = async (c: Context<App>) => {
 <p>${user.first_name} ${user.last_name} has replied to your ticket</p>
 <p>Message: ${parse.message}</p>
 <p>Thanks</p>`;
-	emailSubject = `New message from ${user.first_name} ${user.last_name}`;
+	emailSubject = `New message from Support on your ticket `;
 
 	c.executionCtx.waitUntil(mail(c.env.DB, {
 		to: ticketOwner.email_address,
@@ -117,7 +117,7 @@ const Close = async (c: Context<App>) => {
 	emailBody = `	<p>Hi ${ticketOwner.first_name},</p>
 <p>Your ticket has been closed</p>
 <p>Thanks</p>`;
-	emailSubject = `Ticket closed`;
+	emailSubject = `Ticket closed by Support`;
 
 	c.executionCtx.waitUntil(mail(c.env.DB, {
 		to: ticketOwner.email_address,
