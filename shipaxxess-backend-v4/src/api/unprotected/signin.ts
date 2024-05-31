@@ -43,7 +43,7 @@ export const SignInUser = async (c: Context<App>) => {
 			and(
 				eq(users.email_address, parse.email_address),
 				eq(users.password, passwordHash),
-				eq(users.email_verified, true),
+				// eq(users.email_verified, true),
 			),
 		)
 		.get();
@@ -136,5 +136,6 @@ export const SignInUser = async (c: Context<App>) => {
 	return c.json({ token });
 	} catch (error) {
 		console.log("error",error)
+		return c.json({ error: "Internal Server Error" }, 500);
 	}
 };

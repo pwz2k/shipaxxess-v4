@@ -15,6 +15,7 @@ export const stripeCheckout = async (secret: string, payload: PayloadProps) => {
 	const session = await stripe.checkout.sessions.create({
 		success_url: `${config.app.loclhost}/payments?response=success&gateway=stripe`,
 		cancel_url: `${config.app.loclhost}/payments?response=cancel&gateway=stripe`,
+
 		line_items: [
 			{
 				price_data: {
@@ -30,6 +31,7 @@ export const stripeCheckout = async (secret: string, payload: PayloadProps) => {
 			user_id: payload.user_id,
 		},
 		mode: "payment",
+	
 	});
 
 	if (!session.url) throw new Error("URL not found");
