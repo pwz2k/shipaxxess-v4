@@ -45,22 +45,62 @@ const Create = async (c: Context<App>) => {
 		user_id: user.id,
 		uuid: v4(),
 	});
-
-	// Send email to admin
 	const admins = await model.all(users, eq(users.isadmin, true));
-	
-	
+	const adminEmails = admins.map((a) => a.email_address);
+	let emailBody = ``;
+
+	let emailSubject = ``;
+
+	if (parse.type === "label") {
+		// tell the admin that new ticket has been created for label
+		emailBody = `
+	<p>Hi Admin,</p>
+	<p>A new ticket has been created for label</p>
+	<p>Thanks!</p>
+	<p>The ${config.app.name} Team</p>
+	`;
+		emailSubject = `New ticket created for label`;
+	}
+	else if (parse.type === "payment") {
+		// tell the admin that new ticket has been created for payment
+		emailBody = `
+	<p>Hi Admin,</p>
+	<p>A new ticket has been created for payment</p>
+	<p>Thanks!</p>
+	<p>The ${config.app.name} Team</p>
+	`;
+		emailSubject = `New ticket created for payment`;
+	}
+	else if (parse.type === "referal") {
+		// tell the admin that new ticket has been created for general
+		emailBody = `
+	<p>Hi Admin,</p>
+	<p>A new ticket has been created for referal</p>
+	<p>Thanks!</p>
+	<p>The ${config.app.name} Team</p>
+	`;
+		emailSubject = `New ticket created for referal`;
+	}
+	else {
+		// tell the admin that new ticket has been created for general
+		emailBody = `
+	<p>Hi Admin,</p>
+	<p>A new ticket has been created for general</p>
+	<p>Thanks!</p>
+	<p>The ${config.app.name} Team</p>
+	`;
+		emailSubject = `New ticket created for general`;
+	}
+
+
+
 	if (admins.length > 0) {
-		const adminEmails= admins.map((a) => a.email_address);
+
 		c.executionCtx.waitUntil(
 			mail(c.env.DB, {
 				to: adminEmails[0],
-				subject: `New ticket from ${user.first_name} ${user.last_name}`,
-				html: `
-			<p>${parse.content}</p>
-			<p>Thanks!</p>
-			<p>The ${config.app.name} Team</p>
-			`,
+				subject: emailSubject,
+				html: emailBody,
 			}),
 		);
 	}
@@ -95,8 +135,8 @@ const PostMessage = async (c: Context<App, "/:ticket_id">) => {
 	const chat_uuid = v4();
 	await model.insert(chats, {
 		message: parse.message,
-		message_author: `${user.first_name} ${user.last_name}`,
-		message_profile: `${user.first_name.charAt(0)}${user.last_name.charAt(0)}`,
+		message_author: `${user.first_name} ${user.last_name} `,
+		message_profile: `${user.first_name.charAt(0)}${user.last_name.charAt(0)} `,
 		ticket_uuid: c.req.param("ticket_id"),
 		user_id: user.id,
 		uuid: chat_uuid,
@@ -104,16 +144,24 @@ const PostMessage = async (c: Context<App, "/:ticket_id">) => {
 
 	const chat = await model.get(chats, eq(chats.uuid, chat_uuid));
 
-
-	
-	// Send email to admin about new message using email with the ticket id
-
-	const ticket = await model.get(tickets, eq(tickets.uuid, c.req.param("ticket_id")));
 	const admins = await model.all(users, eq(users.isadmin, true));
-	
-	
 
-	
+	if (admins.length > 0) {
+		const adminEmails = admins.map((a) => a.email_address);
+		c.executionCtx.waitUntil(
+			mail(c.env.DB, {
+				to: adminEmails[0],
+				subject: `New message from ${user.first_name} ${user.last_name} `,
+				html: `
+			< p > ${parse.message} </p>
+				< p > Thanks! < /p>
+				< p > The ${config.app.name} Team < /p>
+					`,
+			}),
+		);
+	}
+
+
 
 	return c.json(chat);
 };
