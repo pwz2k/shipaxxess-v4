@@ -23,6 +23,7 @@ import { UseQueryResult } from "@tanstack/react-query";
 import { useNotificationsQuery, useMarkAsReadMutation } from "@client/hooks/useNotificationsQuery";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { set } from "date-fns";
 
 const Header = ({ items, user }: { items: HeaderProps[]; user: UseQueryResult<UsersSelectModel> }) => {
 	return (
@@ -152,6 +153,7 @@ const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<Users
 		notificationsQuery.data?.forEach((notification: { read: boolean; }) => {
 			notification.read = true;
 		});
+		setUnreadNotificationCount(0);
 
 
 
