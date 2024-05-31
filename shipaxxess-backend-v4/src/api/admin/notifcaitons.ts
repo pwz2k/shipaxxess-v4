@@ -12,7 +12,10 @@ import { Context } from "hono"
 
 const Get = async (c: Context<App>) => {
     try {
-        const data = await drizzle(c.env.DB).select().from(notifications).orderBy(eq(notifications.created_at, "asc")).limit(50).all()
+
+        const user_id = c.get("jwtPayload").id
+
+        const data = await drizzle(c.env.DB).select().from(notifications).where(eq(notifications.user_id, user_id)).orderBy(eq(notifications.created_at, "asc")).limit(50).all()
         return c.json(data)
     } catch (error: any) {
         return c.json({ error: error.message })

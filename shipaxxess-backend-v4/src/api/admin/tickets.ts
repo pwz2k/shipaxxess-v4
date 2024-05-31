@@ -4,6 +4,8 @@ import { tickets } from "@schemas/tickets";
 import { users } from "@schemas/users";
 import { Chats, Id } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
+import { mail } from "@utils/mail";
+import { INOtifcation, SaveNotifcaiton } from "@utils/notification";
 import { eq } from "drizzle-orm";
 import { Context } from "hono";
 import { v4 } from "uuid";
@@ -12,6 +14,7 @@ const GetAll = async (c: Context<App>) => {
 	const model = new Model(c.env.DB);
 
 	const tk = await model.all(tickets);
+	console.log(tk);
 
 	return c.json(tk);
 };
@@ -32,10 +35,12 @@ const Get = async (c: Context<App, "/:uuid">) => {
 const PostMessage = async (c: Context<App>) => {
 	const body = await c.req.json();
 	const parse = Chats.IDZODSCHEMA.parse(body);
+	console.log("parse", parse);
 
 	const model = new Model(c.env.DB);
 
 	const tk = await model.get(tickets, eq(tickets.id, parse.id));
+
 	if (!tk) throw exception({ message: "Ticket not found", code: 404 });
 
 	const user = await model.get(users, eq(users.id, c.get("jwtPayload").id));
@@ -49,6 +54,37 @@ const PostMessage = async (c: Context<App>) => {
 		user_id: c.get("jwtPayload").id,
 		uuid: v4(),
 	});
+
+	const { user_id } = tk;
+	// find tikcer owner
+	const ticketOwner = await model.get(users, eq(users.id, user_id));
+	if (!ticketOwner) throw exception({ message: "Ticket owner not found", code: 5564 });
+
+	let emailBody = ``;
+	let emailSubject = ``;
+	emailBody = `	<p>Hi ${ticketOwner.first_name},</p>
+<p>${user.first_name} ${user.last_name} has replied to your ticket</p>
+<p>Message: ${parse.message}</p>
+<p>Thanks</p>`;
+	emailSubject = `New message from ${user.first_name} ${user.last_name}`;
+
+	c.executionCtx.waitUntil(mail(c.env.DB, {
+		to: ticketOwner.email_address,
+		subject: emailSubject,
+		html: emailBody,
+	})
+	)
+
+	const notifcaiton: INOtifcation = {
+		title: "Reply to ticket",
+		description: `${user.first_name} ${user.last_name} has replied to your ticket`,
+		user_id: user_id,
+		uuid: v4(),
+
+	}
+
+	await SaveNotifcaiton(c.env.DB, notifcaiton);
+
 
 	return c.json(cht);
 };
@@ -70,9 +106,42 @@ const Close = async (c: Context<App>) => {
 		eq(tickets.id, parse.id),
 	);
 
+	// send email to ticket owner
+	const { user_id } = tk;
+	// find tikcer owner
+	const ticketOwner = await model.get(users, eq(users.id, user_id));
+	if (!ticketOwner) throw exception({ message: "Ticket owner not found", code: 5564 });
+
+	let emailBody = ``;
+	let emailSubject = ``;
+	emailBody = `	<p>Hi ${ticketOwner.first_name},</p>
+<p>Your ticket has been closed</p>
+<p>Thanks</p>`;
+	emailSubject = `Ticket closed`;
+
+	c.executionCtx.waitUntil(mail(c.env.DB, {
+		to: ticketOwner.email_address,
+		subject: emailSubject,
+		html: emailBody,
+	})
+	)
+	// save notification for ticket owner
+	const notifcaiton: INOtifcation = {
+		title: "Ticket closed",
+		description: `Your ticket has been closed`,
+		user_id: user_id,
+		uuid: v4(),
+
+	}
+
+	await SaveNotifcaiton(c.env.DB, notifcaiton);
+
+
+
 	return c.json({ success: true });
 };
 
 const TicketsAdmin = { Get, GetAll, PostMessage, Close };
 
 export { TicketsAdmin };
+

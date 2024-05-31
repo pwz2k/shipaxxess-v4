@@ -6,6 +6,7 @@ import { users } from "@schemas/users";
 import { Chats, Tickets } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
 import { mail } from "@utils/mail";
+import { SaveNotifcaiton } from "@utils/notification";
 import { eq } from "drizzle-orm";
 import { Context } from "hono";
 import { v4, validate } from "uuid";
@@ -93,7 +94,7 @@ const Create = async (c: Context<App>) => {
 	}
 
 
-	console.log("adminEmails", adminEmails)
+
 	if (admins.length > 0) {
 
 		c.executionCtx.waitUntil(
@@ -104,6 +105,16 @@ const Create = async (c: Context<App>) => {
 			}),
 		);
 	}
+	// save message notification into admin notification table
+	const notification = {
+		user_id: admins[0].id,
+		title: "New ticket created",
+		description: `A new ticket has been created by ${user.first_name} ${user.last_name}`,
+		uuid: v4(),
+	}
+
+	await SaveNotifcaiton(c.env.DB, notification);
+
 
 
 	return c.json({ success: true });
@@ -173,6 +184,14 @@ const PostMessage = async (c: Context<App, "/:ticket_id">) => {
 			}),
 		);
 	}
+	// save message notification into admin notification table
+	const notification = {
+		user_id: admins[0].id,
+		title: "New message from user",
+		description: `A new message has been posted by ${user.first_name} ${user.last_name}`,
+		uuid: v4(),
+	}
+	await SaveNotifcaiton(c.env.DB, notification);
 
 
 
