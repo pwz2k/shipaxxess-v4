@@ -1,9 +1,11 @@
+import { config } from "@config";
 import { Model } from "@lib/model";
 import { chats } from "@schemas/chats";
 import { tickets } from "@schemas/tickets";
 import { users } from "@schemas/users";
 import { Chats, Tickets } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
+import { mail } from "@utils/mail";
 import { eq } from "drizzle-orm";
 import { Context } from "hono";
 import { v4, validate } from "uuid";
@@ -43,6 +45,25 @@ const Create = async (c: Context<App>) => {
 		user_id: user.id,
 		uuid: v4(),
 	});
+
+	// Send email to admin
+	const admins = await model.all(users, eq(users.isadmin, true));
+	console.log("admins", admins);
+	if (admins.length > 0) {
+		const adminEmails= admins.map((a) => a.email_address);
+		c.executionCtx.waitUntil(
+			mail(c.env.DB, {
+				to: adminEmails[0],
+				subject: `New ticket from ${user.first_name} ${user.last_name}`,
+				html: `
+			<p>${parse.content}</p>
+			<p>Thanks!</p>
+			<p>The ${config.app.name} Team</p>
+			`,
+			}),
+		);
+	}
+
 
 	return c.json({ success: true });
 };
@@ -88,3 +109,4 @@ const PostMessage = async (c: Context<App, "/:ticket_id">) => {
 const TicketsUser = { Create, Get, Find, PostMessage };
 
 export { TicketsUser };
+
