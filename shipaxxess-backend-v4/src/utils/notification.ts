@@ -12,11 +12,16 @@ export interface INOtifcation {
 }
 export const SaveNotifcaiton = async (db: D1Database, notification: INOtifcation) => {
 	
-    const model = new Model(db)
+    try {
+        const model = new Model(db)
     const data = await model.insert(notifications, { ...notification,})
     console.log("Notifcation added",data)
 
     return data
+    } catch (error: any) {
+        console.log("Error",error)
+        return { error: error.message}
+    }
 }
 
 

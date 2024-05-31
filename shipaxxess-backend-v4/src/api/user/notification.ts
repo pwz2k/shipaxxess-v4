@@ -17,7 +17,7 @@ const Get =  async (c: Context<App>) => {
     try {
         const user_id = c.get("jwtPayload").id
       
-        const data= await drizzle(c.env.DB).select().from(notifications).where(eq(notifications.user_id, user_id)).orderBy(eq(notifications.created_at,"asc")).limit(10).all()
+        const data= await drizzle(c.env.DB).select().from(notifications).where(eq(notifications.user_id, user_id)).orderBy(eq(notifications.created_at,"asc")).limit(50).all()
 
         return c.json(data)
 

@@ -1,6 +1,6 @@
 import { api } from "@client/lib/api";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { QueryClient } from "@tanstack/react-query";
+
 export const useNotificationsQuery = () => {
 	return useQuery({
 		queryKey: ["notifications"],
@@ -10,6 +10,12 @@ export const useNotificationsQuery = () => {
 			if (data.error) {
 				throw new Error(data.error);
 			}
+			//  sort the notifications by created_at in descending order
+			data.sort((a: any, b: any) => {
+				return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+			});
+
+
 			return data;
 
 

@@ -65,6 +65,14 @@ export const StripeWebhook = async (c: Context<App>) => {
 				);
 
 				log(`Stripe webhook: ${user.email_address} topped up ${topup.credit} credits`);
+			
+				const notification:INOtifcation = {
+					user_id: user_id,
+					title: "Top-up Successful",
+					description: `Your account has been successfully topped up with ${topup.credit} credits.`,
+					uuid: v4(),
+				}
+				await SaveNotifcaiton(c.env.DB, notification);
 				c.executionCtx.waitUntil(
 					mail(c.env.DB, {
 						to: user.email_address,
@@ -78,13 +86,6 @@ export const StripeWebhook = async (c: Context<App>) => {
 							<p>${config.app.support}</p>`
 					})
 				);
-				const notification:INOtifcation = {
-					user_id: user_id,
-					title: "Top-up Successful",
-					description: `Your account has been successfully topped up with ${topup.credit} credits.`,
-					uuid: v4(),
-				}
-				await SaveNotifcaiton(c.env.DB, notification);
 				return c.json({ success: true });
 
 			
