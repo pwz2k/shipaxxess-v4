@@ -1,3 +1,4 @@
+import { Boxes } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
@@ -29,7 +30,12 @@ const TotalShipmentsLineChart: React.FC = () => {
 
     return (
         <div className="p-4 bg-white shadow-md rounded-lg">
-            <h2 className="text-lg font-bold mb-4">Total Shipments</h2>
+            <div className='flex justify-normal gap-x-1'>
+                <Boxes size={24} />
+                <h2 className="text-lg font-bold mb-2">Total Shipments</h2>
+            </ div>
+            <h2 className="text-sm font-bold mb-4 text-gray-400 border-b-2 border-gray-300 pb-2">Overview</h2>
+
             <ResponsiveContainer width="100%" height={400}>
                 <LineChart data={totalShipmentsData}>
                     <CartesianGrid strokeDasharray="3 3" />

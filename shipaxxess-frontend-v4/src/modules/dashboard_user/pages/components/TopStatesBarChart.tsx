@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
+import { MapPin } from "lucide-react";
 interface TopStateData {
     state: string;
     orders: number;
@@ -35,35 +35,34 @@ const usStates = [
     { fullName: "Missouri", abbreviation: "MO" },
     { fullName: "Montana", abbreviation: "MT" },
     { fullName: "Nebraska", abbreviation: "NE" },
-    { fullName: "Nevada", abbreviation: "NV" },
-    { fullName: "New Hampshire", abbreviation: "NH" },
-    { fullName: "New Jersey", abbreviation: "NJ" },
-    { fullName: "New Mexico", abbreviation: "NM" },
-    { fullName: "New York", abbreviation: "NY" },
-    { fullName: "North Carolina", abbreviation: "NC" },
-    { fullName: "North Dakota", abbreviation: "ND" },
-    { fullName: "Ohio", abbreviation: "OH" },
-    { fullName: "Oklahoma", abbreviation: "OK" },
-    { fullName: "Oregon", abbreviation: "OR" },
-    { fullName: "Pennsylvania", abbreviation: "PA" },
-    { fullName: "Rhode Island", abbreviation: "RI" },
-    { fullName: "South Carolina", abbreviation: "SC" },
-    { fullName: "South Dakota", abbreviation: "SD" },
-    { fullName: "Tennessee", abbreviation: "TN" },
-    { fullName: "Texas", abbreviation: "TX" },
-    { fullName: "Utah", abbreviation: "UT" },
-    { fullName: "Vermont", abbreviation: "VT" },
-    { fullName: "Virginia", abbreviation: "VA" },
-    { fullName: "Washington", abbreviation: "WA" },
-    { fullName: "West Virginia", abbreviation: "WV" },
-    { fullName: "Wisconsin", abbreviation: "WI" },
-    { fullName: "Wyoming", abbreviation: "WY" }
+    // { fullName: "Nevada", abbreviation: "NV" },
+    // { fullName: "New Hampshire", abbreviation: "NH" },
+    // { fullName: "New Jersey", abbreviation: "NJ" },
+    // { fullName: "New Mexico", abbreviation: "NM" },
+    // { fullName: "New York", abbreviation: "NY" },
+    // { fullName: "North Carolina", abbreviation: "NC" },
+    // { fullName: "North Dakota", abbreviation: "ND" },
+    // { fullName: "Ohio", abbreviation: "OH" },
+    // { fullName: "Oklahoma", abbreviation: "OK" },
+    // { fullName: "Oregon", abbreviation: "OR" },
+    // { fullName: "Pennsylvania", abbreviation: "PA" },
+    // { fullName: "Rhode Island", abbreviation: "RI" },
+    // { fullName: "South Carolina", abbreviation: "SC" },
+    // { fullName: "South Dakota", abbreviation: "SD" },
+    // { fullName: "Tennessee", abbreviation: "TN" },
+    // { fullName: "Texas", abbreviation: "TX" },
+    // { fullName: "Utah", abbreviation: "UT" },
+    // { fullName: "Vermont", abbreviation: "VT" },
+    // { fullName: "Virginia", abbreviation: "VA" },
+    // { fullName: "Washington", abbreviation: "WA" },
+    // { fullName: "West Virginia", abbreviation: "WV" },
+    // { fullName: "Wisconsin", abbreviation: "WI" },
+    // { fullName: "Wyoming", abbreviation: "WY" }
 ];
 
 const generateRandomData = (): TopStateData[] => {
-    return usStates.map(({ abbreviation, fullName }) => ({
+    return usStates.map(({ fullName }) => ({
         state: fullName,
-
         orders: Math.floor(Math.random() * 1000)
     }));
 };
@@ -78,7 +77,16 @@ const TopStatesBarChart: React.FC = () => {
 
     return (
         <div className="p-4 bg-white shadow-md rounded-lg">
-            <h2 className="text-lg font-bold mb-4">Top States</h2>
+            <div className='flex justify-normal gap-x-1'>
+                <MapPin size={24} />
+
+                <h2 className="text-lg font-bold mb-2"> Top States</h2>
+
+            </div>
+
+            <h2 className="text-sm font-bold mb-4 text-gray-400 border-b-2 border-gray-300 pb-2">Overview</h2>
+
+
             <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={topStatesData}>
                     {/* <CartesianGrid strokeDasharray="3 3" /> */}
@@ -88,6 +96,7 @@ const TopStatesBarChart: React.FC = () => {
                     <Bar dataKey="orders" fill="#8884d8" />
                 </BarChart>
             </ResponsiveContainer>
+
         </div>
     );
 };
