@@ -5,6 +5,7 @@ import PendingRefundsCard from './components/PendingRefundsCard';
 import AverageCostCard from './components/AverageCostCard';
 import TotalShipmentsLineChart from './components/TotalShipmentsLineChart';
 import OverviewSection from './components/OverviewSection';
+import Title from '@client/components/common/title';
 
 const DashboardStats: React.FC = () => {
 	const getRandomNumber = (min: number, max: number) => {
@@ -14,7 +15,11 @@ const DashboardStats: React.FC = () => {
 	return (
 		<>
 			<div className="px-4">
-				<h2 className="text-lg font-bold mb-4">Overview</h2>
+				{/* <h1 className="text-lg font-bold mb-4">Dashboard</h1> */}
+				<div className='py-4'>
+					<Title title="Dashboard" />
+
+				</div>
 				<div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 flex-1">
 					<OverviewSection title="Current Balance" value={getRandomNumber(1000, 10000)} />
 					<OverviewSection title="Total Spend" value={getRandomNumber(500, 5000)} />
