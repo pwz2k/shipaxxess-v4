@@ -136,6 +136,10 @@ export const SignInUser = async (c: Context<App>) => {
 
 		return c.json({ token });
 	} catch (error) {
+
 		console.log("error", error)
+
+		const message = error.message || "An error occurred";
+		return c.json(message, 400);
 	}
 };
