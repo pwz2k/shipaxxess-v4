@@ -40,7 +40,7 @@ const TopStatesBarChart: React.FC = () => {
                     <XAxis dataKey="state" />
                     <YAxis />
                     <Tooltip />
-                    <Legend />
+                    {/* <Legend /> */}
                     <Bar dataKey="orders" fill="#8884d8" />
                 </BarChart>
             </ResponsiveContainer>
