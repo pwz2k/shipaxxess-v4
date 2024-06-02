@@ -3,25 +3,30 @@ import React, { useState } from 'react';
 
 interface DateRangePickerProps {
     onDateChange: (start: Date | null, end: Date | null) => void;
+    _startDate?: Date | null;
+    _endDate?: Date | null;
+    placeholder?: string;
 }
 
-const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateChange }) => {
-    const [startDate, setStartDate] = useState<Date | null>(null);
-    const [endDate, setEndDate] = useState<Date | null>(null);
+const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateChange, _startDate, _endDate, placeholder }) => {
 
-    const handleStartDateChange = (date: Date | null) => {
-        setStartDate(date);
-        onDateChange(date, endDate);
+    // get start and end date from the parent component
+    const [startDate, setStartDate] = useState<Date | null>(_startDate ?? null);
+    const [endDate, setEndDate] = useState<Date | null>(_endDate ?? null);
+    // handle the date change
+    const handleStartDateChange = (start: Date | null) => {
+        setStartDate(start);
+        onDateChange(start, endDate);
+    };
+    const handleEndDateChange = (end: Date | null) => {
+        setEndDate(end);
+        onDateChange(startDate, end);
     };
 
-    const handleEndDateChange = (date: Date | null) => {
-        setEndDate(date);
-        onDateChange(startDate, date);
-    };
 
     return (
-        <div className="p-4 bg-white shadow-md rounded-lg mb-4 flex">
-            <div className="flex flex-col mr-1">
+        <div className="p-3 bg-white shadow-md rounded-lg my-2 flex">
+            <div className="flex flex-col mr-2">
                 {/* <label htmlFor="start-date" className="text-gray-600 mb-2">Start Date</label> */}
                 <DatePicker
                     field={{
@@ -32,7 +37,9 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateChange }) => {
                         name: 'start-date',
                         ref: () => { }
 
+
                     }}
+                    placeholder='Start Date'
 
                 />
             </div>
@@ -47,6 +54,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateChange }) => {
                         name: 'end-date',
                         ref: () => { }
                     }}
+                    placeholder='End Date'
                 />
             </div>
         </div>

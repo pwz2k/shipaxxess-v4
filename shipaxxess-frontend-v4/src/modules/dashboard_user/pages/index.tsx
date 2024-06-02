@@ -7,26 +7,39 @@ import TotalShipmentsLineChart from './components/TotalShipmentsLineChart';
 import OverviewSection from './components/OverviewSection';
 import Title from '@client/components/common/title';
 import { LayoutDashboardIcon } from 'lucide-react';
-import DateRangePicker from './components/DateRangePicker';
+import DateRangePicker from '../../../components/common/DateRangePicker';
 
 
 const DashboardStats: React.FC = () => {
 	const getRandomNumber = (min: number, max: number) => {
 		return Math.floor(Math.random() * (max - min + 1) + min);
 	};
+	// keep the start and end date in state
+	const [startDate, setStartDate] = React.useState<Date | null>(null);
+	const [endDate, setEndDate] = React.useState<Date | null>(null);
+
+	// handle the date change
+	const handleDateChange = (start: Date | null, end: Date | null) => {
+		setStartDate(start);
+		setEndDate(end);
+	};
+
 
 	return (
 		<>
 			<div className="px-4">
-				{/* <h1 className="text-lg font-bold mb-4">Dashboard</h1> */}
-				<div className=' flex  justify-between'>
-					<div className='flex items-center gap-x-1'>
+
+				<div className='flex justify-between'>
+					<div className='flex items-center gap-x-1 sticky top-0 '>
 						<LayoutDashboardIcon size={24} />
 						<Title title="Dashboard" />
 					</div>
-					<DateRangePicker onDateChange={function (start: Date | null, end: Date | null): void {
-						throw new Error('Function not implemented.');
-					}} />
+					<DateRangePicker
+						_startDate={startDate}
+						_endDate={endDate}
+						onDateChange={handleDateChange}
+
+					/>
 
 				</div>
 				<div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 flex-1">
