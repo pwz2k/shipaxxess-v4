@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import TopStatesBarChart from './components/TopStatesBarChart';
 import PendingRefundsCard from './components/PendingRefundsCard';
 import AverageCostCard from './components/AverageCostCard';
@@ -9,26 +8,43 @@ import Title from '@client/components/common/title';
 import { LayoutDashboardIcon } from 'lucide-react';
 import DateRangePicker from '../../../components/common/DateRangePicker';
 
-
 const DashboardStats: React.FC = () => {
 	const getRandomNumber = (min: number, max: number) => {
 		return Math.floor(Math.random() * (max - min + 1) + min);
 	};
-	// keep the start and end date in state
-	const [startDate, setStartDate] = React.useState<Date | null>(null);
-	const [endDate, setEndDate] = React.useState<Date | null>(null);
 
-	// handle the date change
+	// State for loading
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+
+	// Simulating data loading with setTimeout
+	useEffect(() => {
+		const timeout = setTimeout(() => {
+			setIsLoading(false);
+		}, 2000);
+
+		return () => clearTimeout(timeout);
+	}, []);
+
+	// State for date range
+	const [startDate, setStartDate] = useState<Date | null>(null);
+	const [endDate, setEndDate] = useState<Date | null>(null);
+
+	// Handle date change
 	const handleDateChange = (start: Date | null, end: Date | null) => {
 		setStartDate(start);
 		setEndDate(end);
 	};
 
-
 	return (
 		<>
-			<div className="px-4">
+			{/* Overlay and backdrop when loading */}
+			{isLoading && (
+				<div className="fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+					<div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+				</div>
+			)}
 
+			<div className="px-4">
 				<div className='flex justify-between'>
 					<div className='flex items-center gap-x-1 sticky top-0 '>
 						<LayoutDashboardIcon size={24} />
@@ -38,9 +54,7 @@ const DashboardStats: React.FC = () => {
 						_startDate={startDate}
 						_endDate={endDate}
 						onDateChange={handleDateChange}
-
 					/>
-
 				</div>
 				<div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 flex-1">
 					<OverviewSection title="Current Balance" value={getRandomNumber(1000, 10000)} />
@@ -50,7 +64,6 @@ const DashboardStats: React.FC = () => {
 				</div>
 			</div>
 			<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-
 				<div className="col-span-1 lg:col-span-2">
 					<TopStatesBarChart />
 				</div>
