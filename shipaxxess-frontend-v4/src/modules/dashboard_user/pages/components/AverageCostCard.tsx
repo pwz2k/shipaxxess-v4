@@ -21,29 +21,26 @@ const AverageCostCard: React.FC = () => {
 
     return (
         <div className="p-4 bg-white shadow-md rounded-lg">
-            <div className='flex justify-normal gap-x-1'>
-                <DollarSign size={24} className='  mt-1' />
-
+            <div className='flex items-center'>
+                <DollarSign size={24} className='mr-2' />
                 <h2 className="text-lg font-bold mb-2">Average Cost</h2>
-
             </div>
-
             <h2 className="text-sm font-bold mb-4 text-gray-400 border-b-2 border-gray-300 pb-2">Overview</h2>
             <div className="overflow-auto" style={{ maxHeight: '400px' }}>
                 <table className="w-full">
-                    <thead className="sticky top-0 bg-white z-10">
+                    <thead className="sticky top-0 bg-gray-100">
                         <tr>
-                            <th className="py-2">ID</th>
-                            <th className="py-2">Label</th>
-                            <th className="py-2">Cost</th>
+                            <th className="px-4 py-2 text-left">Label ID</th>
+                            <th className="px-4 py-2 text-left">Label</th>
+                            <th className="px-4 py-2 text-left">Cost</th>
                         </tr>
                     </thead>
                     <tbody>
                         {averageCostData.map(({ id, label, cost }, index) => (
                             <tr key={id} className="border-b border-gray-200">
-                                <td className="py-2">{id}</td>
-                                <td className="py-2">{label}</td>
-                                <td className="py-2">{cost.toFixed(2)}</td>
+                                <td className="px-4 py-2">{id}</td>
+                                <td className="px-4 py-2">{label}</td>
+                                <td className="px-4 py-2">${cost.toFixed(2)}</td>
                             </tr>
                         ))}
                     </tbody>

@@ -6,7 +6,9 @@ import AverageCostCard from './components/AverageCostCard';
 import TotalShipmentsLineChart from './components/TotalShipmentsLineChart';
 import OverviewSection from './components/OverviewSection';
 import Title from '@client/components/common/title';
-import { DivideSquare, LayoutDashboardIcon } from 'lucide-react';
+import { LayoutDashboardIcon } from 'lucide-react';
+import DateRangePicker from './components/DateRangePicker';
+
 
 const DashboardStats: React.FC = () => {
 	const getRandomNumber = (min: number, max: number) => {
@@ -17,11 +19,14 @@ const DashboardStats: React.FC = () => {
 		<>
 			<div className="px-4">
 				{/* <h1 className="text-lg font-bold mb-4">Dashboard</h1> */}
-				<div className='py-4'>
+				<div className=' flex  justify-between'>
 					<div className='flex items-center gap-x-1'>
 						<LayoutDashboardIcon size={24} />
 						<Title title="Dashboard" />
 					</div>
+					<DateRangePicker onDateChange={function (start: Date | null, end: Date | null): void {
+						throw new Error('Function not implemented.');
+					}} />
 
 				</div>
 				<div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 flex-1">

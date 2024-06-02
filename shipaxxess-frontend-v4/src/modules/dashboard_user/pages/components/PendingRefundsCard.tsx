@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TicketIcon } from "lucide-react";
+
 const PendingRefundsCard: React.FC = () => {
     const [pendingRefunds, setPendingRefunds] = useState<{ id: string; amount: number; date: string }[]>([]);
 
@@ -35,11 +36,11 @@ const PendingRefundsCard: React.FC = () => {
             <h2 className="text-sm font-bold mb-4 text-gray-400 border-b-2 border-gray-300 pb-2">Overview</h2>
             <div className="overflow-auto" style={{ maxHeight: '400px' }}>
                 <table className="w-full">
-                    <thead className="sticky top-0 bg-white z-10"> {/* Apply sticky positioning to the table header */}
+                    <thead className="sticky top-0 top-0 bg-gray-100 z-10"> {/* Apply sticky positioning to the table header */}
                         <tr>
-                            <th className="py-2">Refund ID</th>
-                            <th className="py-2">Amount</th>
-                            <th className="py-2">Date</th>
+                            <th className="py-2 text-left">Refund ID</th>
+                            <th className="py-2 text-left">Amount</th>
+                            <th className="py-2 text-left">Date</th>
                         </tr>
                     </thead>
                     <tbody>
