@@ -5,7 +5,7 @@ import AverageCostCard from './components/AverageCostCard';
 import TotalShipmentsLineChart from './components/TotalShipmentsLineChart';
 import OverviewSection from './components/OverviewSection';
 import Title from '@client/components/common/title';
-import { LayoutDashboardIcon } from 'lucide-react';
+import { CreditCard, LayoutDashboardIcon, Share2 } from 'lucide-react';
 import DateRangePicker from '../../../components/common/DateRangePicker';
 
 const DashboardStats: React.FC = () => {
@@ -57,10 +57,10 @@ const DashboardStats: React.FC = () => {
 					/>
 				</div>
 				<div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 flex-1">
-					<OverviewSection title="Current Balance" value={getRandomNumber(1000, 10000)} />
+					<OverviewSection title="Current Balance" value={getRandomNumber(1000, 10000)} icon={<CreditCard />} />
 					<OverviewSection title="Total Spend" value={getRandomNumber(500, 5000)} />
 					<OverviewSection title="Total Refund" value={getRandomNumber(100, 1000)} />
-					<OverviewSection title="Referral Balance" value={getRandomNumber(500, 5000)} />
+					<OverviewSection title="Referral Balance" value={getRandomNumber(500, 5000)} icon={<Share2 />} />
 				</div>
 			</div>
 			<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
