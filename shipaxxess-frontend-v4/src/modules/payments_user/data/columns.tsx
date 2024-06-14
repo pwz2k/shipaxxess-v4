@@ -1,4 +1,4 @@
-import { ArrowUpDown, LifeBuoy } from "lucide-react";
+import { ArrowUpDown, FileDown, LifeBuoy } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@client/components/ui/badge";
 import { Button } from "@client/components/ui/button";
@@ -7,6 +7,7 @@ import { numberWithCommas } from "@client/lib/utils";
 import { app } from "@client/config/app";
 import { PaymentsSelectModel } from "@db/payments";
 import { Link } from "react-router-dom";
+import TableMenu from "../components/tableMenu";
 
 export const paymentsColumns = (timezone: string) =>
 	[
@@ -151,14 +152,15 @@ export const paymentsColumns = (timezone: string) =>
 			enableSorting: true,
 			enableHiding: true,
 		},
+
 		{
 			id: "action",
 			cell: ({ row }) => (
-				<Link to={`/tickets/new?type=payment&id=${row.original.uuid}`}>
-					<Button variant="outline" size="icon">
-						<LifeBuoy />
-					</Button>
-				</Link>
+
+				<TableMenu row={row} />
+
 			),
-		},
+		}
+
+
 	] as ColumnDef<PaymentsSelectModel>[];

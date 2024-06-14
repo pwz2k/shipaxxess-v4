@@ -35,7 +35,6 @@ export const StripeWebhook = async (c: Context<App>) => {
 		let topup
 		let topup_uuid
 		let data
-		console.log("EVENT", event.type)
 
 		switch (event.type) {
 			case "checkout.session.completed":
@@ -128,7 +127,11 @@ export const StripeWebhook = async (c: Context<App>) => {
 
 			case "charge.failed":
 				break
+			case "payment_intent.succeeded":
 
+				const { charges } = event.data.object
+				console.log("chages", charges.data)
+				break
 
 			default:
 				return c.json({ success: true });
