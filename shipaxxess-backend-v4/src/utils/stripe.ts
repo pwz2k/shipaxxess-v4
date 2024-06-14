@@ -31,10 +31,22 @@ export const stripeCheckout = async (secret: string, payload: PayloadProps) => {
 			user_id: payload.user_id,
 		},
 		mode: "payment",
-	
+
 	});
 
 	if (!session.url) throw new Error("URL not found");
 
 	return session;
+};
+
+// Retrieve a charge function to recicpt the payment
+
+export const retrieveCharge = async (secret: string, charge_id: string) => {
+	const stripe = new Stripe(secret, {
+		apiVersion: "2023-10-16",
+	});
+
+	const charge = await stripe.charges.retrieve(charge_id);
+
+	return charge;
 };
