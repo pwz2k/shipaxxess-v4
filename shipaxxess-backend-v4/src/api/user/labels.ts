@@ -39,12 +39,15 @@ const Get = async (c: Context<App, "/:uuid">) => {
 
 const Create = async (c: Context<App>) => {
 	log("Hit label batch endpoint.");
+	console.log("CENV", c);
 
 	const body = await c.req.json();
 	const parse = Labels.BATCHZODSCHEMA.parse(body);
 	log("Parsed body.");
 
 	const settings = await getSettings(c.env.DB);
+
+
 	const manager = new LabelManager(c.env, settings);
 	log("Created label manager.");
 
@@ -79,10 +82,12 @@ const Create = async (c: Context<App>) => {
 
 	c.executionCtx.waitUntil(manager.chargeUserForBatch(user, user_cost, total_labels));
 	c.executionCtx.waitUntil(manager.sendToBatchProcessQueue(batch.id));
+
 	log("User charged and batch sent to queue.");
 
 	const savedSender = async () => {
 		const model = new Model(c.env.DB);
+
 
 		return await model.insert(addresses, {
 			uuid: v4(),
@@ -97,8 +102,9 @@ const Create = async (c: Context<App>) => {
 			country: parse.sender.country,
 		});
 	};
-
+	log("Saved sender.");
 	if (parse.saved_sender) {
+		log("Waiting for saved sender.");
 		c.executionCtx.waitUntil(savedSender());
 	}
 

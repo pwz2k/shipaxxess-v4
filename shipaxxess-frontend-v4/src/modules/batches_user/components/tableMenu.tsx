@@ -40,7 +40,7 @@ const TableMenu = ({ row }: { row: Row<BatchsSelectModel> }) => {
 	const downloadSinglePDF = async () => {
 		const download = () =>
 			new Promise((resolve, reject) => {
-				fetch(`${app.prod_api}/user/labels/batch/download`, {
+				fetch(`${app.api}/user/labels/batch/download`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",

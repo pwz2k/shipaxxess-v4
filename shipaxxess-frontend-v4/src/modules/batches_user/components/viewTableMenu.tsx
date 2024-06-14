@@ -38,9 +38,11 @@ const ViewTableMenu = ({ row, batch_refund }: { row: Row<LabelsSelectModel>; bat
 	});
 
 	const downloadSinglePDF = async () => {
+
+		const apiurl = app.mode === "dev" ? app.api : app.prod_api;
 		const download = () =>
 			new Promise((resolve, reject) => {
-				fetch(`${app.prod_api}/user/labels/download`, {
+				fetch(`${apiurl}/user/labels/download`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
