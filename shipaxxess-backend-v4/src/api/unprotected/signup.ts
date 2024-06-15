@@ -41,16 +41,16 @@ export const SignUpUser = async (c: Context<App>) => {
 			await initSettings(c.env.DB);
 			await model.update(users, { isadmin: true }, eq(users.id, insert.id));
 		}
+		console.log("email_code", email_code)
 
 		// if c.env==dev then return email_code in message else return message
-		if (c.env === "dev") {
+		if (c.env == "dev") {
 			return c.json({
 				message: `Verification code is ${email_code}`,
 				success: true,
 				code: 1004,
 			});
 		}
-
 
 
 
