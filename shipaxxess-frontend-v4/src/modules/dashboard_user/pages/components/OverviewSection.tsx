@@ -15,7 +15,7 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ title, value, icon, l
     return (
         <div className="bg-gray-200 p-4 rounded transition duration-300 hover:shadow-lg">
             <div className='flex justify-between'>
-                <h2 className="text-lg font-bold mb-2">{title}</h2>
+                <h2 className="text-2xl font-bold mb-2">{title}</h2>
                 {icon}
             </div>
             {/* if the vlaue is negive then the sign will be like -$ 5.6 */}
@@ -38,7 +38,11 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ title, value, icon, l
                                 </a>
                             ))
                         ) : (
-                            <a href={linkUrl} className="text-blue-500 hover:text-blue-700 mt-3 inline-block" style={{ cursor: 'pointer' }}>
+                            <a
+                                href={linkUrl}
+                                className="text-blue-500 hover:text-blue-700 ml-2 mt-3 inline-block"
+                                style={{ cursor: 'pointer' }}
+                            >
                                 {linkText}
                             </a>
                         )}

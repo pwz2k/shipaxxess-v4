@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import GenericLineChart from "./components/DottedLinechart";
-import TopStatesBarChart from './components/TopStatesBarChart';
-import PendingRefundsCard from './components/PendingRefundsCard';
-import AverageCostCard from './components/AverageCostCard';
+
 import OverviewSection from './components/OverviewSection';
 import Title from '@client/components/common/title';
-import { Boxes, CreditCard, LayoutDashboardIcon, Share2 } from 'lucide-react';
+import { Boxes, CreditCard, LayoutDashboardIcon, Share2, Truck, Plane } from 'lucide-react';
 import CustomDateRangePicker from '../../../components/common/CustomDatePicker';
 import TopRegions from './components/TopRegions';
 
@@ -136,8 +134,8 @@ const DashboardStats: React.FC = () => {
 				</div>
 				<div className="col-span-1 h-full">
 					<div className='flex flex-col h-full mt-4  gap-y-10'>
-						<OverviewSection title="Avg. Domestic" value={getRandomNumber(1000, 10000)} linkText={"View Shipments"} />
-						<OverviewSection title="Avg. International" value={getRandomNumber(1000, 10000)} linkText={"View Shipments "} />
+						<OverviewSection title="Avg. Domestic" value={getRandomNumber(1000, 10000)} linkText={"View Shipments"} icon={<Truck size={24} />} />
+						<OverviewSection title="Avg. International" value={getRandomNumber(1000, 10000)} linkText={"View Shipments "} icon={<Plane size={24} />} />
 
 					</div>
 				</div>
