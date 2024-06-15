@@ -12,26 +12,21 @@ const DashboardStats: React.FC = () => {
 	const getRandomNumber = (min: number, max: number) => {
 		return Math.floor(Math.random() * (max - min + 1) + min);
 	};
-	// transactionId: string;
-	// date: string;
-	// total: number;
-	// amount: number;
-	// balance: number;
-	// description: string;
-	// type: string;
-	// status: string;
+
 	const [transactionData, setTransactionData] = useState([
-		{ transactionId: "TRN-001", date: "2021-09-01", total: 1000, amount: 1000, balance: 1000, description: "Payment", type: "Credit", status: "Completed" },
-		{ transactionId: "TRN-002", date: "2021-09-02", total: 2000, amount: 2000, balance: 2000, description: "Payment", type: "Credit", status: "Completed" },
-		{ transactionId: "TRN-003", date: "2021-09-03", total: 3000, amount: 3000, balance: 3000, description: "Payment", type: "Credit", status: "Completed" },
-		{ transactionId: "TRN-004", date: "2021-09-04", total: 4000, amount: 4000, balance: 4000, description: "Payment", type: "Credit", status: "Completed" },
-		{ transactionId: "TRN-005", date: "2021-09-05", total: 5000, amount: 5000, balance: 5000, description: "Payment", type: "Credit", status: "Completed" },
-		{ transactionId: "TRN-006", date: "2021-09-06", total: 6000, amount: 6000, balance: 6000, description: "Payment", type: "Credit", status: "Completed" },
-		{ transactionId: "TRN-007", date: "2021-09-07", total: 7000, amount: 7000, balance: 7000, description: "Payment", type: "Credit", status: "Completed" },
-		{ transactionId: "TRN-008", date: "2021-09-08", total: 8000, amount: 8000, balance: 8000, description: "Payment", type: "Credit", status: "Completed" },
-		{ transactionId: "TRN-009", date: "2021-09-09", total: 9000, amount: 9000, balance: 9000, description: "Payment", type: "Credit", status: "Completed" },
-		{ transactionId: "TRN-010", date: "2021-09-10", total: 10000, amount: 10000, balance: 10000, description: "Payment", type: "Credit", status: "Completed" },
-		{ transactionId: "TRN-011", date: "2021-09-11", total: 11000, amount: 11000, balance: 11000, description: "Payment", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-001", date: "2021-09-01", total: 1000, amount: 1000, balance: 1000, description: "Mallory & Brandons", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-002", date: "2021-09-02", total: 2000, amount: 2000, balance: 2000, description: "Credit Card payments: Visa end in 3865", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-003", date: "2021-09-03", total: 3000, amount: 3000, balance: 3000, description: "Credit Card payments: Visa end in 3865", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-004", date: "2021-09-04", total: 4000, amount: 4000, balance: 4000, description: "Credit Card payments: Visa end in 3865", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-005", date: "2021-09-05", total: 5000, amount: 5000, balance: 5000, description: "Credit Card payments: Visa end in 3865", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-006", date: "2021-09-06", total: 6000, amount: 6000, balance: 6000, description: "Credit Card payments: Visa end in 3865", type: "Credit", status: "Completed" },
+		{
+			transactionId: "TRN-007", date: "2021-09-07", total: 7000, amount: 7000, balance: 7000, description: "Credit Card payments: Visa end in 3865 Card payments: Visa end in 3865 Card payments: Visa end in 3865", type: "Credit", status: "Completed"
+		},
+		{ transactionId: "TRN-008", date: "2021-09-08", total: 8000, amount: 8000, balance: 8000, description: "descriptionThis is a very long description to test the UI. It includes multiple sentences and goes on for a while to ensure that the UI can handle long strings of text. This is important for testing purposes to ensure that the application can handle all possible inputs", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-009", date: "2021-09-09", total: 9000, amount: 9000, balance: 9000, description: "Credit Card payments: Visa end in 3865", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-010", date: "2021-09-10", total: 10000, amount: 10000, balance: 10000, description: "Credit Card payments: Visa end in 3865", type: "Credit", status: "Completed" },
+
 
 
 

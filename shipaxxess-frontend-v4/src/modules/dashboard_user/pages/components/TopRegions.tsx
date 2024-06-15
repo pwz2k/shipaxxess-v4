@@ -90,7 +90,7 @@ const TopRegions: React.FC<TopRegionsProps> = ({ topStates, topCountries }) => {
                         ))}
                     </ul>
                 </div>
-                <div id="chartUS" style={{ width: '800px', height: '400px' }}></div>
+                <div id="chartUS" style={{ width: '900px', height: '400px' }}></div>
             </div>
 
             <div className="flex flex-col md:flex-row justify-between">
@@ -105,7 +105,7 @@ const TopRegions: React.FC<TopRegionsProps> = ({ topStates, topCountries }) => {
                         ))}
                     </ul>
                 </div>
-                <div id="chartWorld" style={{ width: '800px', height: '400px' }}></div>
+                <div id="chartWorld" style={{ width: '900px', height: '400px' }}></div>
             </div>
         </div>
     );

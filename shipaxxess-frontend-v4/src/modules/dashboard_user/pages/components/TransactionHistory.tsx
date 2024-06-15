@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTable, useSortBy, Column, CellProps, Row } from 'react-table';
+import { useTable, useSortBy, Column } from 'react-table';
 import { CSVLink } from "react-csv";
 import { Button } from "@client/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
@@ -89,29 +89,26 @@ const TransactionHistoryTable: React.FC<TransactionHistoryTableProps> = ({ data 
             <div className="overflow-x-auto">
                 <div className="max-h-96 h-96 overflow-y-auto">
                     <table {...getTableProps()} className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg overflow-hidden">
-                        <thead className="bg-gray-200 text-gray-800">
-                            {headerGroups.map((headerGroup: { getHeaderGroupProps: () => JSX.IntrinsicAttributes & React.ClassAttributes<HTMLTableRowElement> & React.HTMLAttributes<HTMLTableRowElement>; headers: { getHeaderProps: (arg0: any) => JSX.IntrinsicAttributes & React.ClassAttributes<HTMLTableHeaderCellElement> & React.ThHTMLAttributes<HTMLTableHeaderCellElement>; getSortByToggleProps: () => { (): any; new(): any; onClick: React.MouseEventHandler<SVGSVGElement> | undefined; }; render: (arg0: string) => string | number | boolean | React.ReactPortal | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | null | undefined; }[]; }) => (
+                        <thead className="bg-gray-200 text-gray-800 sticky top-0">
+                            {headerGroups.map((headerGroup: { getHeaderGroupProps: () => JSX.IntrinsicAttributes & React.ClassAttributes<HTMLTableRowElement> & React.HTMLAttributes<HTMLTableRowElement>; headers: any[]; }) => (
                                 <tr {...headerGroup.getHeaderGroupProps()}>
-                                    {headerGroup.headers.map((column: { getHeaderProps: (arg0: any) => JSX.IntrinsicAttributes & React.ClassAttributes<HTMLTableHeaderCellElement> & React.ThHTMLAttributes<HTMLTableHeaderCellElement>; getSortByToggleProps: () => { (): any; new(): any; onClick: React.MouseEventHandler<SVGSVGElement> | undefined; }; render: (arg0: string) => string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }) => (
+                                    {headerGroup.headers.map((column) => (
                                         <th {...column.getHeaderProps(column.getSortByToggleProps())} className="py-2 px-3 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700 uppercase">
                                             <div className="flex items-center">
                                                 {column.render('Header')}
-                                                <ArrowUpDown
-                                                    className="w-4 h-4 ml-2 cursor-pointer"
-                                                    onClick={column.getSortByToggleProps().onClick}
-                                                />
+                                                <ArrowUpDown className="w-4 h-4 ml-2" />
                                             </div>
                                         </th>
                                     ))}
                                 </tr>
                             ))}
                         </thead>
-                        <tbody {...getTableBodyProps()} className="text-gray-700 h-full">
+                        <tbody {...getTableBodyProps()} className="text-gray-700">
                             {paginatedData.map((row: { getRowProps: () => JSX.IntrinsicAttributes & React.ClassAttributes<HTMLTableRowElement> & React.HTMLAttributes<HTMLTableRowElement>; cells: any[]; }) => {
                                 prepareRow(row);
                                 return (
                                     <tr {...row.getRowProps()} className="border-b border-gray-200 hover:bg-gray-100">
-                                        {row.cells.map(cell => (
+                                        {row.cells.map((cell) => (
                                             <td {...cell.getCellProps()} className="py-3 px-4 text-left whitespace-nowrap">
                                                 {cell.render('Cell')}
                                             </td>
@@ -147,7 +144,7 @@ const TransactionHistoryTable: React.FC<TransactionHistoryTableProps> = ({ data 
                             }}
                             className="ml-2 border border-gray-300 rounded-md px-2 py-1 focus:outline-none focus:border-blue-500"
                         >
-                            {[10, 20, 50, 100].map(size => (
+                            {[10, 20, 50, 100].map((size) => (
                                 <option key={size} value={size}>
                                     Show {size} rows
                                 </option>
