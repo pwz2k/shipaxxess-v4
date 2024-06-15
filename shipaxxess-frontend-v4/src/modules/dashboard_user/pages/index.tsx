@@ -6,19 +6,35 @@ import Title from '@client/components/common/title';
 import { Boxes, CreditCard, LayoutDashboardIcon, Share2, Truck, Plane } from 'lucide-react';
 import CustomDateRangePicker from '../../../components/common/CustomDatePicker';
 import TopRegions from './components/TopRegions';
+import TransactionHistory from './components/TransactionHistory';
 
 const DashboardStats: React.FC = () => {
 	const getRandomNumber = (min: number, max: number) => {
 		return Math.floor(Math.random() * (max - min + 1) + min);
 	};
+	// transactionId: string;
+	// date: string;
+	// total: number;
+	// amount: number;
+	// balance: number;
+	// description: string;
+	// type: string;
+	// status: string;
 	const [transactionData, setTransactionData] = useState([
-		{ id: 1, date: "2021-01-01", amount: 100.0, description: "Payment for shipping" },
-		{ id: 2, date: "2021-01-05", amount: -50.0, description: "Refund for shipment" },
-		{ id: 3, date: "2021-01-10", amount: 200.0, description: "Payment for shipping" },
-		{ id: 4, date: "2021-01-15", amount: -100.0, description: "Refund for shipment" },
-		{ id: 5, date: "2021-01-20", amount: 150.0, description: "Payment for shipping" },
-		{ id: 6, date: "2021-01-25", amount: -75.0, description: "Refund for shipment" },
-		{ id: 7, date: "2021-01-30", amount: 300.0, description: "Payment for shipping" }
+		{ transactionId: "TRN-001", date: "2021-09-01", total: 1000, amount: 1000, balance: 1000, description: "Payment", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-002", date: "2021-09-02", total: 2000, amount: 2000, balance: 2000, description: "Payment", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-003", date: "2021-09-03", total: 3000, amount: 3000, balance: 3000, description: "Payment", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-004", date: "2021-09-04", total: 4000, amount: 4000, balance: 4000, description: "Payment", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-005", date: "2021-09-05", total: 5000, amount: 5000, balance: 5000, description: "Payment", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-006", date: "2021-09-06", total: 6000, amount: 6000, balance: 6000, description: "Payment", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-007", date: "2021-09-07", total: 7000, amount: 7000, balance: 7000, description: "Payment", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-008", date: "2021-09-08", total: 8000, amount: 8000, balance: 8000, description: "Payment", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-009", date: "2021-09-09", total: 9000, amount: 9000, balance: 9000, description: "Payment", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-010", date: "2021-09-10", total: 10000, amount: 10000, balance: 10000, description: "Payment", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-011", date: "2021-09-11", total: 11000, amount: 11000, balance: 11000, description: "Payment", type: "Credit", status: "Completed" },
+
+
+
 	]);
 	const generateUpDownData = (labels: string[]) => {
 		const midPoint = Math.floor(labels.length / 2);
@@ -167,34 +183,12 @@ const DashboardStats: React.FC = () => {
 				<div className="col-span-1 lg:col-span-3">
 					<TopRegions topStates={topStates} topCountries={topCountries} />
 				</div>
-				<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4 w-full">
+				<div className="col-span-1 lg:col-span-3">
 
-					<div className="col-span-3 lg:col-span-3">
+					<TransactionHistory data={transactionData} />
 
-						<h2 className="text-2xl font-bold mb-4">Transactions History</h2>
-						<div className="overflow-x-auto">
-							<table className="min-w-full bg-white border-gray-200 divide-y divide-gray-200 rounded-lg overflow-hidden">
-								<thead className="bg-gray-50">
-									<tr>
-										<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-										<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-										<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-									</tr>
-								</thead>
-								<tbody className="divide-y divide-gray-200">
-									{transactionData.map(transaction => (
-										<tr key={transaction.id}>
-											<td className="px-6 py-4 whitespace-nowrap">{transaction.date}</td>
-											<td className="px-6 py-4 whitespace-nowrap">${transaction.amount.toFixed(2)}</td>
-											<td className="px-6 py-4 whitespace-nowrap">{transaction.description}</td>
-										</tr>
-									))}
-								</tbody>
-							</table>
-						</div>
-
-					</div>
 				</div>
+
 
 			</div>
 		</>

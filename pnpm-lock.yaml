@@ -180,6 +180,9 @@ importers:
       react-chartjs-2:
         specifier: ^5.2.0
         version: 5.2.0(chart.js@4.4.3)(react@18.3.1)
+      react-csv:
+        specifier: ^2.2.2
+        version: 2.2.2
       react-date-range:
         specifier: ^2.0.1
         version: 2.0.1(date-fns@3.6.0)(react@18.3.1)
@@ -210,6 +213,9 @@ importers:
       react-router-dom:
         specifier: ^6.21.0
         version: 6.23.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-table:
+        specifier: ^7.8.0
+        version: 7.8.0(react@18.3.1)
       recharts:
         specifier: ^2.12.7
         version: 2.12.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -235,6 +241,9 @@ importers:
       '@types/react':
         specifier: ^18.2.43
         version: 18.3.3
+      '@types/react-csv':
+        specifier: ^1.1.10
+        version: 1.1.10
       '@types/react-dom':
         specifier: ^18.2.17
         version: 18.3.0
@@ -2247,6 +2256,9 @@ packages:
 
   '@types/prop-types@15.7.12':
     resolution: {integrity: sha512-5zvhXYtRNRluoE/jAp4GVsSduVUzNWKkOZrCDBWYtE7biZywwdC2AcEzg+cSMLFRfVgeAFqpfNabiPjxFddV1Q==}
+
+  '@types/react-csv@1.1.10':
+    resolution: {integrity: sha512-PESAyASL7Nfi/IyBR3ufd8qZkyoS+7jOylKmJxRZUZLFASLo4NZaRsJ8rNP8pCcbIziADyWBbLPD1nPddhsL4g==}
 
   '@types/react-date-range@1.4.9':
     resolution: {integrity: sha512-5oVEDW0ElYmY1+YVSzdMUR8stxSI5QrRJCgCFUvuEAV5197t412vimD9aVTW6g4JTaxCnMmB1BdEOT/odpaBxQ==}
@@ -4939,6 +4951,9 @@ packages:
       chart.js: ^4.1.1
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
 
+  react-csv@2.2.2:
+    resolution: {integrity: sha512-RG5hOcZKZFigIGE8LxIEV/OgS1vigFQT4EkaHeKgyuCbUAu9Nbd/1RYq++bJcJJ9VOqO/n9TZRADsXNDR4VEpw==}
+
   react-date-range@2.0.1:
     resolution: {integrity: sha512-jwKYc9zcjYMg2hWbPht+6BF2wjGG5DkRVNJLRXn2Y0B/QCOOnvQX6YXziZVujVADWmgsBaoQnILdmzYw+Bwh0g==}
     peerDependencies:
@@ -5065,6 +5080,11 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  react-table@7.8.0:
+    resolution: {integrity: sha512-hNaz4ygkZO4bESeFfnfOft73iBUj8K5oKi1EcSHPAibEydfsX2MyU6Z8KCr3mv3C9Kqqh71U+DhZkFvibbnPbA==}
+    peerDependencies:
+      react: ^16.8.3 || ^17.0.0-0 || ^18.0.0
 
   react-transition-group@4.4.5:
     resolution: {integrity: sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==}
@@ -7800,6 +7820,10 @@ snapshots:
       '@types/node': 20.14.2
 
   '@types/prop-types@15.7.12': {}
+
+  '@types/react-csv@1.1.10':
+    dependencies:
+      '@types/react': 18.3.3
 
   '@types/react-date-range@1.4.9':
     dependencies:
@@ -10831,6 +10855,8 @@ snapshots:
       chart.js: 4.4.3
       react: 18.3.1
 
+  react-csv@2.2.2: {}
+
   react-date-range@2.0.1(date-fns@3.6.0)(react@18.3.1):
     dependencies:
       classnames: 2.5.1
@@ -10964,6 +10990,10 @@ snapshots:
       tslib: 2.6.3
     optionalDependencies:
       '@types/react': 18.3.3
+
+  react-table@7.8.0(react@18.3.1):
+    dependencies:
+      react: 18.3.1
 
   react-transition-group@4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
