@@ -38,7 +38,7 @@ const TransactionHistoryTable: React.FC<TransactionHistoryTableProps> = ({ data 
             {
                 Header: 'Description',
                 accessor: 'description',
-                Cell: ({ value }) => (
+                Cell: ({ value }: any) => (
                     <div className="truncate max-w-xs" title={value}>
                         {value}
                     </div>
@@ -77,7 +77,7 @@ const TransactionHistoryTable: React.FC<TransactionHistoryTableProps> = ({ data 
     const totalPages = Math.ceil(rows.length / pageSize);
 
     return (
-        <div className="mx-auto">
+        <div>
             <h2 className="text-2xl font-bold mb-2">Transaction History</h2>
             <div className='py-2 flex items-center justify-between'>
                 <input
