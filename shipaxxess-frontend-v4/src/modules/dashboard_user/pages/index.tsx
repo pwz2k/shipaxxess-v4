@@ -11,7 +11,15 @@ const DashboardStats: React.FC = () => {
 	const getRandomNumber = (min: number, max: number) => {
 		return Math.floor(Math.random() * (max - min + 1) + min);
 	};
-
+	const [transactionData, setTransactionData] = useState([
+		{ id: 1, date: "2021-01-01", amount: 100.0, description: "Payment for shipping" },
+		{ id: 2, date: "2021-01-05", amount: -50.0, description: "Refund for shipment" },
+		{ id: 3, date: "2021-01-10", amount: 200.0, description: "Payment for shipping" },
+		{ id: 4, date: "2021-01-15", amount: -100.0, description: "Refund for shipment" },
+		{ id: 5, date: "2021-01-20", amount: 150.0, description: "Payment for shipping" },
+		{ id: 6, date: "2021-01-25", amount: -75.0, description: "Refund for shipment" },
+		{ id: 7, date: "2021-01-30", amount: 300.0, description: "Payment for shipping" }
+	]);
 	const generateUpDownData = (labels: string[]) => {
 		const midPoint = Math.floor(labels.length / 2);
 		return labels.map((label, index) => {
@@ -158,6 +166,34 @@ const DashboardStats: React.FC = () => {
 
 				<div className="col-span-1 lg:col-span-3">
 					<TopRegions topStates={topStates} topCountries={topCountries} />
+				</div>
+				<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4 w-full">
+
+					<div className="col-span-3 lg:col-span-3">
+
+						<h2 className="text-2xl font-bold mb-4">Transactions History</h2>
+						<div className="overflow-x-auto">
+							<table className="min-w-full bg-white border-gray-200 divide-y divide-gray-200 rounded-lg overflow-hidden">
+								<thead className="bg-gray-50">
+									<tr>
+										<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+										<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+										<th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+									</tr>
+								</thead>
+								<tbody className="divide-y divide-gray-200">
+									{transactionData.map(transaction => (
+										<tr key={transaction.id}>
+											<td className="px-6 py-4 whitespace-nowrap">{transaction.date}</td>
+											<td className="px-6 py-4 whitespace-nowrap">${transaction.amount.toFixed(2)}</td>
+											<td className="px-6 py-4 whitespace-nowrap">{transaction.description}</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+						</div>
+
+					</div>
 				</div>
 
 			</div>

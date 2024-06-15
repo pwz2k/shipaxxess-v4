@@ -24,7 +24,7 @@ const GenericLineChart: React.FC<GenericLineChartProps> = ({ data, title, valueK
         <div className="p-4 bg-white shadow-md rounded-lg">
             <div className='flex justify-center gap-x-1'>
                 {icon}
-                <h2 className="text-lg font-bold mb-2">{title}</h2>
+                <h2 className="text-2xl font-bold mb-2">{title}</h2>
             </div>
             <div className="flex justify-center mb-4">
                 <h3 className="text-xl font-bold">${totalValue.toFixed(2)}</h3>
