@@ -38,6 +38,11 @@ const TransactionHistoryTable: React.FC<TransactionHistoryTableProps> = ({ data 
             {
                 Header: 'Description',
                 accessor: 'description',
+                Cell: ({ value }) => (
+                    <div className="truncate max-w-xs" title={value}>
+                        {value}
+                    </div>
+                ),
             },
             {
                 Header: 'Type',
