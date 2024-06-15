@@ -26,6 +26,15 @@ const DashboardStats: React.FC = () => {
 		{ transactionId: "TRN-008", date: "2021-09-08", total: 8000, amount: 8000, balance: 8000, description: "descriptionThis is a very long description to test the UI. It includes multiple sentences and goes on for a while to ensure that the UI can handle long strings of text. This is important for testing purposes to ensure that the application can handle all possible inputs", type: "Credit", status: "Completed" },
 		{ transactionId: "TRN-009", date: "2021-09-09", total: 9000, amount: 9000, balance: 9000, description: "Credit Card payments: Visa end in 3865", type: "Credit", status: "Completed" },
 		{ transactionId: "TRN-010", date: "2021-09-10", total: 10000, amount: 10000, balance: 10000, description: "Credit Card payments: Visa end in 3865", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-011", date: "2021-09-11", total: 11000, amount: 11000, balance: 11000, description: "Credit Card payments: Visa end in 3865", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-012", date: "2021-09-12", total: 12000, amount: 12000, balance: 12000, description: "Credit Card payments: Visa end in 3865", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-013", date: "2021-09-13", total: 13000, amount: 13000, balance: 13000, description: "Credit Card payments: Visa end in 3865", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-014", date: "2021-09-14", total: 14000, amount: 14000, balance: 14000, description: "Credit Card payments: Visa end in 3865", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-015", date: "2021-09-15", total: 15000, amount: 15000, balance: 15000, description: "Credit Card payments: Visa end in 3865", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-016", date: "2021-09-16", total: 16000, amount: 16000, balance: 16000, description: "Credit Card payments: Visa end in 3865", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-017", date: "2021-09-17", total: 17000, amount: 17000, balance: 17000, description: "Credit Card payments: Visa end in 3865", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-018", date: "2021-09-18", total: 18000, amount: 18000, balance: 18000, description: "Credit Card payments: Visa end in 3865", type: "Credit", status: "Completed" },
+		{ transactionId: "TRN-019", date: "2021-09-19", total: 19000, amount: 19000, balance: 19000, description: "Credit Card payments: Visa end in 3865", type: "Credit", status: "Completed" },
 
 
 
