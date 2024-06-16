@@ -185,12 +185,10 @@ const DashboardStats: React.FC = () => {
 						height={280}
 					/>
 				</div>
-				<div className='col-span-1 lg:col-span-2'>
+				<div className='col-span-1'>
 					<ServicePieChart />
-
-
 				</div>
-				<div className=''>
+				<div className='col-span-2'>
 					<DateBarChart />
 				</div>
 

@@ -12,14 +12,13 @@ const ServicePieChart: React.FC = () => {
     const data: ServiceData[] = [
         { name: 'Service 1', value: 400 },
         { name: 'Service 2', value: 300 },
-        { name: 'Service 3', value: 300 },
-        { name: 'Service 4', value: 200 },
+
     ];
 
     return (
         <div className='w-full'>
-            <h2 className="text-xl font-semibold">Services</h2>
-            <PieChart width={400} height={400}>
+            <h2 className="text-2xl font-semibold">Services</h2>
+            <PieChart width={800} height={400}>
                 <Pie
                     dataKey="value"
                     isAnimationActive={false}
