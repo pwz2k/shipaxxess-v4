@@ -116,125 +116,140 @@ const AdminDashboard: React.FC = () => {
 
 	const COLORS = ['#0088FE', '#00C49F'];
 	const CATEGORY_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+	const [isLoading, setIsLoading] = useState<boolean>(true);
+	useEffect(() => {
+		const timeout = setTimeout(() => {
+			setIsLoading(false);
+		}, 2000);
 
+		return () => clearTimeout(timeout);
+	}, []);
 	return (
-		<div className="px-4 py-4 bg-gray-100 min-h-screen">
-			<div className="flex justify-between items-center mb-4">
-				<div className="flex items-center gap-x-2">
-					<LayoutDashboardIcon size={24} />
-					<Title title="Admin Dashboard" />
+		<>
+			{isLoading && (
+				<div className="fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+					<div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
 				</div>
-				<div className="flex items-center gap-x-2">
-					{/* Add date range picker here */}
-				</div>
-			</div>
+			)}
 
-			<div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
-				<div className="bg-white p-4 rounded-lg shadow-md text-center">
-					<h3 className="text-lg font-bold">Total Users</h3>
-					<p className="text-2xl">{users.length}</p>
-				</div>
-				<div className="bg-white p-4 rounded-lg shadow-md text-center">
-					<h3 className="text-lg font-bold">New Registered Users</h3>
-					<p className="text-2xl">{newUsers}</p>
-				</div>
-				<div className="bg-white p-4 rounded-lg shadow-md text-center">
-					<h3 className="text-lg font-bold">Active Refund Requests</h3>
-					<p className="text-2xl">{activeRefunds}</p>
-				</div>
-				<div className="bg-white p-4 rounded-lg shadow-md text-center">
-					<h3 className="text-lg font-bold">Opened Tickets</h3>
-					<p className="text-2xl">{openTickets}</p>
-				</div>
-			</div>
-
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-				<div className="bg-white p-4 rounded-lg shadow-md flex">
-					<h2 className="text-lg font-bold mb-2">Earnings & Refunds</h2>
-					<PieChart width={400} height={400}>
-						<Pie
-							data={earningsData}
-							cx={200}
-							cy={200}
-							labelLine={false}
-							label
-							outerRadius={120}
-							fill="#8884d8"
-							dataKey="value"
-						>
-							{earningsData.map((_entry, index) => (
-								<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-							))}
-						</Pie>
-						<Tooltip />
-					</PieChart>
+			<div className="px-4 py-4 bg-gray-100 min-h-screen">
+				<div className="flex justify-between items-center mb-4">
+					<div className="flex items-center gap-x-2">
+						<LayoutDashboardIcon size={24} />
+						<Title title="Admin Dashboard" />
+					</div>
+					<div className="flex items-center gap-x-2">
+						{/* Add date range picker here */}
+					</div>
 				</div>
 
-				<div className="bg-white p-4 rounded-lg shadow-md flex">
-					<h2 className="text-lg font-bold mb-2">Revenue Breakdown by Category</h2>
-					<PieChart width={400} height={400}>
-						<Pie
-							data={revenueByCategoryData}
-							cx={200}
-							cy={200}
-							labelLine={false}
-							label
-							outerRadius={120}
-							fill="#8884d8"
-							dataKey="value"
-						>
-							{revenueByCategoryData.map((_entry, index) => (
-								<Cell key={`cell-${index}`} fill={CATEGORY_COLORS[index % CATEGORY_COLORS.length]} />
-							))}
-						</Pie>
-						<Tooltip />
-					</PieChart>
+				<div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
+					<div className="bg-white p-4 rounded-lg shadow-md text-center">
+						<h3 className="text-lg font-bold">Total Users</h3>
+						<p className="text-2xl">{users.length}</p>
+					</div>
+					<div className="bg-white p-4 rounded-lg shadow-md text-center">
+						<h3 className="text-lg font-bold">New Registered Users</h3>
+						<p className="text-2xl">{newUsers}</p>
+					</div>
+					<div className="bg-white p-4 rounded-lg shadow-md text-center">
+						<h3 className="text-lg font-bold">Active Refund Requests</h3>
+						<p className="text-2xl">{activeRefunds}</p>
+					</div>
+					<div className="bg-white p-4 rounded-lg shadow-md text-center">
+						<h3 className="text-lg font-bold">Opened Tickets</h3>
+						<p className="text-2xl">{openTickets}</p>
+					</div>
 				</div>
-			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-				<div className="bg-white p-4 rounded-lg shadow-md">
-					<h2 className="text-lg font-bold mb-2">Monthly Revenue Trend</h2>
-					<ResponsiveContainer width="100%" height={300}>
-						<LineChart data={monthlyRevenueData}>
-							<CartesianGrid stroke="#ccc" />
-							<XAxis dataKey="month" />
-							{/* <YAxis /> */}
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+					<div className="bg-white p-4 rounded-lg shadow-md flex">
+						<h2 className="text-lg font-bold mb-2">Earnings & Refunds</h2>
+						<PieChart width={400} height={400}>
+							<Pie
+								data={earningsData}
+								cx={200}
+								cy={200}
+								labelLine={false}
+								label
+								outerRadius={120}
+								fill="#8884d8"
+								dataKey="value"
+							>
+								{earningsData.map((_entry, index) => (
+									<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+								))}
+							</Pie>
 							<Tooltip />
-							<Line type="monotone" dataKey="revenue" stroke="#8884d8" />
-						</LineChart>
-					</ResponsiveContainer>
-				</div>
+						</PieChart>
+					</div>
 
-				<div className="bg-white p-4 col-span-1 rounded-lg shadow-md w-full">
-					<h2 className="text-lg font-bold mb-2">Top Selling Products</h2>
-					<ResponsiveContainer width="100%" height={300}>
-						<BarChart width={1000} height={300} data={topSellingProducts}>
-							<CartesianGrid strokeDasharray="3 3" />
-							<XAxis dataKey="name" />
-							{/* <YAxis /> */}
+					<div className="bg-white p-4 rounded-lg shadow-md flex">
+						<h2 className="text-lg font-bold mb-2">Revenue Breakdown by Category</h2>
+						<PieChart width={400} height={400}>
+							<Pie
+								data={revenueByCategoryData}
+								cx={200}
+								cy={200}
+								labelLine={false}
+								label
+								outerRadius={120}
+								fill="#8884d8"
+								dataKey="value"
+							>
+								{revenueByCategoryData.map((_entry, index) => (
+									<Cell key={`cell-${index}`} fill={CATEGORY_COLORS[index % CATEGORY_COLORS.length]} />
+								))}
+							</Pie>
 							<Tooltip />
-							<Legend />
-							<Bar dataKey="sales" fill="#8884d8" />
-						</BarChart>
-					</ResponsiveContainer>
+						</PieChart>
+					</div>
+				</div>
+
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+					<div className="bg-white p-4 rounded-lg shadow-md">
+						<h2 className="text-lg font-bold mb-2">Monthly Revenue Trend</h2>
+						<ResponsiveContainer width="100%" height={300}>
+							<LineChart data={monthlyRevenueData}>
+								<CartesianGrid stroke="#ccc" />
+								<XAxis dataKey="month" />
+								{/* <YAxis /> */}
+								<Tooltip />
+								<Line type="monotone" dataKey="revenue" stroke="#8884d8" />
+							</LineChart>
+						</ResponsiveContainer>
+					</div>
+
+					<div className="bg-white p-4 col-span-1 rounded-lg shadow-md w-full">
+						<h2 className="text-lg font-bold mb-2">Top Selling Products</h2>
+						<ResponsiveContainer width="100%" height={300}>
+							<BarChart width={1000} height={300} data={topSellingProducts}>
+								<CartesianGrid strokeDasharray="3 3" />
+								<XAxis dataKey="name" />
+								{/* <YAxis /> */}
+								<Tooltip />
+								<Legend />
+								<Bar dataKey="sales" fill="#8884d8" />
+							</BarChart>
+						</ResponsiveContainer>
+					</div>
+				</div>
+
+				<div className="grid grid-cols-1 md:grid-col-2 lg:grid-cols-4 gap-4 mb-4">
+					<TopShippingCategories />
+					<PeakOrderTimes />
+					<MostPopularStates />
+					<TopReferralUsers />
+				</div>
+
+				<div className="grid grid-cols-1 md:grid-col-2  lg:grid-cols-4 gap-4 mb-4">
+					<PaymentMethodsBreakdown />
+					<Profits />
+					<RefundedOrders />
+					<RefundsByCarrier />
 				</div>
 			</div>
-
-			<div className="grid grid-cols-1 md:grid-col-2 lg:grid-cols-4 gap-4 mb-4">
-				<TopShippingCategories />
-				<PeakOrderTimes />
-				<MostPopularStates />
-				<TopReferralUsers />
-			</div>
-
-			<div className="grid grid-cols-1 md:grid-col-2  lg:grid-cols-4 gap-4 mb-4">
-				<PaymentMethodsBreakdown />
-				<Profits />
-				<RefundedOrders />
-				<RefundsByCarrier />
-			</div>
-		</div>
+		</>
 	);
 }
 export default AdminDashboard;
