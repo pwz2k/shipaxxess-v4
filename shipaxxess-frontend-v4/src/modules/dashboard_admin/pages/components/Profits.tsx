@@ -6,6 +6,14 @@ const profitsData = [
     { month: 'Feb', profit: 300 },
     { month: 'Mar', profit: 200 },
     { month: 'Apr', profit: 278 },
+    { month: 'May', profit: 189 },
+    { month: 'Jun', profit: 239 },
+    { month: 'Jul', profit: 349 },
+    { month: 'Aug', profit: 200 },
+    { month: 'Sep', profit: 300 },
+    { month: 'Oct', profit: 400 },
+    { month: 'Nov', profit: 500 },
+    { month: 'Dec', profit: 600 },
     // Add more data points...
 ];
 

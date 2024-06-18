@@ -208,14 +208,16 @@ const AdminDashboard: React.FC = () => {
 
 				<div className="bg-white p-4 col-span-1 rounded-lg shadow-md w-full">
 					<h2 className="text-lg font-bold mb-2">Top Selling Products</h2>
-					<BarChart width={1000} height={300} data={topSellingProducts}>
-						<CartesianGrid strokeDasharray="3 3" />
-						<XAxis dataKey="name" />
-						{/* <YAxis /> */}
-						<Tooltip />
-						<Legend />
-						<Bar dataKey="sales" fill="#8884d8" />
-					</BarChart>
+					<ResponsiveContainer width="100%" height={300}>
+						<BarChart width={1000} height={300} data={topSellingProducts}>
+							<CartesianGrid strokeDasharray="3 3" />
+							<XAxis dataKey="name" />
+							{/* <YAxis /> */}
+							<Tooltip />
+							<Legend />
+							<Bar dataKey="sales" fill="#8884d8" />
+						</BarChart>
+					</ResponsiveContainer>
 				</div>
 			</div>
 
