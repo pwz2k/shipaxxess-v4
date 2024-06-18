@@ -3,7 +3,8 @@ import SignupRoutes from "@client/modules/signup_user/routes";
 import SigninRoutes from "@client/modules/signin_user/routes";
 import { createBrowserRouter } from "react-router-dom";
 import UserLayout from "./components/layouts/user";
-import DashboardRoutes from "@client/modules/dashboard_user/routes";
+import DashboardUserRoutes from "@client/modules/dashboard_user/routes";
+import DashboardAdminRoute from "@client/modules/dashboard_admin/routes";
 import PackagesRoutes from "@client/modules/packages_user/routes";
 import PaymentsRoutes from "@client/modules/payments_user/routes";
 import ReferralsRoutes from "@client/modules/referrals_user/routes";
@@ -33,7 +34,7 @@ export const router = createBrowserRouter([
 		element: <UserLayout />,
 		children: [
 			...AddressRoutes,
-			...DashboardRoutes,
+			...DashboardAdminRoute,
 			...PackagesRoutes,
 			...PaymentsRoutes,
 			...ReferralsRoutes,
@@ -56,6 +57,7 @@ export const router = createBrowserRouter([
 			...TypesAdminRoutes,
 			...BatchsAdminRoutes,
 			...RefundAdminRoutes,
+			...DashboardAdminRoute,
 		],
 	},
 ]);

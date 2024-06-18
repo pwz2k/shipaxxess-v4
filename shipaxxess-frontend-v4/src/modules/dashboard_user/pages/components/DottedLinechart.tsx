@@ -45,6 +45,7 @@ const GenericLineChart: React.FC<GenericLineChartProps> = ({ data, title, valueK
                         dot={{ r: 6, fill: '#000000', stroke: 'none' }} // Filled dots with no stroke
                     />
                 </LineChart>
+
             </ResponsiveContainer>
         </div>
     );
