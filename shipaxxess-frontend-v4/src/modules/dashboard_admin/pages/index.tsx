@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Title from '@client/components/common/title';
 import { LayoutDashboardIcon } from 'lucide-react';
-import UserList from './components/UserList';
-import ReportList from './components/ReportList';
 import {
 	LineChart,
 	Line,
@@ -18,6 +16,16 @@ import {
 	Cell,
 	ResponsiveContainer,
 } from 'recharts';
+
+// Importing the new components
+import TopShippingCategories from './components/TopShippingCategories';
+import PeakOrderTimes from './components/PeakOrderTimes';
+import MostPopularStates from './components/MostPopularStates';
+import TopReferralUsers from './components/TopReferralUsers';
+import PaymentMethodsBreakdown from './components/PaymentMethodsBreakdown';
+import Profits from './components/Profits';
+import RefundedOrders from './components/RefundedOrders';
+import RefundsByCarrier from './components/RefundsByCarrier';
 
 interface User {
 	id: number;
@@ -148,8 +156,7 @@ const AdminDashboard: React.FC = () => {
 				</div>
 			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 				<div className="bg-white p-4 rounded-lg shadow-md">
 					<h2 className="text-lg font-bold mb-2">Earnings & Refunds</h2>
 					<PieChart width={400} height={400}>
@@ -191,7 +198,9 @@ const AdminDashboard: React.FC = () => {
 						<Tooltip />
 					</PieChart>
 				</div>
+			</div>
 
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 				<div className="bg-white p-4 rounded-lg shadow-md">
 					<h2 className="text-lg font-bold mb-2">Monthly Revenue Trend</h2>
 					<ResponsiveContainer width="100%" height={300}>
@@ -207,18 +216,31 @@ const AdminDashboard: React.FC = () => {
 
 				<div className="bg-white p-4 rounded-lg shadow-md">
 					<h2 className="text-lg font-bold mb-2">Top Selling Products</h2>
-					<BarChart width={600} height={300} data={topSellingProducts}>
-						<CartesianGrid stroke="#ccc" />
+					<BarChart width={400} height={300} data={topSellingProducts}>
+						<CartesianGrid strokeDasharray="3 3" />
 						<XAxis dataKey="name" />
-						{/* <YAxis /> */}
+						<YAxis />
 						<Tooltip />
 						<Legend />
 						<Bar dataKey="sales" fill="#8884d8" />
 					</BarChart>
 				</div>
 			</div>
+
+			<div className="grid grid-cols-1 md:grid-col-2 lg:grid-cols-4 gap-4 mb-4">
+				<TopShippingCategories />
+				<PeakOrderTimes />
+				<MostPopularStates />
+				<TopReferralUsers />
+			</div>
+
+			<div className="grid grid-cols-1 md:grid-col-2  lg:grid-cols-4 gap-4 mb-4">
+				<PaymentMethodsBreakdown />
+				<Profits />
+				<RefundedOrders />
+				<RefundsByCarrier />
+			</div>
 		</div>
 	);
-};
-
+}
 export default AdminDashboard;
