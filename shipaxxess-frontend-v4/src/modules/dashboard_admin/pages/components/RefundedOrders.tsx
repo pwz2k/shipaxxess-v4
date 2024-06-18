@@ -5,7 +5,16 @@ const refundedOrdersData = [
     { month: 'Jan', refunds: 40 },
     { month: 'Feb', refunds: 30 },
     { month: 'Mar', refunds: 20 },
-    // Add more data points...
+    { month: 'Apr', refunds: 28 },
+    { month: 'May', refunds: 18 },
+    { month: 'Jun', refunds: 23 },
+    { month: 'Jul', refunds: 34 },
+    { month: 'Aug', refunds: 20 },
+    { month: 'Sep', refunds: 30 },
+    { month: 'Oct', refunds: 40 },
+    { month: 'Nov', refunds: 50 },
+    { month: 'Dec', refunds: 60 },
+
 ];
 
 const RefundedOrders: React.FC = () => {
