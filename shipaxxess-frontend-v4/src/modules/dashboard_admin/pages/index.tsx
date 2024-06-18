@@ -68,23 +68,15 @@ const AdminDashboard: React.FC = () => {
 			{ id: 2, title: 'Report 2', status: 'Closed' },
 			{ id: 3, title: 'Report 3', status: 'Open' },
 			{ id: 4, title: 'Report 4', status: 'Closed' },
-			// Add more reports here...
+
 		];
 		setReports(fetchedReports);
-		setActiveRefunds(2); // Simulate active refund requests
+		setActiveRefunds(200); // Simulate active refund requests
 		setOpenTickets(2); // Simulate opened tickets
 		setTotalEarnings(1000); // Simulate total earnings
 	}, []);
 
-	const userData = users.map((user) => ({
-		name: user.name,
-		id: user.id,
-	}));
 
-	const reportData = reports.map((report) => ({
-		title: report.title,
-		status: report.status,
-	}));
 
 	const earningsData = [
 		{ name: 'Total Earnings', value: totalEarnings },
@@ -157,7 +149,7 @@ const AdminDashboard: React.FC = () => {
 			</div>
 
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-				<div className="bg-white p-4 rounded-lg shadow-md">
+				<div className="bg-white p-4 rounded-lg shadow-md flex">
 					<h2 className="text-lg font-bold mb-2">Earnings & Refunds</h2>
 					<PieChart width={400} height={400}>
 						<Pie
@@ -166,7 +158,7 @@ const AdminDashboard: React.FC = () => {
 							cy={200}
 							labelLine={false}
 							label
-							outerRadius={80}
+							outerRadius={120}
 							fill="#8884d8"
 							dataKey="value"
 						>
@@ -178,7 +170,7 @@ const AdminDashboard: React.FC = () => {
 					</PieChart>
 				</div>
 
-				<div className="bg-white p-4 rounded-lg shadow-md">
+				<div className="bg-white p-4 rounded-lg shadow-md flex">
 					<h2 className="text-lg font-bold mb-2">Revenue Breakdown by Category</h2>
 					<PieChart width={400} height={400}>
 						<Pie
@@ -187,7 +179,7 @@ const AdminDashboard: React.FC = () => {
 							cy={200}
 							labelLine={false}
 							label
-							outerRadius={80}
+							outerRadius={120}
 							fill="#8884d8"
 							dataKey="value"
 						>
