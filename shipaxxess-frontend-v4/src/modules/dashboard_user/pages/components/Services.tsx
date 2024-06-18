@@ -18,7 +18,7 @@ const ServicePieChart: React.FC = () => {
     return (
         <div className='w-full'>
             <h2 className="text-2xl font-semibold">Services</h2>
-            <PieChart width={800} height={400}>
+            <PieChart width={400} height={400}>
                 <Pie
                     dataKey="value"
                     isAnimationActive={false}

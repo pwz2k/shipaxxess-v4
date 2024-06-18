@@ -34,7 +34,7 @@ export const router = createBrowserRouter([
 		element: <UserLayout />,
 		children: [
 			...AddressRoutes,
-			...DashboardAdminRoute,
+			...DashboardUserRoutes,
 			...PackagesRoutes,
 			...PaymentsRoutes,
 			...ReferralsRoutes,

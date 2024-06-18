@@ -188,10 +188,10 @@ const DashboardStats: React.FC = () => {
 						xAxisLink='/shipments'
 					/>
 				</div>
-				<div className='col-span-1'>
+				<div className='lg:col-span-1  col-span-1'>
 					<ServicePieChart />
 				</div>
-				<div className='col-span-2'>
+				<div className='lg:col-span-2 col-span-1'>
 					<DateBarChart />
 				</div>
 

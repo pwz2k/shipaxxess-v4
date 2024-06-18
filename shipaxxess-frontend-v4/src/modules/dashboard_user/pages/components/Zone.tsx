@@ -1,5 +1,6 @@
 import React from 'react';
 import { BarChart, CartesianGrid, XAxis, Tooltip, Legend, Bar, Cell, ResponsiveContainer, Text } from 'recharts';
+import { LandPlot } from 'lucide-react';
 
 interface ChartData {
     zone: string;
@@ -16,22 +17,30 @@ const DateBarChart: React.FC = () => {
     }));
 
     return (
-        <ResponsiveContainer width="100%" height={400}>
-            <BarChart data={data}>
-                <Text x={0} y={0} dx={200} dy={20} textAnchor="middle" scaleToFit={true} width={500} style={{ fontSize: '24px' }}>
-                    Receipt Zones
-                </Text>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="zone" />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="value">
-                    {data.map((_entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                </Bar>
-            </BarChart>
-        </ResponsiveContainer>
+        <div className="bg-white p-4 md:col-span-2 rounded-lg shadow-md">
+
+
+            <div className="flex justify-center ">
+                <LandPlot size={24} />
+                <h2 className="text-lg font-bold mb-2">Recipent Zones</h2>
+                <Text textAnchor="middle" verticalAnchor="middle" width={30} height={30} />
+            </div>
+
+            <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={data}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="zone" />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="value" fill="#8884d8">
+                        {data.map((_entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                    </Bar>
+                </BarChart>
+            </ResponsiveContainer>
+        </div>
+
     );
 };
 
