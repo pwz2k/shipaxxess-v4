@@ -1,13 +1,12 @@
 import React from 'react';
-import { BarChart, CartesianGrid, XAxis, Tooltip, Legend, Bar, ResponsiveContainer, Text } from 'recharts';
+import { BarChart, CartesianGrid, XAxis, Tooltip, Legend, Bar, Cell, ResponsiveContainer, Text } from 'recharts';
 
 interface ChartData {
     zone: string;
     value: number;
-
 }
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF1493', '#DAA520', '#ADFF2F', '#20B2AA', '#8B4513'];
 
 const DateBarChart: React.FC = () => {
     // Generate random values for zones 1 to 9
@@ -24,12 +23,11 @@ const DateBarChart: React.FC = () => {
                 </Text>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="zone" />
-
                 <Tooltip />
                 <Legend />
                 <Bar dataKey="value">
-                    {data.map((entry, index) => (
-                        <Bar key={`bar-${index}`} dataKey="value" fill='red' />
+                    {data.map((_entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                 </Bar>
             </BarChart>

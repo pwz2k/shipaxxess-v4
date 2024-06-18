@@ -1,4 +1,3 @@
-import { Boxes } from 'lucide-react';
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
@@ -14,10 +13,10 @@ interface GenericLineChartProps {
     icon: React.ReactNode;
     width?: number;
     height?: number;
-
+    xAxisLink?: string;
 }
 
-const GenericLineChart: React.FC<GenericLineChartProps> = ({ data, title, valueKey, icon, width = "100%", height = 400 }) => {
+const GenericLineChart: React.FC<GenericLineChartProps> = ({ data, title, valueKey, icon, width = "100%", height = 400, xAxisLink = "" }) => {
     const totalValue = data.reduce((acc, item) => acc + item.value, 0);
 
     return (
@@ -29,21 +28,21 @@ const GenericLineChart: React.FC<GenericLineChartProps> = ({ data, title, valueK
             <div className="flex justify-center mb-4">
                 <h3 className="text-xl font-bold">${totalValue.toFixed(2)}</h3>
             </div>
-            {/* <h2 className="text-sm font-bold mb-4 text-gray-400 border-b-2 border-gray-300 pb-2">Overview</h2> */}
 
             <ResponsiveContainer width={width} height={height}>
                 <LineChart data={data}>
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="label" />
+                    <XAxis dataKey="label"
+                    />
                     <Tooltip />
                     <Legend />
                     <Line
-                        type="monotone"
+                        type="linear"
                         dataKey={valueKey}
-                        stroke="#8884d8"
+                        stroke="#000000"
                         strokeDasharray="8 8"
                         strokeWidth={3}
-                        dot={{ r: 6 }} // Larger dots
+                        dot={{ r: 6, fill: '#000000', stroke: 'none' }} // Filled dots with no stroke
                     />
                 </LineChart>
             </ResponsiveContainer>

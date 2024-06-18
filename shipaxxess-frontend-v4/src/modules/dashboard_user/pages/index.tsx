@@ -148,6 +148,7 @@ const DashboardStats: React.FC = () => {
 						title="Total Payments"
 						valueKey="value"
 						icon={<Boxes size={24} />}
+						xAxisLink='/payments'
 					/>
 				</div>
 				<div className="col-span-1 lg:col-span-2">
@@ -158,6 +159,7 @@ const DashboardStats: React.FC = () => {
 						valueKey="value"
 						icon={<Boxes size={24} />}
 						height={260}
+						xAxisLink='/cost'
 
 					/>
 
@@ -183,6 +185,7 @@ const DashboardStats: React.FC = () => {
 						valueKey="value"
 						icon={<Boxes size={24} />}
 						height={280}
+						xAxisLink='/shipments'
 					/>
 				</div>
 				<div className='col-span-1'>

@@ -24,8 +24,6 @@ const TopRegions: React.FC<TopRegionsProps> = ({ topStates, topCountries }) => {
         // create a color set for the heat map
 
 
-
-
         chartUS.geodata = am4geodata_usaLow;
         chartUS.projection = new am4maps.projections.AlbersUsa();
 
@@ -45,7 +43,7 @@ const TopRegions: React.FC<TopRegionsProps> = ({ topStates, topCountries }) => {
             id: state.name, // ID should match geojson property for each state
             value: state.shipments // Value to show in tooltip
         }));
-        console.log("polygonSeriesUS", polygonSeriesUS.data)
+
 
         // Heat rule to colorize US states based on value
         polygonSeriesUS.heatRules.push({
