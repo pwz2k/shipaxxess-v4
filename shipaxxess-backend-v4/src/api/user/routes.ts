@@ -84,6 +84,9 @@ user.get("/types", TypeUser.GetAll);
 user.get("/notifications", UserNotification.Get);
 // mark all user notifcations as read
 user.patch("/notifications", UserNotification.MarkAsRead);
+// subscribe user to push notifications
+user.post("/subscribe", UserNotification.Subscribe);
+
 
 
 

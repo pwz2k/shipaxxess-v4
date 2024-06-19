@@ -7,6 +7,8 @@ export const app = {
 	mode: import.meta.env.VITE_MODE,
 	version: "v4.0-dev",
 	support: "support@xclusivelabels.com",
+	VAPID_PUBLIC_KEY: "BCK9cDqQ3T_Pgd2uUMqwSU6Yg4XSOuc5kYHUHgYq73xVRx88KYlp5T68vcHaXp-HVcoN30323jzsXRrlXk6sx-g",
+	VAPID_PRIVATE_KEY: "YWPkthj1WqFzryEZOND0E-W8jhpLn_aVMjUJsKfTYC0",
 	time: {
 		format: "dddd, M/D/YY hh:mm A",
 	},

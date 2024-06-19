@@ -1,7 +1,7 @@
 import { TimezoneContext } from "@client/contexts/timezone";
 import { useStatusQuery } from "@client/hooks/useStatusQuery";
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import Loading from "../common/loading";
 import { app } from "@client/config/app";
 import Banner from "../common/banner";
@@ -9,6 +9,10 @@ import { adminHeaderItems, headerItems, sidebarItems } from "@client/data/layout
 import Sidebar from "../common/sidebar";
 import Header from "../common/header";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+
+import { messaging } from "@client/firebase/firebaseConfig";
+import { onMessage } from "firebase/messaging";
+
 
 const UserLayout = ({ children }: { children?: ReactNode }) => {
 	const { setTimezone } = React.useContext(TimezoneContext);
@@ -27,6 +31,12 @@ const UserLayout = ({ children }: { children?: ReactNode }) => {
 	if (statusQuery.isError) {
 		navigate("/signin?error=failed_authorization");
 	}
+
+	onMessage(messaging, (payload) => {
+		console.log("Message received. ", payload);
+		alert("Message received. ");
+	});
+
 
 	return (
 		<>

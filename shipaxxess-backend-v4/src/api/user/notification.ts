@@ -1,5 +1,7 @@
 import { Model } from "@lib/model"
 import { notifications } from "@schemas/notifications"
+import { subscribtion } from "@schemas/subscribtion"
+import { sendPushNotification } from "@utils/push"
 import { eq } from "drizzle-orm"
 import { drizzle } from "drizzle-orm/d1"
 import { Context } from "hono"
@@ -14,6 +16,7 @@ export interface INOtifcation {
 }
 // user notification handler
 const Get = async (c: Context<App>) => {
+
     try {
         const user_id = c.get("jwtPayload").id
 
@@ -39,7 +42,35 @@ const MarkAsRead = async (c: Context<App>) => {
         return c.json({ error: error.message })
     }
 }
+const Subscribe = async (c: Context<App>) => {
 
-const UserNotification = { Get, MarkAsRead }
+    try {
+        // get all the data from the request and log it
+        const body = await c.req.json();
+        // const parse = Weights.FETCHSCHEMA.parse(body);
+        console.log("body", body)
+
+
+
+        // get the user id from the jwt payload
+        const user_id = c.get("jwtPayload").id
+
+        // get the token from the payload
+        const token = body.token
+        // save the token to the database in subscriptions table
+        const model = new Model(c.env.DB)
+        const data = await model.insert(subscribtion, { user_id, subscription: token, token })
+
+        await sendPushNotification(c.env.SERVICE_ACCOUNT_KEY, token, { title: "Welcome to Shipaxxess", body: "You have successfully subscribed to Shipaxxess notification" })
+
+
+
+        return c.json({ message: "Subscribed" })
+    } catch (error: any) {
+        return c.json({ error: error.message })
+    }
+}
+
+const UserNotification = { Get, MarkAsRead, Subscribe }
 export { UserNotification }
 

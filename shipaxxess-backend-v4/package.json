@@ -11,6 +11,8 @@
 	"dependencies": {
 		"@types/uuid": "^9.0.7",
 		"drizzle-orm": "^0.29.2",
+		"google-auth-library": "^9.11.0",
+		"googleapis": "^140.0.0",
 		"hono": "^3.11.2",
 		"pdf-merger-js": "^4.3.0",
 		"stripe": "^14.9.0",

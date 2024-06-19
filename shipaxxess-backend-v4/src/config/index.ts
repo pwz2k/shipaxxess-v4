@@ -3,7 +3,10 @@ export const config = {
 		name: "Xclusivelabels",
 		support: "support@xclusivelabels.com",
 		url: "https://xclusivelabels.com",
-		loclhost: "http://localhost:5173"
+		loclhost: "http://localhost:5173",
+		VAPID_PUBLIC_KEY: "BCK9cDqQ3T_Pgd2uUMqwSU6Yg4XSOuc5kYHUHgYq73xVRx88KYlp5T68vcHaXp-HVcoN30323jzsXRrlXk6sx-g",
+		VAPID_PRIVATE_KEY: "YWPkthj1WqFzryEZOND0E-W8jhpLn_aVMjUJsKfTYC0",
+		EMAIL: "mydev.com2@gmail.com"
 	},
 	jwt: {
 		secret: "KRqub7QWY8nczJ9rGNYYcte6IevIcu9m",
