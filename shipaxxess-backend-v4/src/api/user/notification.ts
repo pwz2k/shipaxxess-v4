@@ -58,7 +58,17 @@ const Subscribe = async (c: Context<App>) => {
         return c.json({ error: error.message })
     }
 }
+const Unsubscribe = async (c: Context<App>) => {
+    try {
+        const user_id = c.get("jwtPayload").id
+        const model = new Model(c.env.DB)
+        await model.delete(subscribtion, eq(subscribtion.user_id, user_id))
+        return c.json({ message: "Unsubscribed" })
+    } catch (error: any) {
+        return c.json({ error: error.message })
+    }
+}
 
-const UserNotification = { Get, MarkAsRead, Subscribe }
+const UserNotification = { Get, MarkAsRead, Subscribe, Unsubscribe }
 export { UserNotification }
 

@@ -7,15 +7,17 @@ import { getToken, deleteToken } from "firebase/messaging";
 import { api } from "@client/lib/api";
 const { VITE_APP_VAPID_KEY } = import.meta.env;
 
+
 const PushNotificationComponent = () => {
 	// States
 	const [state, setState] = useState(false);
 
 	async function requestPermission() {
 		try {
-
+			// request permission to enable notifications
 			const permission = await Notification.requestPermission();
-			console.log("Permission requested: ", permission);
+
+
 			if (permission === "granted") {
 				const token = await getToken(messaging, {
 					vapidKey: VITE_APP_VAPID_KEY,
@@ -33,7 +35,6 @@ const PushNotificationComponent = () => {
 
 				setState(true);
 			} else if (permission === "denied") {
-
 				setState(false);
 			}
 		} catch (error) {
@@ -43,29 +44,32 @@ const PushNotificationComponent = () => {
 	}
 
 	async function disableNotifications() {
-		try {
-			const token = await getToken(messaging, {
-				vapidKey: VITE_APP_VAPID_KEY,
-			});
+		// disbale notifications and also revoke permission
 
-			await deleteToken(token);
-
-			// Inform the server that the subscription is removed
-			await api.url("/user/unsubscribe").post({ token: token });
-
+		const permission = await Notification.requestPermission();
+		console.log("Permission: ", permission);
+		if (permission === "granted") {
 			setState(false);
-			console.log("Notifications disabled, token deleted: ", token);
-		} catch (error) {
-			console.error("Error disabling notifications: ", error);
+			const currentToken = await getToken(messaging);
+			await deleteToken(messaging);
+			Push.Permission.request();
+			await api.url("/user/unsubscribe").delete({ currentToken });
+
 		}
+
+
 	}
 
 	const handleSwitchChange = async (checked: any) => {
-		console.log("Switch changed: ", checked);
-		if (checked) {
-			await requestPermission();
-		} else {
-			await disableNotifications();
+		const hasPersistedState = Push.Permission.has();
+		console.log("Has persisted state: ", hasPersistedState);
+		if (hasPersistedState) {
+			console.log("Disabling notifications");
+			disableNotifications();
+		}
+		else {
+			console.log("Requesting permission");
+			requestPermission();
 		}
 	};
 
