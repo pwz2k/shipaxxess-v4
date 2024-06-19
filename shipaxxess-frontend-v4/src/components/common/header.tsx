@@ -25,13 +25,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { onMessage } from "firebase/messaging";
 import { messaging } from "@client/firebase/firebaseConfig";
+import { toast } from "sonner";
 
 const Header = ({ items, user }: { items: HeaderProps[]; user: UseQueryResult<UsersSelectModel> }) => {
 	onMessage(messaging, (payload) => {
+		const { title, body }: any = payload.notification;
+		const message = `${title} ${body}`;
+		toast(message, {
+			duration: 5000,
 
-
-		console.log("Message received. ", payload.notification);
-
+		});
 
 	});
 	return (

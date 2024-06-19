@@ -1,13 +1,15 @@
 import { config } from "@config";
 import { Model } from "@lib/model";
 import { chats } from "@schemas/chats";
+import { subscriptions } from "@schemas/subscriptions";
 import { tickets } from "@schemas/tickets";
 import { users } from "@schemas/users";
 import { Chats, Id } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
 import { mail } from "@utils/mail";
 import { INOtifcation, SaveNotifcaiton } from "@utils/notification";
-import { eq } from "drizzle-orm";
+import { sendPushNotification } from "@utils/push";
+import { and, eq } from "drizzle-orm";
 import { Context } from "hono";
 import { v4 } from "uuid";
 
@@ -89,6 +91,17 @@ const PostMessage = async (c: Context<App>) => {
 	}
 
 	await SaveNotifcaiton(c.env.DB, notifcaiton);
+	const devicetoken = await model.all(subscriptions, and(eq(subscriptions.user_id, ticketOwner.id), eq(subscriptions.is_active, true)));
+	if (devicetoken.length > 0) {
+
+		devicetoken.forEach(async (token) => {
+			await sendPushNotification(token.token, {
+				title: "Reply to ticket",
+				body: `${user.first_name} ${user.last_name} has replied to your ticket`,
+			});
+		})
+
+	}
 
 
 	return c.json(cht);
@@ -143,8 +156,17 @@ const Close = async (c: Context<App>) => {
 	}
 
 	await SaveNotifcaiton(c.env.DB, notifcaiton);
+	const devicetoken = await model.all(subscriptions, and(eq(subscriptions.user_id, ticketOwner.id), eq(subscriptions.is_active, true)));
+	if (devicetoken.length > 0) {
 
+		devicetoken.forEach(async (token) => {
+			await sendPushNotification(token.token, {
+				title: "Ticket closed",
+				body: `Your ticket has been closed`,
+			});
+		})
 
+	}
 
 	return c.json({ success: true });
 };

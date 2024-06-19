@@ -1,7 +1,7 @@
 import { config } from "@config";
 import { Model } from "@lib/model";
 import { payments } from "@schemas/payments";
-import { subscribtion } from "@schemas/subscribtion";
+import { subscriptions } from "@schemas/subscriptions";
 import { users } from "@schemas/users";
 import { log } from "@utils/log";
 import { mail } from "@utils/mail";
@@ -88,7 +88,7 @@ export const StripeWebhook = async (c: Context<App>) => {
 					})
 				);
 				// the token must be recently added
-				const token = await model.get(subscribtion, eq(subscribtion.user_id, user_id))
+				const token = await model.get(subscriptions, and(eq(subscriptions.user_id, user_id), eq(subscriptions.is_active, true)));
 				console.log("token", token)
 				if (token) {
 					const message = {
@@ -143,7 +143,7 @@ export const StripeWebhook = async (c: Context<App>) => {
 			case "payment_intent.succeeded":
 
 				const { charges } = event.data.object
-				console.log("chages", charges.data)
+				// console.log("chages", charges.data)
 				break
 
 			default:

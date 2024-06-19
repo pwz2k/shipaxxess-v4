@@ -77,6 +77,10 @@ admin.get("/refunds/user/batch/:uuid", RefundAdmin.Refund);
 // Notifications
 admin.get("/notifications", AdminNotification.Get);
 admin.patch("/notifications", AdminNotification.MarkAsRead);
+admin.post("/subscribe", AdminNotification.Subscribe);
+admin.delete("/unsubscribe", AdminNotification.Unsubscribe);
+admin.get("/subscription", AdminNotification.subscriptionStatus);
+
 
 export { admin };
 

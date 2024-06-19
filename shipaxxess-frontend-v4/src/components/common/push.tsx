@@ -7,40 +7,28 @@ import { getToken, deleteToken } from "firebase/messaging";
 import { api } from "@client/lib/api";
 const { VITE_APP_VAPID_KEY } = import.meta.env;
 
-
 const PushNotificationComponent = () => {
-	// States
 	const [state, setState] = useState(false);
 
 	async function requestPermission() {
 		try {
-			// request permission to enable notifications
 			const permission = await Notification.requestPermission();
-			const pushOn = await Push.create("Notification", {
-				body: "Thanks, now you will receive notifications from us",
-				icon: "/favicon.ico",
-			});
-			console.log("Permission: ", permission);
-			console.log("Push on: ", pushOn);
-
-
 			if (permission === "granted") {
 				const token = await getToken(messaging, {
 					vapidKey: VITE_APP_VAPID_KEY,
 				});
 
-				// Token can be sent to the server here
 				console.log("Token generated: ", token);
-				// Send this to server side to save as subscription
-				await api.url("/user/subscribe").post({ token: token });
+				const path = isAdminPath() ? "/admin/subscribe" : "/user/subscribe";
+				await api.url(path).post({ token: token });
 
 				Push.create("Notification", {
 					body: "Thanks, now you will receive notifications from us",
-					icon: "/favicon.ico",
+					// icon: "/favicon.ico",
 				});
 
 				setState(true);
-			} else if (permission === "denied") {
+			} else {
 				setState(false);
 			}
 		} catch (error) {
@@ -48,43 +36,38 @@ const PushNotificationComponent = () => {
 			setState(false);
 		}
 	}
-
+	const isAdminPath = () => {
+		return window.location.pathname.startsWith("/admin");
+	};
 	async function disableNotifications() {
-		// disbale notifications and also revoke permission
+		try {
+			const currentToken = await getToken(messaging);
+			await deleteToken(messaging);
 
-		const permission = await Notification.requestPermission();
-		Push.clear();
+			// if the logged user is admin it will be admin/notifications else user/notifications
+			const path = isAdminPath() ? "/admin/unsubscribe" : "/user/unsubscribe";
 
-		// console.log("Permission: ", permission);
-		// if (permission === "granted") {
-		// 	setState(false);
-		// 	const currentToken = await getToken(messaging);
-		// 	await deleteToken(messaging);
-		// 	Push.Permission.request();
-		// 	await api.url("/user/unsubscribe").delete({ currentToken });
+			await api.url(path).delete({ token: currentToken });
 
-		// }
-
-
+			setState(false);
+		} catch (error) {
+			console.error("Error disabling notifications: ", error);
+		}
 	}
 
-	const handleSwitchChange = async (checked: any) => {
-		const hasPersistedState = Push.Permission.has();
-
-		console.log("Has persisted state: ", hasPersistedState);
-		if (hasPersistedState) {
-			console.log("Disabling notifications");
-			disableNotifications();
-		}
-		else {
+	const handleSwitchChange = async (checked) => {
+		if (checked) {
 			console.log("Requesting permission");
-			requestPermission();
+			await requestPermission();
+		} else {
+			console.log("Disabling notifications");
+			await disableNotifications();
 		}
 	};
 
 	useEffect(() => {
-		// Check the initial notification permission state
 		const checkNotificationPermission = () => {
+
 			if (Notification.permission === "granted") {
 				setState(true);
 			} else {
@@ -94,6 +77,21 @@ const PushNotificationComponent = () => {
 
 		checkNotificationPermission();
 	}, []);
+	// check if the user has subscation from the server
+	useEffect(() => {
+		const checkSubscription = async () => {
+			const path = isAdminPath() ? "/admin/subscription" : "/user/subscription";
+			const data: any = await api.url(path).get();
+			console.log("Subscription data: ", data);
+			if (data) {
+				setState(true);
+			}
+		};
+
+		checkSubscription();
+	}, []);
+
+
 
 	return (
 		<div className="flex items-center space-x-4 rounded-md border p-4">

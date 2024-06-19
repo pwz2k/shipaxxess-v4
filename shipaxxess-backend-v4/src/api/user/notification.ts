@@ -1,7 +1,7 @@
 import { Model } from "@lib/model"
 import { notifications } from "@schemas/notifications"
-import { subscribtion } from "@schemas/subscribtion"
-import { eq } from "drizzle-orm"
+import { subscriptions } from "@schemas/subscriptions"
+import { and, eq } from "drizzle-orm"
 import { drizzle } from "drizzle-orm/d1"
 import { Context } from "hono"
 
@@ -52,23 +52,39 @@ const Subscribe = async (c: Context<App>) => {
         const token = body.token
 
         const model = new Model(c.env.DB)
-        await model.insert(subscribtion, { user_id, subscription: token, token })
+        await model.insert(subscriptions, { user_id, token: token })
         return c.json({ message: "Subscribed" })
     } catch (error: any) {
         return c.json({ error: error.message })
     }
 }
 const Unsubscribe = async (c: Context<App>) => {
+    // update is_active to false
     try {
         const user_id = c.get("jwtPayload").id
         const model = new Model(c.env.DB)
-        await model.delete(subscribtion, eq(subscribtion.user_id, user_id))
-        return c.json({ message: "Unsubscribed" })
+        const data = await model.update(subscriptions, { is_active: false }, eq(subscriptions.user_id, user_id))
+        return c.json(data)
     } catch (error: any) {
         return c.json({ error: error.message })
+
+
     }
 }
 
-const UserNotification = { Get, MarkAsRead, Subscribe, Unsubscribe }
+const subscriptionStatus = async (c: Context<App>) => {
+
+    try {
+        const user_id = c.get("jwtPayload").id
+        const model = new Model(c.env.DB)
+        const data = await model.get(subscriptions, and(eq(subscriptions.user_id, user_id), eq(subscriptions.is_active, true)))
+        return c.json(data)
+    } catch (error: any) {
+        return c.json({ error: error.message })
+    }
+
+}
+
+const UserNotification = { Get, MarkAsRead, Subscribe, Unsubscribe, subscriptionStatus }
 export { UserNotification }
 

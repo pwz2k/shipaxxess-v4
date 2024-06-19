@@ -88,6 +88,8 @@ user.patch("/notifications", UserNotification.MarkAsRead);
 user.post("/subscribe", UserNotification.Subscribe);
 // unsubscribe user from push notifications
 user.delete("/unsubscribe", UserNotification.Unsubscribe);
+// get subscription status
+user.get("/subscription", UserNotification.subscriptionStatus);
 
 
 

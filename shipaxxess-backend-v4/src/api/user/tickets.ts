@@ -1,13 +1,16 @@
 import { config } from "@config";
 import { Model } from "@lib/model";
 import { chats } from "@schemas/chats";
+import { subscriptions } from "@schemas/subscriptions";
 import { tickets } from "@schemas/tickets";
 import { users } from "@schemas/users";
 import { Chats, Tickets } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
 import { mail } from "@utils/mail";
 import { SaveNotifcaiton } from "@utils/notification";
-import { eq } from "drizzle-orm";
+import { sendPushNotification } from "@utils/push";
+import { and, eq } from "drizzle-orm";
+import { drizzle } from "drizzle-orm/d1";
 import { Context } from "hono";
 import { v4, validate } from "uuid";
 
@@ -123,6 +126,18 @@ const Create = async (c: Context<App>) => {
 	}
 
 	await SaveNotifcaiton(c.env.DB, notification);
+	const devicetoken = await drizzle(c.env.DB).select().from(subscriptions).where(and(eq(subscriptions.user_id, admins[0].id), eq(subscriptions.is_active, true))).all()
+	console.log("devicetoken", devicetoken)
+	if (devicetoken.length > 0) {
+		devicetoken.map(async (token: any) => {
+			const message = {
+				to: token.token,
+				title: "New ticket",
+				body: `A new ticket has been created by ${user.first_name} ${user.last_name}`
+			}
+			await sendPushNotification(token.token, message)
+		})
+	}
 
 
 
@@ -201,8 +216,18 @@ const PostMessage = async (c: Context<App, "/:ticket_id">) => {
 		uuid: v4(),
 	}
 	await SaveNotifcaiton(c.env.DB, notification);
-
-
+	const devicetoken = await drizzle(c.env.DB).select().from(subscriptions).where(and(eq(subscriptions.user_id, admins[0].id), eq(subscriptions.is_active, true))).all()
+	console.log("devicetoken", devicetoken)
+	if (devicetoken.length > 0) {
+		devicetoken.map(async (token: any) => {
+			const message = {
+				to: token.token,
+				title: "New message",
+				body: `A new message has been posted by ${user.first_name} ${user.last_name}`
+			}
+			await sendPushNotification(token.token, message)
+		})
+	}
 
 	return c.json(chat);
 };
@@ -210,4 +235,3 @@ const PostMessage = async (c: Context<App, "/:ticket_id">) => {
 const TicketsUser = { Create, Get, Find, PostMessage };
 
 export { TicketsUser };
-
