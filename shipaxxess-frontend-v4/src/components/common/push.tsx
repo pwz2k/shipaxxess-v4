@@ -16,6 +16,12 @@ const PushNotificationComponent = () => {
 		try {
 			// request permission to enable notifications
 			const permission = await Notification.requestPermission();
+			const pushOn = await Push.create("Notification", {
+				body: "Thanks, now you will receive notifications from us",
+				icon: "/favicon.ico",
+			});
+			console.log("Permission: ", permission);
+			console.log("Push on: ", pushOn);
 
 
 			if (permission === "granted") {
@@ -47,21 +53,24 @@ const PushNotificationComponent = () => {
 		// disbale notifications and also revoke permission
 
 		const permission = await Notification.requestPermission();
-		console.log("Permission: ", permission);
-		if (permission === "granted") {
-			setState(false);
-			const currentToken = await getToken(messaging);
-			await deleteToken(messaging);
-			Push.Permission.request();
-			await api.url("/user/unsubscribe").delete({ currentToken });
+		Push.clear();
 
-		}
+		// console.log("Permission: ", permission);
+		// if (permission === "granted") {
+		// 	setState(false);
+		// 	const currentToken = await getToken(messaging);
+		// 	await deleteToken(messaging);
+		// 	Push.Permission.request();
+		// 	await api.url("/user/unsubscribe").delete({ currentToken });
+
+		// }
 
 
 	}
 
 	const handleSwitchChange = async (checked: any) => {
 		const hasPersistedState = Push.Permission.has();
+
 		console.log("Has persisted state: ", hasPersistedState);
 		if (hasPersistedState) {
 			console.log("Disabling notifications");
