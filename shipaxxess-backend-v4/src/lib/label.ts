@@ -201,6 +201,7 @@ export class LabelManager {
 
 		var payload: ApiResponseProps;
 
+
 		try {
 			payload = (await req.json()) as ApiResponseProps;
 		} catch (err) {
@@ -210,7 +211,9 @@ export class LabelManager {
 
 		if (!req.ok) {
 			this.crons.push({ uuid: label.uuid, message: payload.message });
+
 		}
+
 
 		return payload;
 	}

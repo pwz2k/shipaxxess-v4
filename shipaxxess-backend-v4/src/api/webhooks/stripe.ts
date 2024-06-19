@@ -1,10 +1,12 @@
 import { config } from "@config";
 import { Model } from "@lib/model";
 import { payments } from "@schemas/payments";
+import { subscribtion } from "@schemas/subscribtion";
 import { users } from "@schemas/users";
 import { log } from "@utils/log";
 import { mail } from "@utils/mail";
 import { INOtifcation, SaveNotifcaiton } from "@utils/notification";
+import { sendPushNotification } from "@utils/push";
 import { getSettings } from "@utils/settings";
 import { and, eq } from "drizzle-orm";
 import { Context } from "hono";
@@ -85,6 +87,17 @@ export const StripeWebhook = async (c: Context<App>) => {
 							<p>${config.app.support}</p>`
 					})
 				);
+				// the token must be recently added
+				const token = await model.get(subscribtion, eq(subscribtion.user_id, user_id))
+				console.log("token", token)
+				if (token) {
+					const message = {
+						title: `Top-up Successful`,
+						body: `Your account has been successfully topped up with ${topup.credit} credits.`,
+					}
+					await sendPushNotification(token.token, message)
+
+				}
 				return c.json({ success: true });
 
 

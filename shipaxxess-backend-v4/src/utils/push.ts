@@ -1,3 +1,5 @@
+import { config } from "../config";
+
 interface Message {
     title: string;
     body: string;
@@ -37,7 +39,9 @@ async function getAccessToken(SERVICE_ACCOUNT_KEY_BASE64: string): Promise<strin
         }
         const serviceAccountKeyString = base64UrlDecode(SERVICE_ACCOUNT_KEY_BASE64);
         const serviceAccountKey = JSON.parse(serviceAccountKeyString);
-        console.log('serviceAccountKey', serviceAccountKey);
+        if (!serviceAccountKey.client_email || !serviceAccountKey.private_key) {
+            throw new Error('Invalid service account key');
+        }
         const now = Math.floor(Date.now() / 1000);
         const payload = {
             iss: serviceAccountKey.client_email,
@@ -88,11 +92,13 @@ async function getAccessToken(SERVICE_ACCOUNT_KEY_BASE64: string): Promise<strin
     }
 }
 
-export const sendPushNotification = async (serviceAccountKeyBase64: string, token: string, message: Message) => {
+export const sendPushNotification = async (token: string, message: Message) => {
+
+    const serviceAccountKeyBase64 = config.app.ENCODED_SERVICE_ACCOUNT_KEY;
     try {
-        console.log('serviceAccountKeyBase64', serviceAccountKeyBase64);
+
         const accessToken = await getAccessToken(serviceAccountKeyBase64);
-        console.log('accessToken', accessToken);
+
 
         const url = `https://fcm.googleapis.com/v1/projects/${PROJECT_ID}/messages:send`;
         const headers = {
