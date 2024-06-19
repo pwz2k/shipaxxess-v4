@@ -1,47 +1,43 @@
-
-
-
-interface ServiceAccountKey {
-    client_email: string;
-    private_key: string;
-}
-
 interface Message {
     title: string;
     body: string;
 }
 
-export const sendPushNotification = async (serviceAccountKey: ServiceAccountKey, token: string, message: Message) => {
-    try {
-        const fcmMessage = {
-            message: {
-                token: token,
-                notification: {
-                    title: message.title,
-                    body: message.body
-                }
-            }
-        };
+const PROJECT_ID = 'notifciationbot';
 
-        const accessToken = await getAccessToken(serviceAccountKey);
-        const response = await fetch('https://fcm.googleapis.com/v1/projects/your-project-id/messages:send', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            },
-            body: JSON.stringify(fcmMessage)
-        });
+function base64UrlEncode(str: string): string {
+    return btoa(str)
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=+$/, '');
+}
 
-        const data = await response.json();
-        console.log('FCM Response:', data);
-    } catch (error) {
-        console.error('Error sending push notification:', error);
+function base64UrlDecode(str: string): string {
+    str = str.replace(/-/g, '+').replace(/_/g, '/');
+    while (str.length % 4) {
+        str += '=';
     }
-};
+    return atob(str);
+}
 
-async function getAccessToken(serviceAccountKey: ServiceAccountKey): Promise<string> {
+function pemToArrayBuffer(pem: string): ArrayBuffer {
+    const b64Lines = pem.replace(/-----[^-]+-----/g, '').replace(/\s+/g, '');
+    const byteString = atob(b64Lines);
+    const byteArray = new Uint8Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++) {
+        byteArray[i] = byteString.charCodeAt(i);
+    }
+    return byteArray.buffer;
+}
+
+async function getAccessToken(SERVICE_ACCOUNT_KEY_BASE64: string): Promise<string> {
     try {
+        if (!SERVICE_ACCOUNT_KEY_BASE64) {
+            throw new Error('Service account key base64 string is not provided.');
+        }
+        const serviceAccountKeyString = base64UrlDecode(SERVICE_ACCOUNT_KEY_BASE64);
+        const serviceAccountKey = JSON.parse(serviceAccountKeyString);
+        console.log('serviceAccountKey', serviceAccountKey);
         const now = Math.floor(Date.now() / 1000);
         const payload = {
             iss: serviceAccountKey.client_email,
@@ -51,42 +47,82 @@ async function getAccessToken(serviceAccountKey: ServiceAccountKey): Promise<str
             iat: now
         };
 
-        const encodedHeader = btoa(JSON.stringify({ alg: 'RS256', typ: 'JWT' }));
-        const encodedPayload = btoa(JSON.stringify(payload));
+        const header = { alg: 'RS256', typ: 'JWT' };
+        const encodedHeader = base64UrlEncode(JSON.stringify(header));
+        const encodedPayload = base64UrlEncode(JSON.stringify(payload));
         const toSign = `${encodedHeader}.${encodedPayload}`;
 
-        const encoder = new TextEncoder();
-        const signature = await crypto.subtle.sign(
+        const keyData = pemToArrayBuffer(serviceAccountKey.private_key);
+        const cryptoKey = await crypto.subtle.importKey(
+            'pkcs8',
+            keyData,
             {
                 name: 'RSASSA-PKCS1-v1_5',
-                hash: { name: 'SHA-256' }
+                hash: 'SHA-256',
             },
-            await crypto.subtle.importKey(
-                'pkcs8',
-                new Uint8Array(serviceAccountKey.private_key.match(/.{1,64}/g).map((x) => parseInt(x, 16))).buffer,
-                { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
-                true,
-                ['sign']
-            ),
-            encoder.encode(toSign)
+            false,
+            ['sign']
         );
 
-        const signed = new Uint8Array(signature);
-        const signed_b64 = btoa(String.fromCharCode.apply(null, signed));
-        const jwt = `${toSign}.${signed_b64}`;
+        const signature = await crypto.subtle.sign('RSASSA-PKCS1-v1_5', cryptoKey, new TextEncoder().encode(toSign));
+        const base64Signature = base64UrlEncode(String.fromCharCode(...new Uint8Array(signature)));
+        const jwt = `${toSign}.${base64Signature}`;
 
         const response = await fetch('https://oauth2.googleapis.com/token', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${encodeURIComponent(jwt)}`
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+                assertion: jwt
+            })
         });
 
         const data = await response.json();
+        if (data.error) {
+            throw new Error(data.error_description || 'Error fetching access token');
+        }
         return data.access_token;
     } catch (error) {
         console.error('Error fetching access token:', error);
         throw error;
     }
 }
+
+export const sendPushNotification = async (serviceAccountKeyBase64: string, token: string, message: Message) => {
+    try {
+        console.log('serviceAccountKeyBase64', serviceAccountKeyBase64);
+        const accessToken = await getAccessToken(serviceAccountKeyBase64);
+        console.log('accessToken', accessToken);
+
+        const url = `https://fcm.googleapis.com/v1/projects/${PROJECT_ID}/messages:send`;
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+        };
+        const payload = {
+            message: {
+                token: token,
+                notification: {
+                    title: message.title,
+                    body: message.body,
+                }
+            }
+        };
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(payload),
+        });
+
+        const data = await response.json();
+        if (data.error) {
+            throw new Error(data.error.message || 'Error sending push notification');
+        }
+        console.log('data', data);
+        return data;
+    } catch (error) {
+        console.error('Error sending push notification:', error);
+        throw error;
+    }
+};

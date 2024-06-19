@@ -23,9 +23,17 @@ import { UseQueryResult } from "@tanstack/react-query";
 import { useNotificationsQuery, useMarkAsReadMutation } from "@client/hooks/useNotificationsQuery";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-
+import { onMessage } from "firebase/messaging";
+import { messaging } from "@client/firebase/firebaseConfig";
 
 const Header = ({ items, user }: { items: HeaderProps[]; user: UseQueryResult<UsersSelectModel> }) => {
+	onMessage(messaging, (payload) => {
+
+
+		console.log("Message received. ", payload.notification);
+
+
+	});
 	return (
 		<header
 			className={`sticky h-16 border-b border-primary/5 shadow bg-white flex items-center px-4 justify-between z-40 ${app.mode === "dev" ? "top-9" : "top-0"

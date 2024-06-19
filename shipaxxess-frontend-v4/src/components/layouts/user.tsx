@@ -32,10 +32,6 @@ const UserLayout = ({ children }: { children?: ReactNode }) => {
 		navigate("/signin?error=failed_authorization");
 	}
 
-	onMessage(messaging, (payload) => {
-		console.log("Message received. ", payload);
-		alert("Message received. ");
-	});
 
 
 	return (

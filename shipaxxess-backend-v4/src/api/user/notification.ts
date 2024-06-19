@@ -47,8 +47,7 @@ const Subscribe = async (c: Context<App>) => {
     try {
         // get all the data from the request and log it
         const body = await c.req.json();
-        // const parse = Weights.FETCHSCHEMA.parse(body);
-        console.log("body", body)
+
 
 
 
@@ -61,7 +60,7 @@ const Subscribe = async (c: Context<App>) => {
         const model = new Model(c.env.DB)
         const data = await model.insert(subscribtion, { user_id, subscription: token, token })
 
-        await sendPushNotification(c.env.SERVICE_ACCOUNT_KEY, token, { title: "Welcome to Shipaxxess", body: "You have successfully subscribed to Shipaxxess notification" })
+        await sendPushNotification(c.env.ENCODED_SERVICE_ACCOUNT_KEY, token, { title: "Welcome to Shipaxxess", body: "You have successfully subscribed to Shipaxxess notification" })
 
 
 

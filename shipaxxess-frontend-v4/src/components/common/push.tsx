@@ -13,6 +13,7 @@ const PushNotificationComponent = () => {
 
 	async function requestPermission() {
 		try {
+
 			const permission = await Notification.requestPermission();
 			console.log("Permission requested: ", permission);
 			if (permission === "granted") {
@@ -32,7 +33,7 @@ const PushNotificationComponent = () => {
 
 				setState(true);
 			} else if (permission === "denied") {
-				alert("You denied the notification request.");
+
 				setState(false);
 			}
 		} catch (error) {
