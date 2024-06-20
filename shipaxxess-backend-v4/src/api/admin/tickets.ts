@@ -98,6 +98,8 @@ const PostMessage = async (c: Context<App>) => {
 			await sendPushNotification(token.token, {
 				title: "Reply to ticket",
 				body: `${user.first_name} ${user.last_name} has replied to your ticket`,
+				icon: "/favicon.ico",
+				data: { url: `${config.app.loclhost}/tickets/${tk.uuid}` },
 			});
 		})
 
@@ -163,6 +165,10 @@ const Close = async (c: Context<App>) => {
 			await sendPushNotification(token.token, {
 				title: "Ticket closed",
 				body: `Your ticket has been closed`,
+				icon: "/favicon.ico",
+				data: { url: `${config.app.loclhost}/tickets/${tk.uuid}` },
+
+
 			});
 		})
 
