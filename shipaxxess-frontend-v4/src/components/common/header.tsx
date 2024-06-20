@@ -28,13 +28,24 @@ import { messaging } from "@client/firebase/firebaseConfig";
 import { toast } from "sonner";
 
 const Header = ({ items, user }: { items: HeaderProps[]; user: UseQueryResult<UsersSelectModel> }) => {
-	onMessage(messaging, (payload) => {
-		const { title, body }: any = payload.notification;
-		const message = `${title} ${body}`;
-		toast(message, {
-			duration: 5000,
+	const notificationsQuery = useNotificationsQuery();
+	onMessage(messaging, (payload: any) => {
+		const { title, body, icon } = payload.notification;
+		console.log("Notification received", payload);
 
+		const message = `${title} ${body}`;
+
+		// Show notification toast
+		toast.info(message, {
+			duration: 5000,
+			position: "top-right",
+			icon: icon ? <img src={icon} alt="Notification Icon" /> : undefined,
 		});
+
+		// Refetch notifications
+		notificationsQuery.refetch();
+
+
 
 	});
 	return (

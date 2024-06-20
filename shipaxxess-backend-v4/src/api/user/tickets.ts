@@ -8,7 +8,7 @@ import { Chats, Tickets } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
 import { mail } from "@utils/mail";
 import { SaveNotifcaiton } from "@utils/notification";
-import { sendPushNotification } from "@utils/push";
+import { IMessage, sendPushNotification } from "@utils/push";
 import { and, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import { Context } from "hono";
@@ -220,10 +220,18 @@ const PostMessage = async (c: Context<App, "/:ticket_id">) => {
 	console.log("devicetoken", devicetoken)
 	if (devicetoken.length > 0) {
 		devicetoken.map(async (token: any) => {
-			const message = {
-				to: token.token,
+			const message: IMessage = {
+
 				title: "New message",
-				body: `A new message has been posted by ${user.first_name} ${user.last_name}`
+				body: `A new message has been posted by ${user.first_name} ${user.last_name}`,
+
+				data: {
+					url: `/admin/tickets/${c.req.param("ticket_id")}`,
+					click_action: "OPEN_TICKET",
+				}
+
+
+
 			}
 			await sendPushNotification(token.token, message)
 		})

@@ -1,8 +1,11 @@
 import { config } from "../config";
 
-interface Message {
+export interface IMessage {
+
     title: string;
     body: string;
+    icon?: string;
+    data?: Record<string, any>;
 }
 
 const PROJECT_ID = 'notifciationbot';
@@ -92,7 +95,7 @@ async function getAccessToken(SERVICE_ACCOUNT_KEY_BASE64: string): Promise<strin
     }
 }
 
-export const sendPushNotification = async (token: string, message: Message) => {
+export const sendPushNotification = async (token: string, message: IMessage) => {
 
     const serviceAccountKeyBase64 = config.app.ENCODED_SERVICE_ACCOUNT_KEY;
     try {
@@ -111,7 +114,11 @@ export const sendPushNotification = async (token: string, message: Message) => {
                 notification: {
                     title: message.title,
                     body: message.body,
-                }
+                    icon: message.icon,
+
+
+                },
+                data: message.data,
             }
         };
 
