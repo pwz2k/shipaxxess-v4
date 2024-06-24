@@ -35,10 +35,11 @@ const AdminDashboard: React.FC = () => {
 	const [startDate, setStartDate] = useState<Date | null>(new Date());
 	const [endDate, setEndDate] = useState<Date | null>(new Date());
 	const queryKey = 'admin-dashboard';
-	const { data, isLoading } = UseGet(queryKey, '/admin/dashboard');
+	const { data, isLoading, error, isError } = UseGet(queryKey, '/admin/dashboard');
 
 	const COLORS = ['#0088FE', '#00C49F'];
 	const CATEGORY_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
 
 	return (
 		<>

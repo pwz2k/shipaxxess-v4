@@ -22,7 +22,7 @@ const RefundsByCarrier: React.FC<Props> = ({ refundsByCarrierData }) => {
         <>
             {
                 // handle the error or no data case
-                refundsByCarrierData.length === 0 ? (
+                refundsByCarrierData?.length == 0 ? (
                     <div className="bg-white md:col-span-2  p-4 rounded-lg shadow-md">
                         <h2 className="text-lg font-bold mb-2">Refunds By Carrier</h2>
                         <p>No data available</p>
