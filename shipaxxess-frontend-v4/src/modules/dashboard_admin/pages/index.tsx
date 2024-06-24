@@ -26,6 +26,7 @@ import PaymentMethodsBreakdown from './components/PaymentMethodsBreakdown';
 import Profits from './components/Profits';
 import RefundedOrders from './components/RefundedOrders';
 import RefundsByCarrier from './components/RefundsByCarrier';
+import { UseGet } from '@client/hooks/useGet';
 
 interface User {
 	id: number;
@@ -47,6 +48,9 @@ const AdminDashboard: React.FC = () => {
 	const [totalEarnings, setTotalEarnings] = useState<number>(0);
 	const [startDate, setStartDate] = useState<Date | null>(new Date());
 	const [endDate, setEndDate] = useState<Date | null>(new Date());
+	const queryKey = 'admin-dashboard';
+	const { data, isLoading } = UseGet(queryKey, '/admin/dashboard');
+	console.log(data, "data");
 
 	// Simulate fetching users
 	useEffect(() => {
@@ -116,14 +120,8 @@ const AdminDashboard: React.FC = () => {
 
 	const COLORS = ['#0088FE', '#00C49F'];
 	const CATEGORY_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-	const [isLoading, setIsLoading] = useState<boolean>(true);
-	useEffect(() => {
-		const timeout = setTimeout(() => {
-			setIsLoading(false);
-		}, 2000);
 
-		return () => clearTimeout(timeout);
-	}, []);
+
 	return (
 		<>
 			{isLoading && (
@@ -146,19 +144,19 @@ const AdminDashboard: React.FC = () => {
 				<div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
 					<div className="bg-white p-4 rounded-lg shadow-md text-center">
 						<h3 className="text-lg font-bold">Total Users</h3>
-						<p className="text-2xl">{users.length}</p>
+						<p className="text-2xl">{data?.statisticCard?.totalUsers}</p>
 					</div>
 					<div className="bg-white p-4 rounded-lg shadow-md text-center">
 						<h3 className="text-lg font-bold">New Registered Users</h3>
-						<p className="text-2xl">{newUsers}</p>
+						<p className="text-2xl">{data?.statisticCard?.newlyRegisteredUsers}</p>
 					</div>
 					<div className="bg-white p-4 rounded-lg shadow-md text-center">
 						<h3 className="text-lg font-bold">Active Refund Requests</h3>
-						<p className="text-2xl">{activeRefunds}</p>
+						<p className="text-2xl">${data?.statisticCard?.refundsRequests}</p>
 					</div>
 					<div className="bg-white p-4 rounded-lg shadow-md text-center">
 						<h3 className="text-lg font-bold">Opened Tickets</h3>
-						<p className="text-2xl">{openTickets}</p>
+						<p className="text-2xl">{data?.statisticCard?.openTickets}</p>
 					</div>
 				</div>
 
@@ -167,7 +165,7 @@ const AdminDashboard: React.FC = () => {
 						<h2 className="text-lg font-bold mb-2">Earnings & Refunds</h2>
 						<PieChart width={400} height={400}>
 							<Pie
-								data={earningsData}
+								data={data?.earningRefunds}
 								cx={200}
 								cy={200}
 								labelLine={false}
@@ -188,7 +186,7 @@ const AdminDashboard: React.FC = () => {
 						<h2 className="text-lg font-bold mb-2">Revenue Breakdown by Category</h2>
 						<PieChart width={400} height={400}>
 							<Pie
-								data={revenueByCategoryData}
+								data={data?.revenueByCategory}
 								cx={200}
 								cy={200}
 								labelLine={false}
@@ -197,7 +195,7 @@ const AdminDashboard: React.FC = () => {
 								fill="#8884d8"
 								dataKey="value"
 							>
-								{revenueByCategoryData.map((_entry, index) => (
+								{data?.revenueByCategory.map((_entry: any, index: any) => (
 									<Cell key={`cell-${index}`} fill={CATEGORY_COLORS[index % CATEGORY_COLORS.length]} />
 								))}
 							</Pie>
@@ -210,12 +208,12 @@ const AdminDashboard: React.FC = () => {
 					<div className="bg-white p-4 rounded-lg shadow-md">
 						<h2 className="text-lg font-bold mb-2">Monthly Revenue Trend</h2>
 						<ResponsiveContainer width="100%" height={300}>
-							<LineChart data={monthlyRevenueData}>
+							<LineChart data={data?.monthlyRevenue}>
 								<CartesianGrid stroke="#ccc" />
 								<XAxis dataKey="month" />
 								{/* <YAxis /> */}
 								<Tooltip />
-								<Line type="monotone" dataKey="revenue" stroke="#8884d8" />
+								<Line type="monotone" dataKey="value" stroke="#8884d8" />
 							</LineChart>
 						</ResponsiveContainer>
 					</div>
@@ -223,30 +221,30 @@ const AdminDashboard: React.FC = () => {
 					<div className="bg-white p-4 col-span-1 rounded-lg shadow-md w-full">
 						<h2 className="text-lg font-bold mb-2">Top Selling Products</h2>
 						<ResponsiveContainer width="100%" height={300}>
-							<BarChart width={1000} height={300} data={topSellingProducts}>
+							<BarChart width={1000} height={300} data={data?.topSellingProducts}>
 								<CartesianGrid strokeDasharray="3 3" />
 								<XAxis dataKey="name" />
 								{/* <YAxis /> */}
 								<Tooltip />
 								<Legend />
-								<Bar dataKey="sales" fill="#8884d8" />
+								<Bar dataKey="value" fill="#8884d8" />
 							</BarChart>
 						</ResponsiveContainer>
 					</div>
 				</div>
 
 				<div className="grid grid-cols-1 md:grid-col-2 lg:grid-cols-4 gap-4 mb-4">
-					<TopShippingCategories />
-					<PeakOrderTimes />
-					<MostPopularStates />
-					<TopReferralUsers />
+					<TopShippingCategories shippingCategoriesData={data?.shippingCategories} />
+					<PeakOrderTimes peakOrderTimesData={data?.peakOrderTime} />
+					<MostPopularStates popularStatesData={data?.popularStates} />
+					<TopReferralUsers referralUsersData={data?.referralUsers} />
 				</div>
 
 				<div className="grid grid-cols-1 md:grid-col-2  lg:grid-cols-4 gap-4 mb-4">
-					<PaymentMethodsBreakdown />
-					<Profits />
-					<RefundedOrders />
-					<RefundsByCarrier />
+					<PaymentMethodsBreakdown paymentMethodsData={data?.paymentMethods} />
+					<Profits profitsData={data?.profits} />
+					<RefundedOrders refundedOrdersData={data?.refundedOrders} />
+					<RefundsByCarrier refundsByCarrierData={data?.refundsByCarrier} />
 				</div>
 			</div>
 		</>

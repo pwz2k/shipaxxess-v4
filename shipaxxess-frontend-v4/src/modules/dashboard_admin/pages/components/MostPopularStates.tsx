@@ -15,8 +15,15 @@ const popularStatesData = [
     { state: 'New Jersey', orders: 8 },
 
 ];
+interface PopularState {
+    state: string;
+    orders: number;
+}
+interface Props {
+    popularStatesData: PopularState[];
+}
 
-const MostPopularStates: React.FC = () => {
+const MostPopularStates: React.FC<Props> = ({ popularStatesData }) => {
     return (
         <div className="bg-white p-4 md:col-span-2  rounded-lg shadow-md">
             <h2 className="text-lg font-bold mb-2">Most Popular States</h2>

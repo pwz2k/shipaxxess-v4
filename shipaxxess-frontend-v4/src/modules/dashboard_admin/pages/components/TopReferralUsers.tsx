@@ -1,27 +1,33 @@
 import React, { useState } from 'react';
 
-const referralUsersData = [
-    // Add more details to each user object
-    { id: 1, name: 'User 1', fullName: 'Full Name 1', email: 'user1@example.com', timeZone: 'GMT', referrals: 30, joined: '2022-01-01', status: 'Active' },
-    { id: 2, name: 'User 2', fullName: 'Full Name 2', email: 'user1@example.com', timeZone: 'GMT', referrals: 25, joined: '2022-01-01', status: 'Active' },
-    { id: 3, name: 'User 3', fullName: 'Full Name 3', email: 'user1@example.com', timeZone: 'GMT', referrals: 20, joined: '2022-01-01', status: 'Active' },
-    { id: 4, name: 'User 4', fullName: 'Full Name 4', email: 'user1@example.com', timeZone: 'GMT', referrals: 15, joined: '2022-01-01', status: 'Active' },
-    { id: 5, name: 'User 5', fullName: 'Full Name 5', email: 'user2@gmail.com', timeZone: 'GMT', referrals: 10, joined: '2022-01-01', status: 'Active' },
+interface ReferralUser {
+    id: number;
+    name: string;
+    fullName: string;
+    email: string;
+    timeZone: string;
+    referrals: number;
+    joined: string;
+    status: string;
+}
 
+interface Props {
+    referralUsersData: ReferralUser[];
+}
 
-
-
-];
-
-const TopReferralUsers: React.FC = () => {
+const TopReferralUsers: React.FC<Props> = ({ referralUsersData }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const usersPerPage = 5;
 
     const indexOfLastUser = currentPage * usersPerPage;
     const indexOfFirstUser = indexOfLastUser - usersPerPage;
-    const currentUsers = referralUsersData.slice(indexOfFirstUser, indexOfLastUser);
+    const currentUsers = referralUsersData?.length ? referralUsersData.slice(indexOfFirstUser, indexOfLastUser) : [];
 
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
+    if (!referralUsersData || referralUsersData.length === 0) {
+        return <div>No Data</div>;
+    }
 
     return (
         <div className="bg-white w-full md:col-span-2 p-6 rounded-lg shadow-md">

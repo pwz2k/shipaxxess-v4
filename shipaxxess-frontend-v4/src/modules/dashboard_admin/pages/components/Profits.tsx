@@ -16,8 +16,14 @@ const profitsData = [
     { month: 'Dec', profit: 600 },
     // Add more data points...
 ];
-
-const Profits: React.FC = () => {
+interface Profit {
+    month: string;
+    profit: number;
+}
+interface Props {
+    profitsData: Profit[];
+}
+const Profits: React.FC<Props> = ({ profitsData }) => {
     return (
         <div className="bg-white md:col-span-2  p-4 rounded-lg shadow-md">
             <h2 className="text-lg font-bold mb-2">Profits</h2>

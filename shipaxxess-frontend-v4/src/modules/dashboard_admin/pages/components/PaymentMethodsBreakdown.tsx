@@ -9,8 +9,16 @@ const paymentMethodsData = [
 ];
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+interface PaymentMethod {
+    name: string;
+    value: number;
 
-const PaymentMethodsBreakdown: React.FC = () => {
+}
+interface Props {
+    paymentMethodsData: PaymentMethod[];
+
+}
+const PaymentMethodsBreakdown: React.FC<Props> = ({ paymentMethodsData }) => {
     return (
         <div className="bg-white md:col-span-2  p-4 rounded-lg shadow-md">
             <h2 className="text-lg font-bold mb-2">Payment Methods Breakdown</h2>
@@ -25,7 +33,7 @@ const PaymentMethodsBreakdown: React.FC = () => {
                         dataKey="value"
                         label
                     >
-                        {paymentMethodsData.map((entry, index) => (
+                        {paymentMethodsData?.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                     </Pie>

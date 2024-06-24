@@ -1,6 +1,14 @@
 import React from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 
+interface ShippingCategory {
+    name: string;
+    value: number;
+}
+interface Props {
+    shippingCategoriesData: ShippingCategory[];
+}
+
 const shippingCategoriesData = [
     { name: 'Electronics', value: 400 },
     { name: 'Fashion', value: 300 },
@@ -8,9 +16,10 @@ const shippingCategoriesData = [
     { name: 'Sports', value: 200 },
 ];
 
+
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
-const TopShippingCategories: React.FC = () => {
+const TopShippingCategories: React.FC<Props> = ({ shippingCategoriesData }) => {
     return (
         <div className="bg-white p-4 md:col-span-2 rounded-lg shadow-md">
             <h2 className="text-lg font-bold mb-2">Top Shipping Categories</h2>
@@ -25,7 +34,7 @@ const TopShippingCategories: React.FC = () => {
                         dataKey="value"
                         label
                     >
-                        {shippingCategoriesData.map((_entry, index) => (
+                        {shippingCategoriesData?.map((_entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                     </Pie>

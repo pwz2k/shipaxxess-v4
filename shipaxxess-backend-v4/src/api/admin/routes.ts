@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { CronsAdmin } from "./crons";
+import { DashboardAdmin } from "./dashboard";
 import { LabelsAdmin } from "./labels";
 import { AdminNotification } from "./notifcaitons";
 import { PaymentsAdmin } from "./payments";
@@ -80,6 +81,7 @@ admin.patch("/notifications", AdminNotification.MarkAsRead);
 admin.post("/subscribe", AdminNotification.Subscribe);
 admin.delete("/unsubscribe", AdminNotification.Unsubscribe);
 admin.get("/subscription", AdminNotification.subscriptionStatus);
+admin.get("/dashboard", DashboardAdmin.Get);
 
 
 export { admin };
