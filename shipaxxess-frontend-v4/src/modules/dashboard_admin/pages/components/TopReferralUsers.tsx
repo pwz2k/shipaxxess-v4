@@ -28,23 +28,26 @@ const TopReferralUsers: React.FC<Props> = ({ referralUsersData }) => {
     if (!referralUsersData || referralUsersData.length === 0) {
         return <div>No Data</div>;
     }
+    console.log(referralUsersData);
 
     return (
-        <div className="bg-white w-full md:col-span-2 p-6 rounded-lg shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Top Referral Users</h2>
-            <ul>
-                {currentUsers.map(user => (
-                    <li key={user.id} className="flex justify-between items-center border-b border-gray-200 py-2">
-                        <span className="text-lg font-medium">{user.name}</span>
-                        <span className="text-gray-500">{user.fullName}</span>
-                        <span className="text-gray-500">{user.email}</span>
-                        <span className="text-gray-500">{user.timeZone}</span>
-                        <span className="text-gray-500">{user.referrals} referrals</span>
-                        <span className="text-gray-500">{user.joined}</span>
-                        <span className="text-gray-500">{user.status}</span>
-                    </li>
-                ))}
-            </ul>
+        <div className="bg-white w-full md:col-span-2 p-6 rounded-lg shadow-md flex flex-col justify-between">
+            <div>
+                <h2 className="text-xl font-semibold mb-4">Top Referral Users</h2>
+                <ul>
+                    {currentUsers.map(user => (
+                        <li key={user.id} className="flex justify-between gap-1 items-center border-b border-gray-200 py-2">
+                            <span className="text-gray-500">{user.name}</span>
+                            <span className="text-gray-500">{user.fullName}</span>
+                            <span className="text-gray-500">{user.email}</span>
+                            {/* <span className="text-gray-500">{user.timeZone}</span> */}
+                            <span className="text-gray-500">{user.referrals} referrals</span>
+                            {/* <span className="text-gray-500">{user.joined}</span> */}
+                            <span className="text-gray-500">{user.status}</span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
             <div className="flex justify-center mt-4">
                 {[...Array(Math.ceil(referralUsersData.length / usersPerPage)).keys()].map(number => (
                     <button

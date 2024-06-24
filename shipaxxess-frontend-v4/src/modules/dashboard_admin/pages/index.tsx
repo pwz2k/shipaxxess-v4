@@ -32,8 +32,7 @@ import { UseGet } from '@client/hooks/useGet';
 const AdminDashboard: React.FC = () => {
 
 
-	const [startDate, setStartDate] = useState<Date | null>(new Date());
-	const [endDate, setEndDate] = useState<Date | null>(new Date());
+
 	const queryKey = 'admin-dashboard';
 	const { data, isLoading, error, isError } = UseGet(queryKey, '/admin/dashboard');
 
