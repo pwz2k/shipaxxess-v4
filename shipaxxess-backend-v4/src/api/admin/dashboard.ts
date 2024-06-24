@@ -47,13 +47,15 @@ export const Get = async (c: Context<App>) => {
 	// compute paymentMethods and each method total value using payments table
 	const totalAmountByGateway = await db.select({
 		name: payments.gateway,
-		value: sql`SUM(${payments.credit})` // Sum the credit for each gateway
+		// add $ sign to the value to show that it is a currency
+		value: sql`SUM(${payments.credit})`
+
 	}).from(payments)
 		.where(and(not(eq(payments.gateway, "Label")), not(eq(payments.gateway, "Refund")))) // Exclude third-party API payments and refunds
 		.groupBy(payments.gateway) // Group by gateway only, not by user_id
 		.orderBy(payments.gateway);
 
-	console.log(totalAmountByGateway, "totalAmountByGateway");
+
 
 	// compute refunder orders using batchs table by each month by name
 	const refundedOrders = await db.select({
@@ -109,6 +111,20 @@ export const Get = async (c: Context<App>) => {
 
 	const earningRefunds = [{ name: "Total Earnings", value: totalEarnings[0].totalEarnings }, { name: "Refunds", value: totalRefunds[0].totalRefunds }];
 
+	// compute the total profit by summing the total credit in the payment table and subtracting the refunds and lables as expese where gateway is is label and refund in gateway
+	const profits = await db.select({
+		month: sql`strftime('%m', created_at)`,
+		profit: sql`SUM(${payments.credit}) - (SELECT SUM(${payments.credit}) FROM ${payments} WHERE ${payments.gateway} = "Refund") - (SELECT SUM(${payments.credit}) FROM ${payments} WHERE ${payments.gateway} = "Label")`
+	}).from(payments)
+		.groupBy(sql`strftime('%m', created_at)`)
+		.orderBy(desc(count()));
+	const profitByMonth = profits.map((profit: any) => {
+		const month = monthNames[parseInt(profit.month) - 1];
+		return {
+			month,
+			profit: `$ ${profit.profit}`
+		}
+	})
 
 	const payload = {
 		statisticCard: {
@@ -126,10 +142,7 @@ export const Get = async (c: Context<App>) => {
 		popularStates: [{ state: 'California', orders: 400 }, { state: 'Texas', orders: 300 }, { state: 'New York', orders: 200 }, { state: 'Florida', orders: 100 }, { state: 'Illinois', orders: 50 }, { state: 'Pennsylvania', orders: 40 }, { state: 'Ohio', orders: 30 }, { state: 'Georgia', orders: 20 }, { state: 'North Carolina', orders: 10 }, { state: 'Michigan', orders: 5 }, { state: 'New Jersey', orders: 8 }],
 		referralUsers: topReferralUsers,
 		paymentMethods: totalAmountByGateway,
-		profits: [{ month: 'Jan', profit: 400 },
-		{ month: 'Feb', profit: 300 },
-		{ month: 'Mar', profit: 200 },
-		{ month: 'Apr', profit: 278 }],
+		profits: profitByMonth,
 
 		refundedOrders: formattedRefundedOrders,
 		refundsByCarrier: refundsByCarrier

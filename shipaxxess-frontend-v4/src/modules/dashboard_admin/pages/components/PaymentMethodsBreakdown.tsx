@@ -1,16 +1,11 @@
 import React from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 
-const paymentMethodsData = [
-    { name: 'Credit Card', value: 400 },
-    { name: 'PayPal', value: 300 },
-    { name: 'Bank Transfer', value: 200 },
-    { name: 'Cash', value: 100 },
-];
+
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 interface PaymentMethod {
-    name: string;
+    gateway: string;
     value: number;
 
 }
