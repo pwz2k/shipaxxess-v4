@@ -28,99 +28,17 @@ import RefundedOrders from './components/RefundedOrders';
 import RefundsByCarrier from './components/RefundsByCarrier';
 import { UseGet } from '@client/hooks/useGet';
 
-interface User {
-	id: number;
-	name: string;
-	email: string;
-}
-interface Report {
-	id: number;
-	title: string;
-	status: string;
-}
 
 const AdminDashboard: React.FC = () => {
-	const [users, setUsers] = useState<User[]>([]);
-	const [reports, setReports] = useState<Report[]>([]);
-	const [newUsers, setNewUsers] = useState<number>(0);
-	const [activeRefunds, setActiveRefunds] = useState<number>(0);
-	const [openTickets, setOpenTickets] = useState<number>(0);
-	const [totalEarnings, setTotalEarnings] = useState<number>(0);
+
+
 	const [startDate, setStartDate] = useState<Date | null>(new Date());
 	const [endDate, setEndDate] = useState<Date | null>(new Date());
 	const queryKey = 'admin-dashboard';
 	const { data, isLoading } = UseGet(queryKey, '/admin/dashboard');
-	console.log(data, "data");
-
-	// Simulate fetching users
-	useEffect(() => {
-		const fetchedUsers = [
-			{ id: 1, name: 'User 1', email: 'user1@example.com' },
-			{ id: 2, name: 'User 2', email: 'user2@example.com' },
-			{ id: 3, name: 'User 3', email: 'user3@example.com' },
-			{ id: 4, name: 'User 4', email: 'user4@example.com' },
-			// Add more users here...
-		];
-		setUsers(fetchedUsers);
-		setNewUsers(4); // Simulate new user count
-	}, []);
-
-	// Simulate fetching reports
-	useEffect(() => {
-		const fetchedReports = [
-			{ id: 1, title: 'Report 1', status: 'Open' },
-			{ id: 2, title: 'Report 2', status: 'Closed' },
-			{ id: 3, title: 'Report 3', status: 'Open' },
-			{ id: 4, title: 'Report 4', status: 'Closed' },
-
-		];
-		setReports(fetchedReports);
-		setActiveRefunds(200); // Simulate active refund requests
-		setOpenTickets(2); // Simulate opened tickets
-		setTotalEarnings(1000); // Simulate total earnings
-	}, []);
-
-
-
-	const earningsData = [
-		{ name: 'Total Earnings', value: totalEarnings },
-		{ name: 'Refunds', value: activeRefunds },
-	];
-
-	const revenueByCategoryData = [
-		{ name: 'Category A', value: 400 },
-		{ name: 'Category B', value: 300 },
-		{ name: 'Category C', value: 300 },
-		{ name: 'Category D', value: 200 },
-	];
-
-	const monthlyRevenueData = [
-		{ month: 'Jan', revenue: 400 },
-		{ month: 'Feb', revenue: 300 },
-		{ month: 'Mar', revenue: 200 },
-		{ month: 'Apr', revenue: 278 },
-		{ month: 'May', revenue: 189 },
-		{ month: 'Jun', revenue: 239 },
-		{ month: 'Jul', revenue: 349 },
-		{ month: 'Aug', revenue: 200 },
-		{ month: 'Sep', revenue: 300 },
-		{ month: 'Oct', revenue: 400 },
-		{ month: 'Nov', revenue: 500 },
-		{ month: 'Dec', revenue: 600 },
-	];
-
-	const topSellingProducts = [
-		{ name: 'Product A', sales: 2400 },
-		{ name: 'Product B', sales: 4567 },
-		{ name: 'Product C', sales: 1398 },
-		{ name: 'Product D', sales: 9800 },
-		{ name: 'Product E', sales: 3908 },
-		{ name: 'Product F', sales: 4800 },
-	];
 
 	const COLORS = ['#0088FE', '#00C49F'];
 	const CATEGORY_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-
 
 	return (
 		<>
@@ -174,7 +92,7 @@ const AdminDashboard: React.FC = () => {
 								fill="#8884d8"
 								dataKey="value"
 							>
-								{earningsData.map((_entry, index) => (
+								{data?.earningRefunds.map((_entry: any, index: number) => (
 									<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
 								))}
 							</Pie>
