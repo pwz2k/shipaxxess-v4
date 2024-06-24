@@ -90,12 +90,24 @@ export const Get = async (c: Context<App>) => {
 		status: users.email_verified,
 		uuid: users.uuid,
 
-
-
 	}).from(users).where(gt(users, 0)).execute();
+	// compute the refund and earnings by 
+	// in the payement column we have credit and current_balance and new_balance
+	// the gateway column is the payment method used by the user
+	// and also if the value in payent column Refund we can say that the user has refund the payment
+	// so we can compute the total earnings and refunds
+	const totalEarnings = await db.select({
+		totalEarnings: sql`SUM(${payments.credit})`
+	}).from(payments)
+		.where(not(eq(payments.gateway, "Refund")))
+		.execute();
+	const totalRefunds = await db.select({
+		totalRefunds: sql`SUM(${payments.credit})`
+	}).from(payments)
+		.where(eq(payments.gateway, "Refund"))
+		.execute();
 
-
-
+	const earningRefunds = [{ name: "Total Earnings", value: totalEarnings[0].totalEarnings }, { name: "Refunds", value: totalRefunds[0].totalRefunds }];
 
 
 	const payload = {
@@ -105,7 +117,7 @@ export const Get = async (c: Context<App>) => {
 			openTickets: OpenTicket[0].count,
 			refundsRequests: 200,
 		},
-		earningRefunds: [{ name: "Total Earnings", value: 300 }, { name: "Refunds", value: 200 }],
+		earningRefunds: earningRefunds,
 		revenueByCategory: [{ name: "Category A", value: 400 }, { name: "Category B", value: 300 }, { name: "Category C", value: 300 }],
 		monthlyRevenue: [{ name: "January", value: 400 }, { name: "February", value: 300 }, { name: "March", value: 300 }, { name: "April", value: 200 }, { name: "May", value: 100 }, { name: "June", value: 50 }, { name: "July", value: 40 }, { name: "August", value: 30 }, { name: "September", value: 20 }, { name: "October", value: 10 }, { name: "November", value: 5 }, { name: "December", value: 8 }],
 		topSellingProducts: [{ name: "Product A", value: 400 }, { name: "Product B", value: 300 }, { name: "Product C", value: 300 }, { name: "Product D", value: 200 }],
