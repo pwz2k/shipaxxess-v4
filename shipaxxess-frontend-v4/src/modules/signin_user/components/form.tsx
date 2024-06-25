@@ -33,7 +33,7 @@ const SignInFormComponent = ({ setCode }: { setCode: React.Dispatch<React.SetSta
 		if (res.admin) {
 			localStorage.setItem("token", res.token);
 			api.showSuccessToast("Welcome back, admin!");
-			navigate("/admin/batches");
+			navigate("/admin/dashboard");
 			return;
 		}
 
