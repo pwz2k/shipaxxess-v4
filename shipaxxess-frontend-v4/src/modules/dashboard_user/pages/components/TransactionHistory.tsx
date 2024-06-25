@@ -30,27 +30,50 @@ const TransactionHistoryTable: React.FC<TransactionHistoryTableProps> = ({ data 
             {
                 Header: 'Amount',
                 accessor: 'amount',
+                Cell: ({ value }: any) => (
+                    <div className=''>
+                        ${value}
+                    </div>
+                )
             },
             {
                 Header: 'Balance',
                 accessor: 'balance',
-            },
-            {
-                Header: 'Description',
-                accessor: 'description',
                 Cell: ({ value }: any) => (
-                    <div className="truncate max-w-xs" title={value}>
-                        {value}
+                    <div className=''>
+                        ${value}
                     </div>
-                ),
+                )
             },
+            // {
+            //     Header: 'Description',
+            //     accessor: 'description',
+            //     Cell: ({ value }: any) => (
+            //         <div className="truncate max-w-xs" title={value}>
+            //             {value}
+            //         </div>
+            //     ),
+            // },
             {
                 Header: 'Type',
                 accessor: 'type',
+                Cell: ({ value }: any) => (
+                    <div className="capitalize">
+                        {value}
+                    </div>
+                )
             },
             {
                 Header: 'Status',
                 accessor: 'status',
+                Cell: ({ value }: any) => (
+                    <div className={`capitalize text-center px-2 py-1 rounded-full ${value === 'pending' ? 'bg-yellow-100 text-yellow-600' :
+                        value === 'completed' ? 'bg-green-100 text-green-600' :
+                            'bg-red-100 text-red-600'
+                        }`}>
+                        {value}
+                    </div>
+                )
             },
         ],
         []

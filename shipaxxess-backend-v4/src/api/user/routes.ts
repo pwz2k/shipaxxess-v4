@@ -21,7 +21,7 @@ const user = new Hono<App>();
 user.get("/status", StatusUser);
 
 // Dashboard routes
-user.get("/dashboard", DashboardUser);
+
 
 // Labels routes
 user.post("/labels/download", LabelsUser.DownloadSingle);
@@ -90,6 +90,8 @@ user.post("/subscribe", UserNotification.Subscribe);
 user.delete("/unsubscribe", UserNotification.Unsubscribe);
 // get subscription status
 user.get("/subscription", UserNotification.subscriptionStatus);
+// user dashboard
+user.get("/dashboard", DashboardUser.Get);
 
 
 
