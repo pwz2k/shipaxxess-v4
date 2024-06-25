@@ -17,7 +17,7 @@ export const Get = async (c: Context<App>) => {
 		type: payments.gateway,
 
 	}).from(payments).where(eq(payments.user_id, userId));
-	console.log(transcationHistory);
+
 
 
 	const payload = {

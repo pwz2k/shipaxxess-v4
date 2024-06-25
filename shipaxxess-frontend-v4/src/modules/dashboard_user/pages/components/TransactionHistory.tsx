@@ -4,6 +4,7 @@ import { CSVLink } from "react-csv";
 import { Button } from "@client/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { JSX } from 'react/jsx-runtime';
+import moment from 'moment-timezone';
 
 interface Data {
     transactionId: string;
@@ -26,6 +27,13 @@ const TransactionHistoryTable: React.FC<TransactionHistoryTableProps> = ({ data 
             {
                 Header: 'Date',
                 accessor: 'date',
+                Cell: ({ value }: any) => (
+
+                    <div className=''>
+                        {/* like firady, 6 June 2024 */}
+                        {moment(value).format('dddd, D MMMM YYYY')}
+                    </div>
+                )
             },
             {
                 Header: 'Amount',
@@ -45,15 +53,7 @@ const TransactionHistoryTable: React.FC<TransactionHistoryTableProps> = ({ data 
                     </div>
                 )
             },
-            // {
-            //     Header: 'Description',
-            //     accessor: 'description',
-            //     Cell: ({ value }: any) => (
-            //         <div className="truncate max-w-xs" title={value}>
-            //             {value}
-            //         </div>
-            //     ),
-            // },
+
             {
                 Header: 'Type',
                 accessor: 'type',
