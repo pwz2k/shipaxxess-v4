@@ -121,7 +121,7 @@ const TransactionHistoryTable: React.FC<TransactionHistoryTableProps> = ({ data 
                             {headerGroups.map((headerGroup: { getHeaderGroupProps: () => JSX.IntrinsicAttributes & React.ClassAttributes<HTMLTableRowElement> & React.HTMLAttributes<HTMLTableRowElement>; headers: any[]; }) => (
                                 <tr {...headerGroup.getHeaderGroupProps()}>
                                     {headerGroup.headers.map((column) => (
-                                        <th {...column.getHeaderProps(column.getSortByToggleProps())} className="py-2 px-3 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700 uppercase">
+                                        <th {...column.getHeaderProps(column.getSortByToggleProps())} className="py-2 px-3 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-200 uppercase">
                                             <div className="flex items-center">
                                                 {column.render('Header')}
                                                 <ArrowUpDown className="w-4 h-4 ml-2" />

@@ -16,7 +16,7 @@ const DashboardStats: React.FC = () => {
 		return Math.floor(Math.random() * (max - min + 1) + min);
 	};
 	const queryKey = 'user-dashboard';
-	const { data, isLoading, error, isError } = UseGet(queryKey, '/user/dashboard');
+	const { data, isLoading, } = UseGet(queryKey, '/user/dashboard');
 
 
 	const generateUpDownData = (labels: string[]) => {

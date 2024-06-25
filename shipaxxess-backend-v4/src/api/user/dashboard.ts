@@ -3,6 +3,8 @@ import { users } from "@schemas/users";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import { Context } from "hono";
+
+const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 export const Get = async (c: Context<App>) => {
 	const db = drizzle(c.env.DB);
 	const userId = c.get("jwtPayload").id;
