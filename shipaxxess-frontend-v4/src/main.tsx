@@ -7,6 +7,7 @@ import { RouterProvider } from "react-router-dom";
 import { TimezoneProvider } from "@client/contexts/timezone";
 import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+
 const queryClient = new QueryClient({
 	queryCache: new QueryCache({
 		onError: (error) => {
@@ -14,6 +15,7 @@ const queryClient = new QueryClient({
 		},
 	}),
 });
+
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<React.StrictMode>

@@ -79,6 +79,11 @@ export const sidebarItems: SidebarProps[] = [
 // Admin sidebar items
 export const adminSidebarItems: SidebarProps[] = [
 	{
+		icon: <Home color="#fff" size={20} />,
+		label: "Dashboard",
+		slug: "/admin/dashboard",
+	},
+	{
 		icon: <Tags color="#fff" size={20} />,
 		label: "Batches",
 		slug: "/admin/batches",

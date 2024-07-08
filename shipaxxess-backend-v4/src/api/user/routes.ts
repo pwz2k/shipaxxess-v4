@@ -3,6 +3,8 @@ import { AddressesUser } from "./addresses";
 import { DashboardUser } from "./dashboard";
 import { EbayUser } from "./ebay";
 import { LabelsUser } from "./labels";
+
+import { UserNotification } from "./notification";
 import { PackagesUser } from "./packages";
 import { PaymentUser } from "./payment";
 import { ReferralsUser } from "./referrals";
@@ -19,7 +21,7 @@ const user = new Hono<App>();
 user.get("/status", StatusUser);
 
 // Dashboard routes
-user.get("/dashboard", DashboardUser);
+
 
 // Labels routes
 user.post("/labels/download", LabelsUser.DownloadSingle);
@@ -78,5 +80,21 @@ user.post("/weights", WeightsUser.Post);
 
 // Types routes
 user.get("/types", TypeUser.GetAll);
+// retunrn all user notifcations
+user.get("/notifications", UserNotification.Get);
+// mark all user notifcations as read
+user.patch("/notifications", UserNotification.MarkAsRead);
+// subscribe user to push notifications
+user.post("/subscribe", UserNotification.Subscribe);
+// unsubscribe user from push notifications
+user.delete("/unsubscribe", UserNotification.Unsubscribe);
+// get subscription status
+user.get("/subscription", UserNotification.subscriptionStatus);
+// user dashboard
+user.get("/dashboard", DashboardUser.Get);
+
+
+
 
 export { user };
+

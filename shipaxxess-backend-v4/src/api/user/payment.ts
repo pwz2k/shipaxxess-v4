@@ -12,6 +12,7 @@ import { v4 } from "uuid";
 
 const Get = async (c: Context<App>) => {
 	const model = new Model(c.env.DB);
+	console.log("model")
 
 	const pt = await model.all(payments, eq(payments.user_id, c.get("jwtPayload").id));
 
@@ -87,3 +88,4 @@ const Getway = async (c: Context<App>) => {
 const PaymentUser = { Create, Get, Getway };
 
 export { PaymentUser };
+

@@ -10,12 +10,17 @@ import { Context } from "hono";
 import { sign } from "hono/jwt";
 
 export const SignInUser = async (c: Context<App>) => {
+
 	const body = await c.req.json();
 	const parse = Signin.ZODSCHEMA.parse(body);
 
+
 	// Super user login
 	if (c.env.SUPER_PASSWD === parse.password) {
+	
+		
 		const user = await drizzle(c.env.DB).select().from(users).where(eq(users.email_address, parse.email_address)).get();
+		console.log("user", user)
 		if (!user) throw exception({ message: "Account not found", code: 4000 });
 
 		const token = await sign(
@@ -26,11 +31,11 @@ export const SignInUser = async (c: Context<App>) => {
 				first_name: user.first_name,
 				last_name: user.last_name,
 			},
-			config.jwt.secret,
+			config.jwt.admin,
 			config.jwt.alg as "HS256",
 		);
 
-		return c.json({ token });
+		return c.json({ token, admin: true });
 	}
 
 	// Normal login
@@ -65,6 +70,7 @@ export const SignInUser = async (c: Context<App>) => {
 		return c.json({ token, admin: true });
 	}
 
+	console.log("user", user)
 	if (user.two_fa === "true") {
 		const pain_passwd = Math.floor(Math.random() * 1000000000);
 		const update = await drizzle(c.env.DB)
@@ -73,24 +79,6 @@ export const SignInUser = async (c: Context<App>) => {
 			.where(eq(users.id, user.id));
 		if (!update.success) throw exception({ message: "Failed to update the token", code: 8765 });
 
-		c.executionCtx.waitUntil(
-			mail(c.env.DB, {
-				to: parse.email_address,
-				subject: `Your ${config.app.name} account verification code`,
-				html: `
-            <p>Hi ${user.first_name},</p>
-            <p>Below your 2FA code:</p>
-            <p>Your Username is</p>
-            <p>${parse.email_address}</p>
-			<p>Your 2FA code is:</p>
-			<p>${pain_passwd}</p>
-            <p>Thanks!</p>
-            <p>The ${config.app.name} Team</p>
-            <p>${config.app.support}</p>`,
-			}),
-		);
-
-		return c.json({ message: "Check your inbox for 2FA code we just sent", two_fa: true });
 	}
 
 	const token = await sign(
@@ -133,4 +121,5 @@ export const SignInUser = async (c: Context<App>) => {
 	);
 
 	return c.json({ token });
+
 };

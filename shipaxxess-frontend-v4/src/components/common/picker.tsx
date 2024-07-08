@@ -56,8 +56,10 @@ export const DateRangePicker = ({ className }: { className?: string }) => {
 
 export const DatePicker = <T extends FieldValues, R extends Path<T>>({
 	field,
+	placeholder = "Choose the shipping date",
 }: {
 	field: ControllerRenderProps<T, R>;
+	placeholder?: string;
 }) => {
 	return (
 		<Popover>
@@ -67,7 +69,7 @@ export const DatePicker = <T extends FieldValues, R extends Path<T>>({
 					variant={"outline"}
 					className={cn("w-full justify-start", !field.value && "text-muted-foreground")}>
 					<CalendarIcon className="w-4 h-4 mr-2" />
-					{field.value ? format(new Date(field.value), "PPP") : <span>Choose the shipping date</span>}
+					{field.value ? format(new Date(field.value), "PPP") : <span>{placeholder}</span>}
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className="w-auto p-0">

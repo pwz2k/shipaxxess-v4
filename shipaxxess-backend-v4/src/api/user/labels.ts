@@ -4,12 +4,14 @@ import { addresses } from "@schemas/addresses";
 import { batchs } from "@schemas/batchs";
 import { labels } from "@schemas/labels";
 import { refunds } from "@schemas/refunds";
+import { subscriptions } from "@schemas/subscriptions";
 import { users } from "@schemas/users";
 import { Id, Labels, Refund } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
 import { log } from "@utils/log";
+import { sendPushNotification } from "@utils/push";
 import { getSettings } from "@utils/settings";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import { Context } from "hono";
 import { v4 } from "uuid";
@@ -39,12 +41,15 @@ const Get = async (c: Context<App, "/:uuid">) => {
 
 const Create = async (c: Context<App>) => {
 	log("Hit label batch endpoint.");
+	console.log("CENV", c);
 
 	const body = await c.req.json();
 	const parse = Labels.BATCHZODSCHEMA.parse(body);
 	log("Parsed body.");
 
 	const settings = await getSettings(c.env.DB);
+
+
 	const manager = new LabelManager(c.env, settings);
 	log("Created label manager.");
 
@@ -79,10 +84,12 @@ const Create = async (c: Context<App>) => {
 
 	c.executionCtx.waitUntil(manager.chargeUserForBatch(user, user_cost, total_labels));
 	c.executionCtx.waitUntil(manager.sendToBatchProcessQueue(batch.id));
+
 	log("User charged and batch sent to queue.");
 
 	const savedSender = async () => {
 		const model = new Model(c.env.DB);
+
 
 		return await model.insert(addresses, {
 			uuid: v4(),
@@ -97,9 +104,26 @@ const Create = async (c: Context<App>) => {
 			country: parse.sender.country,
 		});
 	};
-
+	log("Saved sender.");
 	if (parse.saved_sender) {
+		log("Waiting for saved sender.");
 		c.executionCtx.waitUntil(savedSender());
+	}
+	const message = {
+
+	}
+	const devicetoken = await drizzle(c.env.DB).select().from(subscriptions).where(and(eq(subscriptions.user_id, user.id), eq(subscriptions.is_active, true))).all()
+	console.log("devicetoken", devicetoken)
+	if (devicetoken.length > 0) {
+		devicetoken.map(async (token: any) => {
+			const message = {
+				to: token.token,
+				title: "New Label",
+				body: `Your label has been created successfully`
+			}
+			await sendPushNotification(token.token, message)
+		})
+
 	}
 
 	return c.json({ success: true, message: "We are processing your batch. Please check back later." });

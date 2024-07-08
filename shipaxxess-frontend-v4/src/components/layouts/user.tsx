@@ -10,6 +10,7 @@ import Sidebar from "../common/sidebar";
 import Header from "../common/header";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
+
 const UserLayout = ({ children }: { children?: ReactNode }) => {
 	const { setTimezone } = React.useContext(TimezoneContext);
 
@@ -27,6 +28,8 @@ const UserLayout = ({ children }: { children?: ReactNode }) => {
 	if (statusQuery.isError) {
 		navigate("/signin?error=failed_authorization");
 	}
+
+
 
 	return (
 		<>
