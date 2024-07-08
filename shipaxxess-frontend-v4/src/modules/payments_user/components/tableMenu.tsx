@@ -44,22 +44,20 @@ const TableMenu = ({ row }: { row: Row<any> }) => {
 		console.log(row.original);
 		const doc = new jsPDF();
 
-		// Add company logo (replace 'yourBase64Image' with the actual base64 string of your logo)
+		// Add company logo if available
 		// const logo = "img/logo.png";
 		// doc.addImage(logo, "PNG", 10, 10, 50, 20);
 
 		// Add title below the logo
 		doc.setFontSize(22);
-		// doc.setFontStyle("bold");
+		doc.setFont("helvetica", "bold");
 		doc.text("Transaction Details", 70, 25);
 
 		// Add company information in the header
 		doc.setFontSize(10);
-		// doc.setFontStyle("normal");
+		doc.setFont("helvetica", "normal");
 		doc.text(`Company name: ${app.name}`, 10, 35);
-		// doc.text("Your Company Address", 10, 40);
 		doc.text(`Support email: ${app.support}`, 10, 45);
-		// doc.text("Your Company Phone", 10, 50);
 
 		// Add a horizontal line below the header
 		doc.setLineWidth(0.5);
@@ -70,8 +68,8 @@ const TableMenu = ({ row }: { row: Row<any> }) => {
 			["Email", row.original.user_email],
 			["Name", row.original.user_name],
 			["Credit", row.original.credit],
-			["Current Balance", row.original.current_balance],
-			["New Balance", row.original.new_balance],
+			["Current Balance", `$ ${row.original.current_balance}`],
+			["New Balance", `$ ${row.original.new_balance}`],
 			["Status", row.original.status],
 			["Type", row.original.gateway],
 		];
@@ -81,15 +79,15 @@ const TableMenu = ({ row }: { row: Row<any> }) => {
 			startY: 60,
 			// head: [["Field", "Value"]],
 			body: data.map(([field, value]) => [field, String(value)]),
-			theme: "grid",
-			headStyles: { fillColor: [22, 160, 133] },
+			theme: "striped",
+			headStyles: { fillColor: [22, 160, 133], textColor: [255, 255, 255] },
 			styles: {
 				cellPadding: 2,
 				fontSize: 10,
-				halign: 'center',
+				valign: 'middle',
 			},
 			columnStyles: {
-				0: { cellWidth: 40 },
+				0: { cellWidth: 40, fontStyle: 'bold' },
 				1: { cellWidth: 150 },
 			},
 		});
@@ -102,6 +100,7 @@ const TableMenu = ({ row }: { row: Row<any> }) => {
 			doc.setFontSize(10);
 			doc.setTextColor(150);
 			doc.text(app.name, 10, doc.internal.pageSize.height - 10);
+			doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width - 20, doc.internal.pageSize.height - 10);
 		}
 
 		// Save the PDF
