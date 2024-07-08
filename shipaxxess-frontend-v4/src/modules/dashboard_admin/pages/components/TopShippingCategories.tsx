@@ -9,12 +9,7 @@ interface Props {
     shippingCategoriesData: ShippingCategory[];
 }
 
-const shippingCategoriesData = [
-    { name: 'Electronics', value: 400 },
-    { name: 'Fashion', value: 300 },
-    { name: 'Home & Garden', value: 300 },
-    { name: 'Sports', value: 200 },
-];
+
 
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];

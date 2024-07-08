@@ -28,7 +28,7 @@ const PaymentMethodsBreakdown: React.FC<Props> = ({ paymentMethodsData }) => {
                         dataKey="value"
                         label
                     >
-                        {paymentMethodsData?.map((entry, index) => (
+                        {paymentMethodsData?.map((_entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                     </Pie>

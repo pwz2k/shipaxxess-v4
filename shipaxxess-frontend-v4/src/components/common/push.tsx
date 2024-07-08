@@ -55,7 +55,7 @@ const PushNotificationComponent = () => {
 		}
 	}
 
-	const handleSwitchChange = async (checked) => {
+	const handleSwitchChange = async (checked: boolean) => {
 		if (checked) {
 			console.log("Requesting permission");
 			await requestPermission();

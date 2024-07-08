@@ -36,7 +36,7 @@ const AverageCostCard: React.FC = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {averageCostData.map(({ id, label, cost }, index) => (
+                        {averageCostData.map(({ id, label, cost }, _index) => (
                             <tr key={id} className="border-b border-gray-200">
                                 <td className="px-4 py-2">{id}</td>
                                 <td className="px-4 py-2">{label}</td>

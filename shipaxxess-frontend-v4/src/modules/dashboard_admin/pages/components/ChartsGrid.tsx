@@ -11,7 +11,7 @@ import {
     Tooltip,
     BarChart,
     Bar,
-    Legend,
+
 } from 'recharts';
 
 const COLORS = ['#0088FE', '#00C49F'];

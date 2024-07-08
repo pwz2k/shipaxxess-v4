@@ -18,6 +18,9 @@ importers:
 
   shipaxxess-backend-v4:
     dependencies:
+      '@shipaxxess/shipaxxess-zod-v4':
+        specifier: ^1.0.0
+        version: link:../shipaxxess-zod-v4
       '@types/uuid':
         specifier: ^9.0.7
         version: 9.0.8

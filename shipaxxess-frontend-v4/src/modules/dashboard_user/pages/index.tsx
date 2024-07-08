@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import GenericLineChart from "./components/DottedLinechart";
 
 import OverviewSection from './components/OverviewSection';
 import Title from '@client/components/common/title';
-import { Boxes, CreditCard, LayoutDashboardIcon, Share2, Truck, Plane, MailWarning } from 'lucide-react';
+import { Boxes, LayoutDashboardIcon, Share2, Truck, Plane, MailWarning } from 'lucide-react';
 import CustomDateRangePicker from '../../../components/common/CustomDatePicker';
 import TopRegions from './components/TopRegions';
 import TransactionHistory from './components/TransactionHistory';

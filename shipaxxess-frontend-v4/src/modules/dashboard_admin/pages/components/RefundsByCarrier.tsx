@@ -1,12 +1,7 @@
 import React from 'react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 
-const refundsByCarrierData = [
-    { name: 'UPS', value: 400 },
-    { name: 'FedEx', value: 300 },
-    { name: 'DHL', value: 300 },
-    { name: 'USPS', value: 200 },
-];
+
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 interface RefundByCarrier {

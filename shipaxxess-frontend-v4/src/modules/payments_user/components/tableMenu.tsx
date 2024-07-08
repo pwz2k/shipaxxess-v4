@@ -1,15 +1,15 @@
-import AlertWrapper from "@client/components/common/alert";
+
 import { Button } from "@client/components/ui/button";
 import { app } from "@client/config/app";
 import { useLoading } from "@client/hooks/useLoading";
 import { api } from "@client/lib/api";
-import { BatchsSelectModel } from "@db/batchs";
+
 import { useQueryClient } from "@tanstack/react-query";
 import { Row } from "@tanstack/react-table";
-import { BadgeDollarSign, EyeIcon, FileDown, LifeBuoy } from "lucide-react";
+import { EyeIcon, FileDown, LifeBuoy } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
-import { toast } from "sonner";
+
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
@@ -17,8 +17,8 @@ import "jspdf-autotable";
 const TableMenu = ({ row }: { row: Row<any> }) => {
 	const queryClient = useQueryClient();
 
-	const [refund, setRefund] = React.useState(false);
-	const { button: RefundSubmitButton, setIsLoading } = useLoading({
+	const [_refund, setRefund] = React.useState(false);
+	const { button: _RefundSubmitButton, setIsLoading } = useLoading({
 		label: "Refund The Label",
 		async click() {
 			setIsLoading(true);
@@ -74,7 +74,7 @@ const TableMenu = ({ row }: { row: Row<any> }) => {
 			["Type", row.original.gateway],
 		];
 
-		// Add the table
+		// @ts-ignore
 		doc.autoTable({
 			startY: 60,
 			// head: [["Field", "Value"]],
@@ -93,6 +93,7 @@ const TableMenu = ({ row }: { row: Row<any> }) => {
 		});
 
 		// Add footer
+		// @ts-ignore
 		const pageCount = doc.internal.getNumberOfPages();
 		for (let i = 1; i <= pageCount; i++) {
 			doc.setPage(i);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { MapPin } from "lucide-react";
 interface TopStateData {
     state: string;
@@ -35,29 +35,6 @@ const usStates = [
     { fullName: "Missouri", abbreviation: "MO" },
     { fullName: "Montana", abbreviation: "MT" },
     { fullName: "Nebraska", abbreviation: "NE" },
-    // { fullName: "Nevada", abbreviation: "NV" },
-    // { fullName: "New Hampshire", abbreviation: "NH" },
-    // { fullName: "New Jersey", abbreviation: "NJ" },
-    // { fullName: "New Mexico", abbreviation: "NM" },
-    // { fullName: "New York", abbreviation: "NY" },
-    // { fullName: "North Carolina", abbreviation: "NC" },
-    // { fullName: "North Dakota", abbreviation: "ND" },
-    // { fullName: "Ohio", abbreviation: "OH" },
-    // { fullName: "Oklahoma", abbreviation: "OK" },
-    // { fullName: "Oregon", abbreviation: "OR" },
-    // { fullName: "Pennsylvania", abbreviation: "PA" },
-    // { fullName: "Rhode Island", abbreviation: "RI" },
-    // { fullName: "South Carolina", abbreviation: "SC" },
-    // { fullName: "South Dakota", abbreviation: "SD" },
-    // { fullName: "Tennessee", abbreviation: "TN" },
-    // { fullName: "Texas", abbreviation: "TX" },
-    // { fullName: "Utah", abbreviation: "UT" },
-    // { fullName: "Vermont", abbreviation: "VT" },
-    // { fullName: "Virginia", abbreviation: "VA" },
-    // { fullName: "Washington", abbreviation: "WA" },
-    // { fullName: "West Virginia", abbreviation: "WV" },
-    // { fullName: "Wisconsin", abbreviation: "WI" },
-    // { fullName: "Wyoming", abbreviation: "WY" }
 ];
 
 const generateRandomData = (): TopStateData[] => {
@@ -89,9 +66,9 @@ const TopStatesBarChart: React.FC = () => {
 
             <ResponsiveContainer width="100%" height={400}>
                 <BarChart data={topStatesData}>
-                    {/* <CartesianGrid strokeDasharray="3 3" /> */}
+
                     <XAxis dataKey="state" />
-                    {/* <YAxis /> */}
+
                     <Tooltip />
                     <Bar dataKey="orders" fill="#8884d8" />
                 </BarChart>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Title from '@client/components/common/title';
 import { LayoutDashboardIcon } from 'lucide-react';
 import {
@@ -6,7 +6,7 @@ import {
 	Line,
 	CartesianGrid,
 	XAxis,
-	YAxis,
+
 	Tooltip,
 	BarChart,
 	Bar,
@@ -34,7 +34,7 @@ const AdminDashboard: React.FC = () => {
 
 
 	const queryKey = 'admin-dashboard';
-	const { data, isLoading, error, isError } = UseGet(queryKey, '/admin/dashboard');
+	const { data, isLoading } = UseGet(queryKey, '/admin/dashboard');
 
 	const COLORS = ['#0088FE', '#00C49F'];
 	const CATEGORY_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];

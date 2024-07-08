@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+
+// @ts-ignore
 import { useTable, useSortBy, Column } from 'react-table';
 import { CSVLink } from "react-csv";
 import { Button } from "@client/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { JSX } from 'react/jsx-runtime';
-import moment from 'moment-timezone';
+
 import NoResults from '@client/components/common/NoResults';
 
 interface Data {
@@ -122,7 +124,7 @@ const TransactionHistoryTable: React.FC<TransactionHistoryTableProps> = ({ data 
                     <div className="min-w-full border-t-2 border-x-2 border-gray-200 rounded-t-lg">
                         <table {...getTableProps()} className="min-w-full">
                             <thead className="text-gray-900 bg-white sticky top-0 z-10">
-                                {headerGroups.map((headerGroup: { getHeaderGroupProps: () => JSX.IntrinsicAttributes & React.ClassAttributes<HTMLTableRowElement> & React.HTMLAttributes<HTMLTableRowElement>; headers: any[]; }, index: any) => (
+                                {headerGroups.map((headerGroup: { getHeaderGroupProps: () => JSX.IntrinsicAttributes & React.ClassAttributes<HTMLTableRowElement> & React.HTMLAttributes<HTMLTableRowElement>; headers: any[]; }, _index: any) => (
                                     <tr {...headerGroup.getHeaderGroupProps()}>
                                         {headerGroup.headers.map((column, columnIndex) => (
                                             <th

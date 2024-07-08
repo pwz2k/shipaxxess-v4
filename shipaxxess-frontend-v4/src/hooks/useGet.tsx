@@ -1,5 +1,5 @@
 import { api } from "@client/lib/api";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 
 export const UseGet = (queryKey: string, url: string) => {

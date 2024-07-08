@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { DateRangePicker } from 'react-date-range';
-import { addDays, startOfMonth, endOfMonth, subDays } from 'date-fns';
+
+import { startOfMonth, endOfMonth, subDays } from 'date-fns';
 import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
-import { is } from 'date-fns/locale';
+
 
 interface CustomDateRangePickerProps {
     onDateChange: (start: Date | null, end: Date | null) => void;
 }
 
 const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({ onDateChange }) => {
-    const [state, setState] = useState([
+    const [_state, setState] = useState([
         {
             startDate: new Date(),
             endDate: new Date(),
@@ -18,7 +18,7 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({ onDateCha
 
         }
     ]);
-    const [isOpen, setIsOpen] = useState(false);
+    const [_isOpen, setIsOpen] = useState(false);
 
     const predefinedRanges = [
         {
@@ -84,25 +84,12 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({ onDateCha
                 endDate: new Date(),
             }),
         },
-        // {
-        //     label: 'Custom Range',
-        //     range: () => ({
-        //         startDate: new Date(),
-        //         endDate: new Date(),
-        //     }),
 
-
-        // }
 
     ];
 
-    const handleSelect = (ranges: any) => {
-        const { startDate, endDate } = ranges.selection;
-        setIsOpen(false);
-        setState([ranges.selection]);
-        onDateChange(startDate, endDate);
 
-    };
+
     const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const range = predefinedRanges.find(range => range.label === event.target.value);
 
@@ -124,23 +111,6 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({ onDateCha
                     </option>
                 ))}
             </select>
-
-
-            {/* {isOpen && <DateRangePicker
-                ranges={state}
-                showMonthArrow={true}
-
-                onChange={handleSelect}
-                // staticRanges={predefinedRanges.map(({ label, range }) => ({
-                //     label,
-                //     range,
-                //     isSelected: () => false,
-                // }))}
-                inputRanges={[]}
-            />}
- */}
-
-
 
 
         </div>

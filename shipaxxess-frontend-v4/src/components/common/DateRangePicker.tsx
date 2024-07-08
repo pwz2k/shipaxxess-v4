@@ -8,7 +8,7 @@ interface DateRangePickerProps {
     placeholder?: string;
 }
 
-const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateChange, _startDate, _endDate, placeholder }) => {
+const DateRangePicker: React.FC<DateRangePickerProps> = ({ onDateChange, _startDate, _endDate }) => {
 
     // get start and end date from the parent component
     const [startDate, setStartDate] = useState<Date | null>(_startDate ?? null);

@@ -1,4 +1,4 @@
-import { ArrowUpDown, FileDown, LifeBuoy } from "lucide-react";
+import { ArrowUpDown, } from "lucide-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@client/components/ui/badge";
 import { Button } from "@client/components/ui/button";
@@ -6,7 +6,7 @@ import moment from "moment-timezone";
 import { numberWithCommas } from "@client/lib/utils";
 import { app } from "@client/config/app";
 import { PaymentsSelectModel } from "@db/payments";
-import { Link } from "react-router-dom";
+
 import TableMenu from "../components/tableMenu";
 
 export const paymentsColumns = (timezone: string) =>
