@@ -50,6 +50,7 @@
 		"date-fns": "^3.6.0",
 		"firebase": "^10.12.2",
 		"install": "^0.13.0",
+		"jspdf": "^2.5.1",
 		"lucide-react": "^0.298.0",
 		"moment-timezone": "^0.5.43",
 		"next-router-query": "^0.1.3",

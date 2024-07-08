@@ -57,4 +57,4 @@ export const Get = async (c: Context<App>) => {
 	return c.json(payload);
 };
 
-export const DashboardUser = { Get };
+export const DashboardUser = { Get }; 

@@ -10,6 +10,9 @@ import { BadgeDollarSign, EyeIcon, FileDown, LifeBuoy } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+
 
 const TableMenu = ({ row }: { row: Row<any> }) => {
 	const queryClient = useQueryClient();
@@ -36,50 +39,73 @@ const TableMenu = ({ row }: { row: Row<any> }) => {
 			setRefund(false);
 		},
 	});
-
 	const downloadSinglePDF = async () => {
-		const download = () =>
-			new Promise((resolve, reject) => {
-				fetch(`${app.api}/user/labels/batch/download`, {
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-					body: JSON.stringify({
-						uuid: row.original.uuid,
-					}),
-				})
-					.then((response) => {
-						if (!response.ok) {
-							throw new Error(response.statusText);
-						}
-						return response.blob();
-					})
-					.then((blob) => {
-						if (row.original.merge_pdf_key === null) {
-							reject("No PDF found");
-						}
+		console.log("downloadSinglePDF");
+		console.log(row.original);
+		const doc = new jsPDF();
 
-						const url = window.URL.createObjectURL(new Blob([blob]));
-						const link = document.createElement("a");
-						link.href = url;
-						link.setAttribute("download", row.original.merge_pdf_key!);
-						document.body.appendChild(link);
-						link.click();
-						link.parentNode?.removeChild(link);
-						resolve(true);
-					})
-					.catch((error) => {
-						reject(error);
-					});
-			});
+		// Add company logo (replace 'yourBase64Image' with the actual base64 string of your logo)
+		// const logo = "img/logo.png";
+		// doc.addImage(logo, "PNG", 10, 10, 50, 20);
 
-		toast.promise(download, {
-			loading: "Downloading PDF...",
-			success: "PDF Downloaded!",
-			error: "PDF Download Failed!",
+		// Add title below the logo
+		doc.setFontSize(22);
+		// doc.setFontStyle("bold");
+		doc.text("Transaction Details", 70, 25);
+
+		// Add company information in the header
+		doc.setFontSize(10);
+		// doc.setFontStyle("normal");
+		doc.text(`Company name: ${app.name}`, 10, 35);
+		// doc.text("Your Company Address", 10, 40);
+		doc.text(`Support email: ${app.support}`, 10, 45);
+		// doc.text("Your Company Phone", 10, 50);
+
+		// Add a horizontal line below the header
+		doc.setLineWidth(0.5);
+		doc.line(10, 55, 200, 55);
+
+		// Prepare the data for the table
+		const data = [
+			["Email", row.original.user_email],
+			["Name", row.original.user_name],
+			["Credit", row.original.credit],
+			["Current Balance", row.original.current_balance],
+			["New Balance", row.original.new_balance],
+			["Status", row.original.status],
+			["Type", row.original.gateway],
+		];
+
+		// Add the table
+		doc.autoTable({
+			startY: 60,
+			// head: [["Field", "Value"]],
+			body: data.map(([field, value]) => [field, String(value)]),
+			theme: "grid",
+			headStyles: { fillColor: [22, 160, 133] },
+			styles: {
+				cellPadding: 2,
+				fontSize: 10,
+				halign: 'center',
+			},
+			columnStyles: {
+				0: { cellWidth: 40 },
+				1: { cellWidth: 150 },
+			},
 		});
+
+		// Add footer
+		const pageCount = doc.internal.getNumberOfPages();
+		for (let i = 1; i <= pageCount; i++) {
+			doc.setPage(i);
+			// Footer with page number
+			doc.setFontSize(10);
+			doc.setTextColor(150);
+			doc.text(app.name, 10, doc.internal.pageSize.height - 10);
+		}
+
+		// Save the PDF
+		doc.save(`${row.original.uuid}.pdf`);
 	};
 
 	return (

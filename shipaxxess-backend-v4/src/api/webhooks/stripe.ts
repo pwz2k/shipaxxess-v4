@@ -143,11 +143,18 @@ export const StripeWebhook = async (c: Context<App>) => {
 			case "payment_intent.succeeded":
 
 				const { charges } = event.data.object
-				// console.log("chages", charges.data)
-				break
+				console.log("event.data.objec", event.data.object)
+
+
+
+
+				return c.json({ success: true });
+
+
 
 			default:
 				return c.json({ success: true });
+
 
 
 		}
