@@ -22,6 +22,7 @@ const PaymentsUserPage = () => {
 		data: paymentsQuery.data,
 		loading: paymentsQuery.isLoading,
 		sort: [{ id: "id", desc: true }],
+
 	});
 
 	if (paymentsQuery.isLoading) {

@@ -21,7 +21,7 @@ const user = new Hono<App>();
 user.get("/status", StatusUser);
 
 // Dashboard routes
-user.get("/dashboard", DashboardUser);
+
 
 // Labels routes
 user.post("/labels/download", LabelsUser.DownloadSingle);
@@ -84,6 +84,15 @@ user.get("/types", TypeUser.GetAll);
 user.get("/notifications", UserNotification.Get);
 // mark all user notifcations as read
 user.patch("/notifications", UserNotification.MarkAsRead);
+// subscribe user to push notifications
+user.post("/subscribe", UserNotification.Subscribe);
+// unsubscribe user from push notifications
+user.delete("/unsubscribe", UserNotification.Unsubscribe);
+// get subscription status
+user.get("/subscription", UserNotification.subscriptionStatus);
+// user dashboard
+user.get("/dashboard", DashboardUser.Get);
+
 
 
 

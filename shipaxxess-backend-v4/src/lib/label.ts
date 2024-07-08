@@ -115,7 +115,7 @@ export class LabelManager {
 		log("Saved into cron table.");
 	}
 
-	async saveIntoLabelTable() {}
+	async saveIntoLabelTable() { }
 
 	async saveIntoLabelTableWithDrizzleBatch() {
 		await drizzle(this.env.DB).batch(
@@ -125,7 +125,7 @@ export class LabelManager {
 		log("Saved into label table.");
 	}
 
-	async chargeUserForLabel() {}
+	async chargeUserForLabel() { }
 
 	async chargeUserForBatch(user: UsersSelectModel, user_cost: number, total_labels: number) {
 		await drizzle(this.env.DB)
@@ -155,7 +155,13 @@ export class LabelManager {
 	}
 
 	async sendToBatchProcessQueue(batch_id: number) {
-		return await this.env.BATCH_QUEUE.send({ batch_id }, { contentType: "json" });
+		console.log("sendToBatchProcessQueue", batch_id);
+
+		if (this.env.BATCH_QUEUE) {
+			return await this.env.BATCH_QUEUE.send({ batch_id }, { contentType: "json" });
+		} else {
+			console.error("BATCH_QUEUE is not defined");
+		}
 	}
 
 	async sendToBatchDownloadQueue(batch_uuid: string) {
@@ -163,6 +169,8 @@ export class LabelManager {
 	}
 
 	async generateUSPSLabel(label: LabelsSelectModel) {
+
+		console.log("label", label);
 		const req = await fetch(`${this.settings["label_host"]}/api/label/generate`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json", "x-api-key": this.settings["label_apikey"] },
@@ -188,9 +196,11 @@ export class LabelManager {
 				toState: label.recipent_state,
 			}),
 		});
+
 		log("Generated USPS label.");
 
 		var payload: ApiResponseProps;
+
 
 		try {
 			payload = (await req.json()) as ApiResponseProps;
@@ -201,7 +211,9 @@ export class LabelManager {
 
 		if (!req.ok) {
 			this.crons.push({ uuid: label.uuid, message: payload.message });
+
 		}
+
 
 		return payload;
 	}
@@ -410,7 +422,7 @@ export class LabelManager {
 		return buffer;
 	}
 
-	async notifyBatchDownloadCompleteEvent(batch_uuid: string) {}
+	async notifyBatchDownloadCompleteEvent(batch_uuid: string) { }
 
 	async updateBatchFirstTrackingNumber(batch_uuid: string) {
 		return await drizzle(this.env.DB)

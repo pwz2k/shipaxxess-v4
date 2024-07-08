@@ -23,25 +23,32 @@ import { UseQueryResult } from "@tanstack/react-query";
 import { useNotificationsQuery, useMarkAsReadMutation } from "@client/hooks/useNotificationsQuery";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { set } from "date-fns";
+import { onMessage } from "firebase/messaging";
+import { messaging } from "@client/firebase/firebaseConfig";
+import { toast } from "sonner";
 
 
 const Header = ({ items, user }: { items: HeaderProps[]; user: UseQueryResult<UsersSelectModel> }) => {
-	const [bellRing, setBellRing] = useState<any>()
-	useEffect(() => {
-		api.initWebSocket((message) => {
-			setBellRing(message)
+	const notificationsQuery = useNotificationsQuery();
+	onMessage(messaging, (payload: any) => {
+		const { title, body, icon } = payload.notification;
+		console.log("Notification received", payload);
+
+		const message = `${title} ${body}`;
+
+		// Show notification toast
+		toast.info(message, {
+			duration: 5000,
+			position: "top-right",
+			icon: icon ? <img src={icon} alt="Notification Icon" /> : undefined,
+		});
+
+		// Refetch notifications
+		notificationsQuery.refetch();
 
 
 
-		})
-	}, [])
-	const resetBell = async () => {
-		setBellRing(null)
-		const req = await api.url("/user/notifications/mark-read").useAuth().put();
-		console.log(req);
-	}
-
+	});
 	return (
 		<header
 			className={`sticky h-16 border-b border-primary/5 shadow bg-white flex items-center px-4 justify-between z-40 ${app.mode === "dev" ? "top-9" : "top-0"

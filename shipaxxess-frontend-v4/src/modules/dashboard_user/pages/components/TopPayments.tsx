@@ -8,36 +8,10 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
 ChartJS.register({
     id: 'roundedBar',
     beforeDraw: (chart) => {
-        const { ctx } = chart;
-        const { datasets } = chart.data;
+
 
         chart.clear();
 
-        // datasets.forEach((dataset, index) => {
-        //     const meta = chart.getDatasetMeta(index);
-        //     meta.data.forEach((bar) => {
-        //         const { x, y, base, width } = bar;
-        //         const radius = 10;
-
-        //         const leftX = x - width / 2;
-        //         const rightX = x + width / 2;
-        //         const topY = y;
-        //         const bottomY = base;
-
-        //         ctx.save();
-        //         ctx.beginPath();
-        //         ctx.moveTo(leftX, bottomY);
-        //         ctx.lineTo(leftX, topY + radius);
-        //         ctx.quadraticCurveTo(leftX, topY, leftX + radius, topY);
-        //         ctx.lineTo(rightX - radius, topY);
-        //         ctx.quadraticCurveTo(rightX, topY, rightX, topY + radius);
-        //         ctx.lineTo(rightX, bottomY);
-        //         ctx.closePath();
-        //         ctx.fillStyle = dataset.backgroundColor; // Keep the original dataset background color
-        //         ctx.fill();
-        //         ctx.restore();
-        //     });
-        // });
     },
 });
 

@@ -25,18 +25,24 @@ export const stripeCheckout = async (secret: string, payload: PayloadProps) => {
 					unit_amount: payload.amount * 100,
 				},
 				quantity: 1,
+
 			},
+
 		],
 		metadata: {
 			topup_uuid: payload.topup_uuid,
 			user_id: payload.user_id,
 		},
 		mode: "payment",
-	
+
 	});
 
 	if (!session.url) throw new Error("URL not found");
 
 	return session;
 };
+<<<<<<< HEAD
  
+=======
+
+>>>>>>> notification-user

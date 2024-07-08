@@ -6,7 +6,7 @@
 		"frontend:build": "cd ./shipaxxess-frontend-v4 && pnpm build"
 	},
 	"dependencies": {
-		
+		"@types/web-push": "^3.6.3"
 	},
 	"devDependencies": {
 		"lerna": "^8.0.1"

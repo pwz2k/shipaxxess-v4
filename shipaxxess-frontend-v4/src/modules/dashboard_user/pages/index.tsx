@@ -1,105 +1,181 @@
-import Meta from "@client/components/common/meta";
-import OverviewSection from "./components/OverviewSection";
-import TopPayments from "./components/TopPayments";
-import TopServices from "./components/TopServices";
-import TopUps from "./components/TopUps";
-import TopStates from "./components/TopStates";
+import React from 'react';
+import GenericLineChart from "./components/DottedLinechart";
 
-const getRandomNumber = (min: number, max: number) => {
-	return Math.floor(Math.random() * (max - min + 1) + min);
-};
+import OverviewSection from './components/OverviewSection';
+import Title from '@client/components/common/title';
+import { Boxes, LayoutDashboardIcon, Share2, Truck, Plane, MailWarning } from 'lucide-react';
+import CustomDateRangePicker from '../../../components/common/CustomDatePicker';
+import TopRegions from './components/TopRegions';
+import TransactionHistory from './components/TransactionHistory';
+import ServicePieChart from './components/Services';
+import DateBarChart from './components/Zone';
+import { UseGet } from '@client/hooks/useGet';
 
-// Sample data for demonstration
-const samplePayments = [
-	{ id: 1, name: 'Monthly Subscription', amount: 50, date: '2024-05-15', method: 'Credit Card', status: 'Completed', recipient: 'Netflix' },
-	{ id: 2, name: 'Online Purchase', amount: 120, date: '2024-05-14', method: 'PayPal', status: 'Completed', recipient: 'Amazon' },
-	{ id: 3, name: 'Utility Bill', amount: 80, date: '2024-04-12', method: 'Bank Transfer', status: 'Completed', recipient: 'Utility Company' },
-	{ id: 4, name: 'Monthly Subscription', amount: 50, date: '2024-04-15', method: 'Credit Card', status: 'Completed', recipient: 'Netflix' },
-	{ id: 5, name: 'Online Purchase', amount: 120, date: '2024-03-14', method: 'PayPal', status: 'Completed', recipient: 'Amazon' },
-	{ id: 6, name: 'Utility Bill', amount: 80, date: '2024-03-12', method: 'Bank Transfer', status: 'Completed', recipient: 'Utility Company' },
-	{ id: 7, name: 'Utility Bill', amount: 80, date: '2024-04-12', method: 'Bank Transfer', status: 'Completed', recipient: 'Utility Company' },
-	{ id: 8, name: 'Monthly Subscription', amount: 50, date: '2024-04-15', method: 'Credit Card', status: 'Completed', recipient: 'Netflix' },
-	{ id: 9, name: 'Online Purchase', amount: 120, date: '2024-03-14', method: 'PayPal', status: 'Completed', recipient: 'Amazon' },
-	{ id: 10, name: 'Utility Bill', amount: 80, date: '2024-03-12', method: 'Bank Transfer', status: 'Completed', recipient: 'Utility Company' },
-	{ id: 11, name: 'Monthly Subscription', amount: 50, date: '2024-05-15', method: 'Credit Card', status: 'Completed', recipient: 'Netflix' },
-	{ id: 12, name: 'Online Purchase', amount: 120, date: '2024-05-14', method: 'PayPal', status: 'Completed', recipient: 'Amazon' },
-];
+const DashboardStats: React.FC = () => {
+	const getRandomNumber = (min: number, max: number) => {
+		return Math.floor(Math.random() * (max - min + 1) + min);
+	};
+	const queryKey = 'user-dashboard';
+	const { data, isLoading, } = UseGet(queryKey, '/user/dashboard');
 
-const sampleServices = [
-	{ id: 1, name: 'Service A' },
-	{ id: 2, name: 'Service B' },
-	{ id: 3, name: 'Service C' },
-	{ id: 4, name: 'Service D' },
-	{ id: 5, name: 'Service E' },
-	{ id: 1, name: 'Service A' },
-	{ id: 2, name: 'Service B' },
-	{ id: 3, name: 'Service C' },
-	{ id: 4, name: 'Service D' },
-	{ id: 5, name: 'Service E' },
-];
 
-const sampleTopUps = [
-	{ id: 1, name: 'TopUp 1' },
-	{ id: 2, name: 'TopUp 2' },
-	{ id: 3, name: 'TopUp 3' }
-];
+	const generateUpDownData = (labels: string[]) => {
+		const midPoint = Math.floor(labels.length / 2);
+		return labels.map((label, index) => {
+			let baseValue;
+			if (index <= midPoint) {
+				baseValue = 200 + ((index / midPoint) * 800); // Increase to peak
+			} else {
+				baseValue = 200 + ((1 - (index - midPoint) / midPoint) * 800); // Decrease from peak
+			}
+			const fluctuations = Math.floor(Math.random() * 100) - 50; // Random number between -50 and 50
+			const value = baseValue + fluctuations;
+			return {
+				label,
+				value: Math.max(0, value) // Ensure value is not negative
+			};
+		});
+	};
 
-const sampleStates = [
-	{ id: 1, name: 'New York' },
-	{ id: 2, name: 'California' },
-	{ id: 3, name: 'Texas' },
-	{ id: 1, name: 'New York' },
-	{ id: 2, name: 'California' },
-	{ id: 3, name: 'Texas' },
-	{ id: 2, name: 'California' },
-	{ id: 3, name: 'Texas' },
-	{ id: 1, name: 'New York' },
-	{ id: 2, name: 'California' },
-	{ id: 3, name: 'Texas' }
-];
+	const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+	const totalShipmentsData = generateUpDownData(months);
+	const totalPaymentsData = generateUpDownData(months);
+	const averageCostData = generateUpDownData(months);
+	const topStates = [
+		{ name: "Georgia", percentage: 15.53, shipments: 34, average: 3.59 },
+		{ name: "California", percentage: 9.13, shipments: 20, average: 3.4 },
+		{ name: "Florida", percentage: 8.68, shipments: 19, average: 2.99 },
+		{ name: "Texas", percentage: 7.31, shipments: 16, average: 3.0 },
+		{ name: "New Jersey", percentage: 6.85, shipments: 15, average: 3.11 },
+		{ name: "New York", percentage: 6.4, shipments: 14, average: 3.2 },
+		{ name: "Illinois", percentage: 5.94, shipments: 13, average: 3.1 },
+		{ name: "North Carolina", percentage: 5.49, shipments: 12, average: 3.0 },
+		{ name: "Virginia", percentage: 5.03, shipments: 11, average: 3.1 },
+		{ name: "Pennsylvania", percentage: 4.58, shipments: 10, average: 3.2 }
 
-const DashboardUserPage = () => {
+	];
+
+	const topCountries = [
+		{ name: "Australia", percentage: 28.13, shipments: 9, average: 16.39 },
+		{ name: "United Kingdom", percentage: 28.13, shipments: 9, average: 13.78 },
+		{ name: "Germany", percentage: 15.63, shipments: 5, average: 13.78 },
+		{ name: "Canada", percentage: 15.63, shipments: 5, average: 11.64 },
+		{ name: "Mexico", percentage: 12.5, shipments: 4, average: 11.88 }
+	];
+
+
+
+	const handleDateChange = (date: any) => {
+		console.log(date);
+	};
+
 	return (
 		<>
-			<Meta title="Dashboard" />
-			<div className="px-4 py-8 space-y-8 h-screen relative">
-				<h1 className="text-3xl font-bold px-4">Dashboard</h1>
-				<div className="flex flex-row fixed top-0 w-full bg-white shadow-md z-10">
-				</div>
 
-				{/* Overview Section */}
-				<div className="px-4">
-					<h2 className="text-lg font-bold mb-4">Overview</h2>
-					<div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 flex-1">
-						<OverviewSection title="Current Balance" value={getRandomNumber(1000, 10000)} />
-						<OverviewSection title="Total Spend" value={getRandomNumber(500, 5000)} />
-						<OverviewSection title="Total Refund" value={getRandomNumber(100, 1000)} />
-						<OverviewSection title="Referral Balance" value={getRandomNumber(500, 5000)} />
-					</div>
+			{isLoading ? (
+				<div className="fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center bg-black bg-opacity-50">
+					<div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
 				</div>
-				<div className="px-4">
-					<div className="flex flex-row">
-						<div className="flex-1">
-							{/* <TopPayments payments={samplePayments} />
-							 */}
-							Top payments
+			) :
+				<>
+					<div className="px-4">
+						<div className='flex justify-between'>
+							<div className='flex items-center gap-x-1 sticky top-0 '>
+								<LayoutDashboardIcon size={24} />
+								<Title title="Dashboard" />
+							</div>
+
+							<CustomDateRangePicker onDateChange={handleDateChange} />
 						</div>
-						<div className="flex-2">
-							{/* <TopServices services={sampleServices} /> */}
-							Top services
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 flex-1">
+							{/* <OverviewSection title="Current Balance" value={getRandomNumber(1000, 10000)} icon={<CreditCard />} /> */}
+							<OverviewSection title="Total Spend" value={data?.staticsCard?.totalSpend} />
+							<OverviewSection title="Total Refund" value={data?.staticsCard?.totalRefund} />
+							<OverviewSection title="Referral Balance" value={data?.staticsCard?.referlBalance} icon={<Share2 />} />
 						</div>
 					</div>
+					<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 p-4">
 
-				</div>
-				<div className="px-4">
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1">
-						<TopUps topUps={sampleTopUps} />
-						<TopStates states={sampleStates} />
+						<div className="col-span-1 h-full">
+							<div className='flex flex-col h-full gap-y-6'>
+								<OverviewSection title="Total Shipping Cost" value={getRandomNumber(1000, 10000)} linkText={"View Transactions"} />
+								<OverviewSection title="Carrier Adjustment" value={-5.9} linkText={"View All Adjustment"} />
+								<OverviewSection title="Pending Refund" value={getRandomNumber(1000, 10000)} linkText={"View Refund History"} />
+							</div>
+						</div>
+						<div className="col-span-1 lg:col-span-2">
+							<GenericLineChart
+								data={totalPaymentsData}
+								title="Total Payments"
+								valueKey="value"
+								icon={<Boxes size={24} />}
+								xAxisLink='/payments'
+							/>
+						</div>
+						<div className="col-span-1 lg:col-span-2">
+
+							<GenericLineChart
+								data={averageCostData}
+								title="Average Cost"
+								valueKey="value"
+								icon={<Boxes size={24} />}
+								height={260}
+								xAxisLink='/cost'
+
+							/>
+
+						</div>
+						<div className="col-span-1 h-full">
+							<div className='flex flex-col h-full mt-4  gap-y-10'>
+								<OverviewSection title="Avg. Domestic" value={getRandomNumber(1000, 10000)} linkText={"View Shipments"} icon={<Truck size={24} />} />
+								<OverviewSection title="Avg. International" value={getRandomNumber(1000, 10000)} linkText={"View Shipments "} icon={<Plane size={24} />} />
+
+							</div>
+						</div>
+						<div className="col-span-1 h-full">
+							<div className='flex flex-col h-full mt-4  gap-y-10'>
+								<OverviewSection title="New Shipments" value={getRandomNumber(1000, 10000)} linkText={"View Shipments"} />
+								<OverviewSection title="Delivery Issues" value={getRandomNumber(1000, 10000)} linkText={"View Undeliverable Shipments "} icon={<MailWarning size={24} />} />
+
+							</div>
+						</div>
+						<div className="col-span-1 lg:col-span-2">
+							<GenericLineChart
+								data={totalShipmentsData}
+								title="Total Shipments"
+								valueKey="value"
+								icon={<Boxes size={24} />}
+								height={280}
+								xAxisLink='/shipments'
+							/>
+						</div>
+						<div className='lg:col-span-1  col-span-1'>
+							<ServicePieChart />
+						</div>
+						<div className='lg:col-span-2 col-span-1'>
+							<DateBarChart />
+						</div>
+
+						<div className="col-span-1 lg:col-span-3">
+							<TopRegions topStates={topStates} topCountries={topCountries} />
+						</div>
+						<div className="col-span-1 lg:col-span-3 pb-10">
+
+							<TransactionHistory data={data?.transcationHistory} />
+
+						</div>
+
+
 					</div>
-				</div>
-			</div>
+
+
+				</>
+
+			}
+
+
 		</>
 	);
 };
 
-export default DashboardUserPage;
+export default DashboardStats;
