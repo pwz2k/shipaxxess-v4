@@ -60,6 +60,9 @@ const Reject = async (c: Context<App>) => {
 		eq(payments.id, parse.payment_id),
 	);
 
+	//send an email to user to notify payment decline on account
+	
+
 	return c.json({ success: true });
 };
 

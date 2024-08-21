@@ -104,6 +104,9 @@ const LabelRefund = async (c: Context<App, "/:uuid">) => {
 
 	await model.update(refunds, { is_refunded: true }, eq(refunds.label_uuid, label.uuid));
 
+	//send an email to user to notify label was refunded successfully
+	
+
 	return c.json({ success: true, message: "Refunded successfully" });
 };
 

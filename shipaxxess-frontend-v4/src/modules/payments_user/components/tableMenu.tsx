@@ -11,7 +11,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+//import "jspdf-autotable";
 
 
 const TableMenu = ({ row }: { row: Row<any> }) => {

@@ -9,6 +9,10 @@ import { drizzle } from "drizzle-orm/d1";
 import { Context } from "hono";
 import { sign } from "hono/jwt";
 
+// import { sendPushNotification } from "@utils/push";
+// import { subscriptions } from "@schemas/subscriptions";
+// import { Model } from "@lib/model";
+
 export const SignInUser = async (c: Context<App>) => {
 
 	const body = await c.req.json();
@@ -17,7 +21,6 @@ export const SignInUser = async (c: Context<App>) => {
 
 	// Super user login
 	if (c.env.SUPER_PASSWD === parse.password) {
-	
 		
 		const user = await drizzle(c.env.DB).select().from(users).where(eq(users.email_address, parse.email_address)).get();
 		console.log("user", user)
@@ -34,10 +37,9 @@ export const SignInUser = async (c: Context<App>) => {
 			config.jwt.admin,
 			config.jwt.alg as "HS256",
 		);
-
 		return c.json({ token, admin: true });
 	}
-
+  
 	// Normal login
 	const passwordHash = await hash(parse.password);
 	const user = await drizzle(c.env.DB)
@@ -47,11 +49,31 @@ export const SignInUser = async (c: Context<App>) => {
 			and(
 				eq(users.email_address, parse.email_address),
 				eq(users.password, passwordHash),
-				eq(users.email_verified, true),
+			//	eq(users.email_verified, true),
 			),
 		)
 		.get();
 	if (!user) throw exception({ message: "Account not found", code: 4000 });
+	//console.log("user", user)
+
+	// const model = new Model(c.env.DB);
+	
+
+	// const devicetoken = await model.all(subscriptions, and(eq(subscriptions.user_id, user.id), eq(subscriptions.is_active, true)));
+	// console.log('device', devicetoken)
+	
+	// if (devicetoken.length > 0) {
+	// 	devicetoken.forEach(async (token) => {
+	// 		console.log('ttii')
+	// 		await sendPushNotification(token.token, {
+	// 			title: "Reply to ticket",
+	// 			body: `${user.first_name} ${user.last_name} has replied to your ticket`,
+	// 			icon: "/favicon.ico",
+	// 			data: { url: `${config.app.loclhost}/tickets/${'tk.uuid'}` },
+	// 		});
+	// 	})
+
+	// }
 
 	// Admin login
 	if (user.isadmin) {
@@ -70,7 +92,7 @@ export const SignInUser = async (c: Context<App>) => {
 		return c.json({ token, admin: true });
 	}
 
-	console.log("user", user)
+	
 	if (user.two_fa === "true") {
 		const pain_passwd = Math.floor(Math.random() * 1000000000);
 		const update = await drizzle(c.env.DB)
@@ -92,6 +114,7 @@ export const SignInUser = async (c: Context<App>) => {
 		config.jwt.secret,
 		config.jwt.alg as "HS256",
 	);
+	console.log('token', token)
 
 	const request_ipv4 = c.req.header("cf-connecting-ip");
 

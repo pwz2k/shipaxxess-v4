@@ -6,6 +6,7 @@ import {
 	Line,
 	CartesianGrid,
 	XAxis,
+	YAxis,
 
 	Tooltip,
 	BarChart,
@@ -35,9 +36,28 @@ const AdminDashboard: React.FC = () => {
 
 	const queryKey = 'admin-dashboard';
 	const { data, isLoading } = UseGet(queryKey, '/admin/dashboard');
+	console.log('data ds', data)
 
 	const COLORS = ['#0088FE', '#00C49F'];
 	const CATEGORY_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
+	const formatMonth = (month: string): string => {
+		const monthAbbreviations : { [key: string]: string } = {
+		  January: 'Jan',
+		  February: 'Feb',
+		  March: 'Mar',
+		  April: 'Apr',
+		  May: 'May',
+		  June: 'Jun',
+		  July: 'Jul',
+		  August: 'Aug',
+		  September: 'Sep',
+		  October: 'Oct',
+		  November: 'Nov',
+		  December:'Dec'
+		};
+		return monthAbbreviations[month] || month;
+	  };
 
 
 	return (
@@ -79,37 +99,44 @@ const AdminDashboard: React.FC = () => {
 				</div>
 
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-					<div className="bg-white p-4 rounded-lg shadow-md flex">
+					<div className="bg-white p-4 rounded-lg shadow-md">
 						<h2 className="text-lg font-bold mb-2">Earnings & Refunds</h2>
-						<PieChart width={400} height={400}>
-							<Pie
-								data={data?.earningRefunds}
-								cx={200}
-								cy={200}
-								labelLine={false}
-								label
-								outerRadius={120}
-								fill="#8884d8"
-								dataKey="value"
-							>
-								{data?.earningRefunds.map((_entry: any, index: number) => (
-									<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-								))}
-							</Pie>
-							<Tooltip />
-						</PieChart>
+						<ResponsiveContainer width="100%" height={400}>
+							<PieChart>
+								<Pie
+									data={data?.earningRefunds}
+									cx='50%'
+									cy='50%'
+									labelLine={false}
+									label={({ name, value }) => `${name}: ${value}`}
+									outerRadius={120}
+									innerRadius={80}
+									fill="#8884d8"
+									dataKey="value"
+								>
+									{data?.earningRefunds.map((_entry: any, index: number) => (
+										<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+									))}
+								</Pie>
+								<Legend verticalAlign="bottom" height={15} />
+								<Tooltip />
+							</PieChart>
+						</ResponsiveContainer>
+						
 					</div>
 
-					<div className="bg-white p-4 rounded-lg shadow-md flex">
+					<div className="bg-white p-4 rounded-lg shadow-md">
 						<h2 className="text-lg font-bold mb-2">Revenue Breakdown by Category</h2>
-						<PieChart width={400} height={400}>
+						<ResponsiveContainer width="100%" height={400}>
+							<PieChart >
 							<Pie
 								data={data?.revenueByCategory}
-								cx={200}
-								cy={200}
+								cx="50%"
+								cy="50%"
 								labelLine={false}
-								label
+								label={({ name, value }) => `${name}: ${value}`}
 								outerRadius={120}
+								innerRadius={80}
 								fill="#8884d8"
 								dataKey="value"
 							>
@@ -117,8 +144,11 @@ const AdminDashboard: React.FC = () => {
 									<Cell key={`cell-${index}`} fill={CATEGORY_COLORS[index % CATEGORY_COLORS.length]} />
 								))}
 							</Pie>
+							<Legend verticalAlign="bottom"  height={15}/>
 							<Tooltip />
 						</PieChart>
+						</ResponsiveContainer>
+						
 					</div>
 				</div>
 
@@ -126,10 +156,11 @@ const AdminDashboard: React.FC = () => {
 					<div className="bg-white p-4 rounded-lg shadow-md">
 						<h2 className="text-lg font-bold mb-2">Monthly Revenue Trend</h2>
 						<ResponsiveContainer width="100%" height={300}>
-							<LineChart data={data?.monthlyRevenue}>
+							<LineChart data={data?.monthlyRevenue} >
+								{console.log('dd',data?.monthlyRevenue)}
 								<CartesianGrid stroke="#ccc" />
-								<XAxis dataKey="month" />
-								{/* <YAxis /> */}
+								<XAxis dataKey="name" textAnchor="middle" tickFormatter={formatMonth} />
+								<YAxis />
 								<Tooltip />
 								<Line type="monotone" dataKey="value" stroke="#8884d8" />
 							</LineChart>

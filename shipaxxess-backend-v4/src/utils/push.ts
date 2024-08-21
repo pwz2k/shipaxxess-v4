@@ -65,26 +65,34 @@ async function getAccessToken(SERVICE_ACCOUNT_KEY_BASE64: string): Promise<strin
             keyData,
             {
                 name: 'RSASSA-PKCS1-v1_5',
-                hash: 'SHA-256',
+                hash: { name:'SHA-256'},
             },
             false,
             ['sign']
         );
-
+     
         const signature = await crypto.subtle.sign('RSASSA-PKCS1-v1_5', cryptoKey, new TextEncoder().encode(toSign));
         const base64Signature = base64UrlEncode(String.fromCharCode(...new Uint8Array(signature)));
         const jwt = `${toSign}.${base64Signature}`;
+        const params = new URLSearchParams({
+            grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+            assertion: jwt,
+            client_id: 'your-client-id',
+            client_secret: 'your-client-secret',
+           })
+       // console.log('params', params.toString())
+        //console.log('signtare',signature)
 
         const response = await fetch('https://oauth2.googleapis.com/token', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-                grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
-                assertion: jwt
-            })
+            body: params
         });
-
+        
+        console.log('response')
         const data = await response.json();
+        console.log('dataa', data)
+     
         if (data.error) {
             throw new Error(data.error_description || 'Error fetching access token');
         }
@@ -96,11 +104,13 @@ async function getAccessToken(SERVICE_ACCOUNT_KEY_BASE64: string): Promise<strin
 }
 
 export const sendPushNotification = async (token: string, message: IMessage) => {
+    console.log('pushing message', message);
 
     const serviceAccountKeyBase64 = config.app.ENCODED_SERVICE_ACCOUNT_KEY;
     try {
 
         const accessToken = await getAccessToken(serviceAccountKeyBase64);
+        console.log('notification token', accessToken)
 
 
         const url = `https://fcm.googleapis.com/v1/projects/${PROJECT_ID}/messages:send`;
@@ -115,8 +125,6 @@ export const sendPushNotification = async (token: string, message: IMessage) => 
                     title: message.title,
                     body: message.body,
                     icon: message.icon,
-
-
                 },
                 data: message.data,
             }
@@ -128,7 +136,9 @@ export const sendPushNotification = async (token: string, message: IMessage) => 
             body: JSON.stringify(payload),
         });
 
+
         const data = await response.json();
+        
         if (data.error) {
             throw new Error(data.error.message || 'Error sending push notification');
         }

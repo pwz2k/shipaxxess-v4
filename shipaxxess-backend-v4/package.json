@@ -2,11 +2,12 @@
 	"name": "@shipaxxess/shipaxxess-backend-v4",
 	"private": "true",
 	"scripts": {
-		"dev": "wrangler dev src/index.ts --port 8000",
+		"dev": "wrangler dev src/index.ts --port 8787",
 		"deploy": "wrangler deploy --minify src/index.ts",
 		"generate": "npx drizzle-kit generate:sqlite --config ./src/database/drizzle-orm/drizzle.config.ts",
-		"migrate": "export NO_D1_WARNING=true && npx wrangler d1 migrations apply shipaxxess-backend-d1",
-		"tail": "npx wrangler tail"
+		"migrate": "set NO_D1_WARNING=true && npx wrangler d1 migrations apply shipaxxess-backend-d1",
+		"tail": "npx wrangler tail",
+		"studio": "drizzle-kit studio"
 	},
 	"dependencies": {
 		"@shipaxxess/shipaxxess-zod-v4": "workspace:*",
@@ -18,6 +19,7 @@
 		"pdf-merger-js": "^4.3.0",
 		"stripe": "^14.9.0",
 		"uuid": "^9.0.1",
+		"web-push": "^3.6.7",
 		"zod": "^3.22.4"
 	},
 	"devDependencies": {

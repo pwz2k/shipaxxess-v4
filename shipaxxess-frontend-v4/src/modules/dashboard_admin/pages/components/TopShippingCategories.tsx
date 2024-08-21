@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 interface ShippingCategory {
     name: string;
@@ -25,14 +25,16 @@ const TopShippingCategories: React.FC<Props> = ({ shippingCategoriesData }) => {
                         cx="50%"
                         cy="50%"
                         outerRadius={120}
+                        innerRadius={80}
+                        label={({ name, value }) => `${name}: ${value}`}
                         fill="#8884d8"
                         dataKey="value"
-                        label
                     >
                         {shippingCategoriesData?.map((_entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                     </Pie>
+                     <Legend verticalAlign="bottom" height={15} />
                     <Tooltip />
                 </PieChart>
             </ResponsiveContainer>

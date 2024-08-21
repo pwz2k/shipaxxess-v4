@@ -55,7 +55,8 @@ const Header = ({ items, user }: { items: HeaderProps[]; user: UseQueryResult<Us
 				}`}>
 			<ProfileDropDownMenu items={items} userQuery={user} />
 
-			<NotificationsComponent userQuery={user} bellRing={bellRing} resetRing={resetBell} />
+			{/* <NotificationsComponent userQuery={user} bellRing={bellRing} resetRing={resetBell} /> */}
+			<NotificationsComponent userQuery={user}  />
 		</header>
 	);
 };
