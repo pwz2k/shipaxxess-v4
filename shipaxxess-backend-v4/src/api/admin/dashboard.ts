@@ -10,7 +10,7 @@ import nodemailer from "nodemailer";
 
 interface Order {
 	id: number;
-	created_at: string; // Assuming ISO 8601 datetime format
+	created_at: string;
 }
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -19,8 +19,8 @@ const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 const transporter = nodemailer.createTransport({
 	service: 'gmail', // or another service
 	auth: {
-		user: 'pwz2k@hotmail.com', // Your email address
-		pass: 'super' // Your email password
+		user: 'pwz2k@hotmail.com', //email address
+		pass: 'super' //email password
 	}
 });
 
@@ -29,7 +29,7 @@ const sendEmail = async (subject: string, text: string) => {
 	try {
 		await transporter.sendMail({
 			from: 'pwz2k@hotmail.com',
-			to: 'pwz2k@hotmail.com', // Replace with admin email
+			to: 'pwz2k@hotmail.com', // Replace it with youradmin email if you want to change
 			subject: subject,
 			text: text
 		});
