@@ -1,6 +1,3 @@
-
-
-
 // Get All admin notifications handler
 
 import { Model } from "@lib/model"

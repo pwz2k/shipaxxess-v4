@@ -4,8 +4,10 @@ import { tickets } from "@schemas/tickets";
 
 import { users } from "@schemas/users";
 import { and, count, desc, eq, gt, not, sql } from "drizzle-orm";
-import { drizzle, } from "drizzle-orm/d1";
+import { drizzle } from "drizzle-orm/d1";
 import { Context } from "hono";
+import nodemailer from "nodemailer";
+
 interface Order {
 	id: number;
 	created_at: string; // Assuming ISO 8601 datetime format
@@ -13,8 +15,33 @@ interface Order {
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
 	"Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
+// Configure Nodemailer
+const transporter = nodemailer.createTransport({
+	service: 'gmail', // or another service
+	auth: {
+		user: 'pwz2k@hotmail.com', // Your email address
+		pass: 'super' // Your email password
+	}
+});
+
+// Function to send email
+const sendEmail = async (subject: string, text: string) => {
+	try {
+		await transporter.sendMail({
+			from: 'pwz2k@hotmail.com',
+			to: 'pwz2k@hotmail.com', // Replace with admin email
+			subject: subject,
+			text: text
+		});
+		console.log('Email sent successfully');
+	} catch (error) {
+		console.error('Error sending email:', error);
+	}
+};
+
 export const Get = async (c: Context<App>) => {
 	const db = drizzle(c.env.DB);
+
 	const totalUsers = await db.select({
 		count: count()
 	}).from(users);
@@ -22,42 +49,35 @@ export const Get = async (c: Context<App>) => {
 	const OpenTicket = await db.select({
 		count: count()
 	}).from(tickets).where(eq(tickets.status, "active"));
-	// calculate the peak order time from the batchs table using batch table
+
 	const peakOrderTime = await db.select({
-		timeFrame: sql`strftime('%Y-%m-%d %H', created_at)`, // Format the datetime to 'YYYY-MM-DD HH'
+		timeFrame: sql`strftime('%Y-%m-%d %H', created_at)`,
 		orderCount: count()
 	})
 		.from(batchs)
-		// .where(eq(batchs.status_label, "active")) // Assuming 'active' batches are what you're interested in
 		.groupBy(sql`strftime('%Y-%m-%d %H', created_at)`)
 		.orderBy(desc(count()))
-		.limit(24)
+		.limit(24);
+
 	const formattedPeakOrderTime = peakOrderTime.map((order: any) => {
 		const parts = order.timeFrame.split(' ');
 		const datePart = parts[0];
 		let timePart = parts[1];
 		const [hours, minutes] = timePart.split(':');
 		return {
-
 			hours: `${hours}:00`,
 			orders: order.orderCount
-		}
+		};
+	});
 
-	})
-	// compute paymentMethods and each method total value using payments table
 	const totalAmountByGateway = await db.select({
 		name: payments.gateway,
-		// add $ sign to the value to show that it is a currency
 		value: sql`SUM(${payments.credit})`
-
 	}).from(payments)
-		.where(and(not(eq(payments.gateway, "Label")), not(eq(payments.gateway, "Refund")))) // Exclude third-party API payments and refunds
-		.groupBy(payments.gateway) // Group by gateway only, not by user_id
+		.where(and(not(eq(payments.gateway, "Label")), not(eq(payments.gateway, "Refund"))))
+		.groupBy(payments.gateway)
 		.orderBy(payments.gateway);
 
-
-
-	// compute refunder orders using batchs table by each month by name
 	const refundedOrders = await db.select({
 		month: sql`strftime('%m', created_at)`,
 		orders: count()
@@ -70,9 +90,9 @@ export const Get = async (c: Context<App>) => {
 		return {
 			month,
 			orders: order.orders
-		}
-	})
-	// compute  refundsByCarrier using batchs table by each carrier
+		};
+	});
+
 	const refundsByCarrier = await db.select({
 		name: batchs.type,
 		value: count()
@@ -80,7 +100,6 @@ export const Get = async (c: Context<App>) => {
 		.groupBy(batchs.type)
 		.orderBy(desc(count()));
 
-	// return the top 10 referralUsers that referred the most users if user not refer any it refer_from is null
 	const topReferralUsers = await db.select({
 		id: users.id,
 		name: users.first_name,
@@ -91,13 +110,8 @@ export const Get = async (c: Context<App>) => {
 		joined: users.created_at,
 		status: users.email_verified,
 		uuid: users.uuid,
-
 	}).from(users).where(gt(users, 0)).execute();
-	// compute the refund and earnings by 
-	// in the payement column we have credit and current_balance and new_balance
-	// the gateway column is the payment method used by the user
-	// and also if the value in payent column Refund we can say that the user has refund the payment
-	// so we can compute the total earnings and refunds
+
 	const totalEarnings = await db.select({
 		totalEarnings: sql`SUM(${payments.credit})`
 	}).from(payments)
@@ -111,20 +125,20 @@ export const Get = async (c: Context<App>) => {
 
 	const earningRefunds = [{ name: "Total Earnings", value: totalEarnings[0].totalEarnings }, { name: "Refunds", value: totalRefunds[0].totalRefunds }];
 
-	// compute the total profit by summing the total credit in the payment table and subtracting the refunds and lables as expese where gateway is is label and refund in gateway
 	const profits = await db.select({
 		month: sql`strftime('%m', created_at)`,
 		profit: sql`SUM(${payments.credit}) - (SELECT SUM(${payments.credit}) FROM ${payments} WHERE ${payments.gateway} = "Refund") - (SELECT SUM(${payments.credit}) FROM ${payments} WHERE ${payments.gateway} = "Label")`
 	}).from(payments)
 		.groupBy(sql`strftime('%m', created_at)`)
 		.orderBy(desc(count()));
+
 	const profitByMonth = profits.map((profit: any) => {
 		const month = monthNames[parseInt(profit.month) - 1];
 		return {
 			month,
 			profit: `$ ${profit.profit}`
-		}
-	})
+		};
+	});
 
 	const payload = {
 		statisticCard: {
@@ -143,10 +157,22 @@ export const Get = async (c: Context<App>) => {
 		referralUsers: topReferralUsers,
 		paymentMethods: totalAmountByGateway,
 		profits: profitByMonth,
-
 		refundedOrders: formattedRefundedOrders,
 		refundsByCarrier: refundsByCarrier
+	};
 
+	// Notify admin when a support ticket is created or replied to
+	const supportTickets = await db.select({
+		id: tickets.id,
+		created_at: tickets.created_at,
+		updated_at: tickets.updated_at,
+		status: tickets.status,
+	}).from(tickets).where(eq(tickets.status, 'created'), eq(tickets.status, 'replied'));
+
+	for (const ticket of supportTickets) {
+		const subject = `Support Ticket ${ticket.status} - ID: ${ticket.id}`;
+		const text = `A support ticket with ID ${ticket.id} has been ${ticket.status}. Created at: ${ticket.created_at}, Last updated at: ${ticket.updated_at}.`;
+		await sendEmail(subject, text);
 	}
 
 	// Return the payload as a JSON response

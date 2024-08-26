@@ -6,9 +6,12 @@
 		"frontend:build": "cd ./shipaxxess-frontend-v4 && pnpm build"
 	},
 	"dependencies": {
-		"@types/web-push": "^3.6.3"
+		"@types/web-push": "^3.6.3",
+		"nodemailer": "^6.9.14"
 	},
 	"devDependencies": {
+		"@types/nodemailer": "^6.4.15",
+		"@types/uuid": "^10.0.0",
 		"lerna": "^8.0.1"
 	}
 }
