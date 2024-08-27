@@ -15,12 +15,12 @@ export const SignUpUser = async (c: Context<App>) => {
 	try {
 		const body = await c.req.json();
 		const parse = Signup.ZODSCHEMA.parse(body);
-
+		console.log(parse);
 		const model = new Model(c.env.DB);
 
 		const haveUser = await model.get(users, eq(users.email_address, parse.email_address));
 		if (haveUser) throw exception({ message: "Already have an account", code: 1000 });
-
+		// console.log(haveUser);
 		const email_code = generateSixDigitRandomNumber();
 		const passwordHash = await hash(parse.password);
 		const [insert] = await model.insert(users, {
@@ -35,27 +35,22 @@ export const SignUpUser = async (c: Context<App>) => {
 			current_ip: c.req.header("cf-connecting-ip"),
 		});
 
-
-
+		// console.log(insert);
+		console.log(parse.email_address);
 		if (insert.id === 1) {
 			await initSettings(c.env.DB);
 			await model.update(users, { isadmin: true }, eq(users.id, insert.id));
 		}
-		console.log("email_code", email_code)
+		console.log("email_code", email_code);
 
 		// if c.env==dev then return email_code in message else return message
-		if (c.env == "dev") {
+		if (String(c.env) == "dev") {
 			return c.json({
 				message: `Verification code is ${email_code}`,
 				success: true,
 				code: 1004,
 			});
 		}
-
-
-
-
-
 
 		c.executionCtx.waitUntil(
 			mail(c.env.DB, {
@@ -74,18 +69,14 @@ export const SignUpUser = async (c: Context<App>) => {
 			}),
 		);
 
-
-
-
 		return c.json({
 			message: "Verification mail is sent to your email address, please check the inbox/spam folder",
 			success: true,
 			code: 1004,
-
 		});
 	} catch (error) {
-		console.log("error", error)
-		return c.json(error)
-
+		
+		console.log("error", error);
+		return c.json(error);
 	}
 };

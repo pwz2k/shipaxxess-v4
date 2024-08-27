@@ -1,13 +1,12 @@
-import React from 'react';
-import Title from '@client/components/common/title';
-import { LayoutDashboardIcon } from 'lucide-react';
+import React from "react";
+import Title from "@client/components/common/title";
+import { LayoutDashboardIcon } from "lucide-react";
 import {
 	LineChart,
 	Line,
 	CartesianGrid,
 	XAxis,
 	YAxis,
-
 	Tooltip,
 	BarChart,
 	Bar,
@@ -16,49 +15,44 @@ import {
 	Pie,
 	Cell,
 	ResponsiveContainer,
-} from 'recharts';
+} from "recharts";
 
 // Importing the new components
-import TopShippingCategories from './components/TopShippingCategories';
-import PeakOrderTimes from './components/PeakOrderTimes';
-import MostPopularStates from './components/MostPopularStates';
-import TopReferralUsers from './components/TopReferralUsers';
-import PaymentMethodsBreakdown from './components/PaymentMethodsBreakdown';
-import Profits from './components/Profits';
-import RefundedOrders from './components/RefundedOrders';
-import RefundsByCarrier from './components/RefundsByCarrier';
-import { UseGet } from '@client/hooks/useGet';
-
+import TopShippingCategories from "./components/TopShippingCategories";
+import PeakOrderTimes from "./components/PeakOrderTimes";
+import MostPopularStates from "./components/MostPopularStates";
+import TopReferralUsers from "./components/TopReferralUsers";
+import PaymentMethodsBreakdown from "./components/PaymentMethodsBreakdown";
+import Profits from "./components/Profits";
+import RefundedOrders from "./components/RefundedOrders";
+import RefundsByCarrier from "./components/RefundsByCarrier";
+import { UseGet } from "@client/hooks/useGet";
 
 const AdminDashboard: React.FC = () => {
+	const queryKey = "admin-dashboard";
+	const { data, isLoading } = UseGet(queryKey, "/admin/dashboard");
+	console.log("data ds", data);
 
-
-
-	const queryKey = 'admin-dashboard';
-	const { data, isLoading } = UseGet(queryKey, '/admin/dashboard');
-	console.log('data ds', data)
-
-	const COLORS = ['#0088FE', '#00C49F'];
-	const CATEGORY_COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+	const COLORS = ["#0088FE", "#00C49F"];
+	const CATEGORY_COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 	const formatMonth = (month: string): string => {
-		const monthAbbreviations : { [key: string]: string } = {
-		  January: 'Jan',
-		  February: 'Feb',
-		  March: 'Mar',
-		  April: 'Apr',
-		  May: 'May',
-		  June: 'Jun',
-		  July: 'Jul',
-		  August: 'Aug',
-		  September: 'Sep',
-		  October: 'Oct',
-		  November: 'Nov',
-		  December:'Dec'
+		const monthAbbreviations: { [key: string]: string } = {
+			January: "Jan",
+			February: "Feb",
+			March: "Mar",
+			April: "Apr",
+			May: "May",
+			June: "Jun",
+			July: "Jul",
+			August: "Aug",
+			September: "Sep",
+			October: "Oct",
+			November: "Nov",
+			December: "Dec",
 		};
 		return monthAbbreviations[month] || month;
-	  };
-
+	};
 
 	return (
 		<>
@@ -74,9 +68,7 @@ const AdminDashboard: React.FC = () => {
 						<LayoutDashboardIcon size={24} />
 						<Title title="Admin Dashboard" />
 					</div>
-					<div className="flex items-center gap-x-2">
-						{/* Add date range picker here */}
-					</div>
+					<div className="flex items-center gap-x-2">{/* Add date range picker here */}</div>
 				</div>
 
 				<div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
@@ -105,15 +97,14 @@ const AdminDashboard: React.FC = () => {
 							<PieChart>
 								<Pie
 									data={data?.earningRefunds}
-									cx='50%'
-									cy='50%'
+									cx="50%"
+									cy="50%"
 									labelLine={false}
 									label={({ name, value }) => `${name}: ${value}`}
 									outerRadius={120}
 									innerRadius={80}
 									fill="#8884d8"
-									dataKey="value"
-								>
+									dataKey="value">
 									{data?.earningRefunds.map((_entry: any, index: number) => (
 										<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
 									))}
@@ -122,33 +113,30 @@ const AdminDashboard: React.FC = () => {
 								<Tooltip />
 							</PieChart>
 						</ResponsiveContainer>
-						
 					</div>
 
 					<div className="bg-white p-4 rounded-lg shadow-md">
 						<h2 className="text-lg font-bold mb-2">Revenue Breakdown by Category</h2>
 						<ResponsiveContainer width="100%" height={400}>
-							<PieChart >
-							<Pie
-								data={data?.revenueByCategory}
-								cx="50%"
-								cy="50%"
-								labelLine={false}
-								label={({ name, value }) => `${name}: ${value}`}
-								outerRadius={120}
-								innerRadius={80}
-								fill="#8884d8"
-								dataKey="value"
-							>
-								{data?.revenueByCategory.map((_entry: any, index: any) => (
-									<Cell key={`cell-${index}`} fill={CATEGORY_COLORS[index % CATEGORY_COLORS.length]} />
-								))}
-							</Pie>
-							<Legend verticalAlign="bottom"  height={15}/>
-							<Tooltip />
-						</PieChart>
+							<PieChart>
+								<Pie
+									data={data?.revenueByCategory}
+									cx="50%"
+									cy="50%"
+									labelLine={false}
+									label={({ name, value }) => `${name}: ${value}`}
+									outerRadius={120}
+									innerRadius={80}
+									fill="#8884d8"
+									dataKey="value">
+									{data?.revenueByCategory.map((_entry: any, index: number) => (
+										<Cell key={`cell-${index}`} fill={CATEGORY_COLORS[index % CATEGORY_COLORS.length]} />
+									))}
+								</Pie>
+								<Legend verticalAlign="bottom" height={15} />
+								<Tooltip />
+							</PieChart>
 						</ResponsiveContainer>
-						
 					</div>
 				</div>
 
@@ -156,8 +144,8 @@ const AdminDashboard: React.FC = () => {
 					<div className="bg-white p-4 rounded-lg shadow-md">
 						<h2 className="text-lg font-bold mb-2">Monthly Revenue Trend</h2>
 						<ResponsiveContainer width="100%" height={300}>
-							<LineChart data={data?.monthlyRevenue} >
-								{console.log('dd',data?.monthlyRevenue)}
+							<LineChart data={data?.monthlyRevenue}>
+								{console.log("dd", data?.monthlyRevenue)}
 								<CartesianGrid stroke="#ccc" />
 								<XAxis dataKey="name" textAnchor="middle" tickFormatter={formatMonth} />
 								<YAxis />
@@ -198,5 +186,5 @@ const AdminDashboard: React.FC = () => {
 			</div>
 		</>
 	);
-}
+};
 export default AdminDashboard;

@@ -27,6 +27,7 @@ user.get("/status", StatusUser);
 user.post("/labels/download", LabelsUser.DownloadSingle);
 user.post("/labels/refund", LabelsUser.RefundAsSingle);
 
+
 user.get("/labels/batch", LabelsUser.GetAll);
 user.post("/labels/batch", LabelsUser.Create);
 user.post("/labels/batch/download", LabelsUser.DownloadBatch);

@@ -39,6 +39,7 @@ const Get = async (c: Context<App, "/:uuid">) => {
 	return c.json({ labels: batchLabels, batch: { name: batch.name, status_refund: batch.status_refund } });
 };
 
+
 const Create = async (c: Context<App>) => {
 	log("Hit label batch endpoint.");
 	console.log("CENV", c);
@@ -167,6 +168,7 @@ const RefundAsSingle = async (c: Context<App>) => {
 	const model = new Model(c.env.DB);
 
 	const label = await model.get(labels, eq(labels.uuid, parse.id));
+	console.log(label);
 	if (!label) {
 		throw exception({ message: "Label not found.", code: 404 });
 	}
@@ -288,5 +290,10 @@ const Search = async (c: Context<App>) => {
 
 	return c.json({});
 };
+
+
+
+
+
 
 export const LabelsUser = { GetAll, Create, RefundAsBatch, Get, DownloadSingle, DownloadBatch, Search, RefundAsSingle };

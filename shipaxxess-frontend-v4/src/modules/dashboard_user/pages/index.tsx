@@ -41,6 +41,7 @@ const DashboardStats: React.FC = () => {
 	const totalShipmentsData = generateUpDownData(months);
 	const totalPaymentsData = generateUpDownData(months);
 	const averageCostData = generateUpDownData(months);
+	
 	const topStates = [
 		{ name: "Georgia", percentage: 15.53, shipments: 34, average: 3.59 },
 		{ name: "California", percentage: 9.13, shipments: 20, average: 3.4 },
