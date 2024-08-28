@@ -105,7 +105,7 @@ const AdminDashboard: React.FC = () => {
 									innerRadius={80}
 									fill="#8884d8"
 									dataKey="value">
-									{data?.earningRefunds.map((_entry: any, index: number) => (
+									{data?.earningRefunds?.map((_entry: any, index: number) => (
 										<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
 									))}
 								</Pie>
@@ -129,7 +129,7 @@ const AdminDashboard: React.FC = () => {
 									innerRadius={80}
 									fill="#8884d8"
 									dataKey="value">
-									{data?.revenueByCategory.map((_entry: any, index: number) => (
+									{data?.revenueByCategory?.map((_entry: any, index: number) => (
 										<Cell key={`cell-${index}`} fill={CATEGORY_COLORS[index % CATEGORY_COLORS.length]} />
 									))}
 								</Pie>

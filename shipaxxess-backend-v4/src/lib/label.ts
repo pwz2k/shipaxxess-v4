@@ -20,13 +20,13 @@ export class LabelManager {
 	private crons: { uuid: string; message: string }[] = [];
 
 	constructor(private env: Bindings, private settings: { [x: string]: string }) {
-		if (!this.settings["label_apikey"]) {
-			throw exception({ message: "label_apikey is not defined", code: 404 });
-		}
+		// if (!this.settings["label_apikey"]) {
+		// 	throw exception({ message: "label_apikey is not defined", code: 404 });
+		// }
 
-		if (!this.settings["label_host"]) {
-			throw exception({ message: "label_host is not defined", code: 404 });
-		}
+		// if (!this.settings["label_host"]) {
+		// 	throw exception({ message: "label_host is not defined", code: 404 });
+		// }
 
 		log("Label manager is ready.");
 	}
