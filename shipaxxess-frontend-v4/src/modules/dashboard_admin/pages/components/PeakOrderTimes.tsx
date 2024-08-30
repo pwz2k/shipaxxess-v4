@@ -10,8 +10,8 @@ interface Props {
     peakOrderTimesData: PeakOrderTime[] | undefined | [];
 
 }
-const PeakOrderTimes: React.FC<Props> = ({ peakOrderTimesData }) => {
 
+const PeakOrderTimes: React.FC<Props> = ({ peakOrderTimesData }) => {
     return (
         <>
             {

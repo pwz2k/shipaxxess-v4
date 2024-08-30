@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { api } from "@client/lib/api";
 import { useQuery } from "@tanstack/react-query";
 

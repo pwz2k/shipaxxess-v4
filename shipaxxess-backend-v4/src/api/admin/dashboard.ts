@@ -1,10 +1,11 @@
 import { addresses } from "@schemas/addresses";
 import { batchs } from "@schemas/batchs";
 import { payments } from "@schemas/payments";
+import { refunds } from "@schemas/refunds";
 import { tickets } from "@schemas/tickets";
 
 import { users } from "@schemas/users";
-import { and, count, desc, eq, gt, not, sql } from "drizzle-orm";
+import { and, count, desc, eq, gt, not, sql, sum } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import { Context } from "hono";
 interface Order {
@@ -21,7 +22,6 @@ export const Get = async (c: Context<App>) => {
 		})
 		.from(users);
 
-	//              console.log(formattedPopularStates);
 
 	const OpenTicket = await db
 		.select({
@@ -84,11 +84,11 @@ export const Get = async (c: Context<App>) => {
 	const refundsByCarrier = await db
 		.select({
 			name: batchs.type,
-			value: count(),
+			value: count(batchs.status_refund),
 		})
 		.from(batchs)
 		.groupBy(batchs.type)
-		.orderBy(desc(count()));
+		.where(eq(batchs.status_refund, true));
 
 	// return the top 10 referralUsers that referred the most users if user not refer any it refer_from is null
 	const topReferralUsers = await db
@@ -133,18 +133,20 @@ export const Get = async (c: Context<App>) => {
 
 	// compute the total profit by summing the total credit in the payment table and subtracting the refunds and lables as expese where gateway is is label and refund in gateway
 	const profits = await db
-		.select({
-			month: sql`strftime('%m', created_at)`,
-			profit: sql`SUM(${payments.credit}) - (SELECT SUM(${payments.credit}) FROM ${payments} WHERE ${payments.gateway} = "Refund") - (SELECT SUM(${payments.credit}) FROM ${payments} WHERE ${payments.gateway} = "Label")`,
-		})
-		.from(payments)
-		.groupBy(sql`strftime('%m', created_at)`)
-		.orderBy(desc(count()));
+  .select({
+    month: sql`strftime('%m', created_at)`,
+    profit: sql`SUM(COALESCE(${payments.credit}, 0))`,
+  })
+  .from(payments)
+  .groupBy(sql`strftime('%m', created_at)`)
+  .orderBy(desc(sql`strftime('%m', created_at)`));
+		
 	const profitByMonth = profits.map((profit: any) => {
 		const month = monthNames[parseInt(profit.month) - 1];
+
 		return {
 			month,
-			profit: `$ ${profit.profit}`,
+			profit: `$${profit.profit}`,
 		};
 	});
 
@@ -171,7 +173,6 @@ export const Get = async (c: Context<App>) => {
 
 	// Process recipients
 	const stateCount: Record<string, number> = {};
-	console.log(batchs.recipients);
 	batchData.forEach((batch: any) => {
 		try {
 			const recipients = typeof batch.recipients === "string" ? JSON.parse(batch.recipients) : batch.recipients;
@@ -191,14 +192,43 @@ export const Get = async (c: Context<App>) => {
 		.map(([state, count]) => ({ state, orders: count }))
 		.sort((a, b) => b.orders - a.orders);
 
-	console.log(formattedPopularStates);
+	
+
+
+
+
+
+		const topSpenders = await db
+		.select({first_name: users.first_name, last_name: users.last_name, total_spent : users.total_spent, email: users.email_address})
+		.from(users)
+		.orderBy(desc(users.total_spent)) 
+		.limit(10); 
+		
+
+		const refundedOrdersAmount = await db
+		.select({ count: count(refunds.is_refunded) })
+		.from(refunds)
+		.where(eq(refunds.is_refunded, true));
+
+		const pendingRefundedAmount = await db
+		.select({ count: count(refunds.is_refunded) })
+		.from(refunds)
+		.where(eq(refunds.is_refunded, false));
+
+
+
+
+
 
 	const payload = {
+		topUsers : topSpenders,
 		statisticCard: {
 			totalUsers: totalUsers[0].count,
 			newlyRegisteredUsers: 4,
 			openTickets: OpenTicket[0].count,
+			refundedOrdersAmount: refundedOrdersAmount[0].count,
 			refundsRequests: 200,
+			pendingRefundedAmount: pendingRefundedAmount[0].count
 		},
 		earningRefunds: earningRefunds,
 		revenueByCategory: [
@@ -234,19 +264,7 @@ export const Get = async (c: Context<App>) => {
 		],
 		peakOrderTime: formattedPeakOrderTime,
 		popularStates: formattedPopularStates,
-		// [
-		// 	{ state: "California", orders: 400 },
-		// 	{ state: "Texas", orders: 300 },
-		// 	{ state: "New York", orders: 200 },
-		// 	{ state: "Florida", orders: 100 },
-		// 	{ state: "Illinois", orders: 50 },
-		// 	{ state: "Pennsylvania", orders: 40 },
-		// 	{ state: "Ohio", orders: 30 },
-		// 	{ state: "Georgia", orders: 20 },
-		// 	{ state: "North Carolina", orders: 10 },
-		// 	{ state: "Michigan", orders: 5 },
-		// 	{ state: "New Jersey", orders: 8 },
-		// ],
+		
 		referralUsers: topReferralUsers,
 		paymentMethods: totalAmountByGateway,
 		profits: profitByMonth,

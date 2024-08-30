@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Title from "@client/components/common/title";
 import { LayoutDashboardIcon } from "lucide-react";
 import {
@@ -16,7 +16,8 @@ import {
 	Cell,
 	ResponsiveContainer,
 } from "recharts";
-
+import "react-date-range/dist/styles.css"; // main css file
+import "react-date-range/dist/theme/default.css"; // theme css file
 // Importing the new components
 import TopShippingCategories from "./components/TopShippingCategories";
 import PeakOrderTimes from "./components/PeakOrderTimes";
@@ -27,12 +28,15 @@ import Profits from "./components/Profits";
 import RefundedOrders from "./components/RefundedOrders";
 import RefundsByCarrier from "./components/RefundsByCarrier";
 import { UseGet } from "@client/hooks/useGet";
-
+import TopSpentUsers from "./components/TopSpentUser";
+import { createStaticRanges, DateRangePicker } from "react-date-range";
+import {  endOfMonth, endOfYear, startOfMonth, startOfYear, subDays, subYears } from "date-fns";
+import { Button } from "@client/components/ui/button";
 const AdminDashboard: React.FC = () => {
 	const queryKey = "admin-dashboard";
 	const { data, isLoading } = UseGet(queryKey, "/admin/dashboard");
 	console.log("data ds", data);
-
+	const [showDateRange, setShowDateRange] = useState<boolean>(false);
 	const COLORS = ["#0088FE", "#00C49F"];
 	const CATEGORY_COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
@@ -54,6 +58,85 @@ const AdminDashboard: React.FC = () => {
 		return monthAbbreviations[month] || month;
 	};
 
+	const [state, setState] = useState([
+		{
+			startDate: new Date(),
+			endDate: new Date(),
+			key: "selection",
+		},
+	]);
+
+	const predefinedRanges = createStaticRanges([
+		{
+			label: "Today",
+			range: () => ({
+				startDate: new Date(),
+				endDate: new Date(),
+			}),
+		},
+		{
+			label: "Yesterday",
+			range: () => ({
+				startDate: subDays(new Date(), 1),
+				endDate: subDays(new Date(), 1),
+			}),
+		},
+		{
+			label: "Last 7 Days",
+			range: () => ({
+				startDate: subDays(new Date(), 6),
+				endDate: new Date(),
+			}),
+		},
+		{
+			label: "Last 30 Days",
+			range: () => ({
+				startDate: subDays(new Date(), 29),
+				endDate: new Date(),
+			}),
+		},
+		{
+			label: "This Month",
+			range: () => ({
+				startDate: startOfMonth(new Date()),
+				endDate: endOfMonth(new Date()),
+			}),
+		},
+		{
+			label: "Last Month",
+			range: () => ({
+				startDate: startOfMonth(subDays(new Date(), 30)),
+				endDate: endOfMonth(subDays(new Date(), 30)),
+			}),
+		},
+		{
+			label: "Last 3 Months",
+			range: () => ({
+				startDate: subDays(new Date(), 90),
+				endDate: new Date(),
+			}),
+		},
+		{
+			label: "Last 6 Months",
+			range: () => ({
+				startDate: subDays(new Date(), 180),
+				endDate: new Date(),
+			}),
+		},
+		
+			{
+				label: "Last 1 Year",
+				range: () => ({
+					startDate: startOfYear(subYears(new Date(), 1)),
+					endDate: endOfYear(subYears(new Date(), 1)),
+				}),
+			},
+	
+		
+	]);
+
+	console.log(state);
+
 	return (
 		<>
 			{isLoading && (
@@ -68,7 +151,30 @@ const AdminDashboard: React.FC = () => {
 						<LayoutDashboardIcon size={24} />
 						<Title title="Admin Dashboard" />
 					</div>
-					<div className="flex items-center gap-x-2">{/* Add date range picker here */}</div>
+					<Button onClick={() => setShowDateRange(!showDateRange)}>Change Date</Button>
+
+					{showDateRange && (
+						<div
+							onKeyDown={() => setShowDateRange(false)}
+							className="shadow-2xl z-[999] absolute right-0 top-40 flex flex-col">
+							<DateRangePicker
+							staticRanges={predefinedRanges}
+								onChange={(item) => setState([item?.selection])}
+								ranges={state}
+								inputRanges={[]} // Pass the empty inputRanges here
+								showMonthAndYearPickers={true}
+								direction="vertical"
+								maxDate={new Date()}
+							/>
+							<div className="bg-white  flex justify-center pb-2">
+								<Button
+									onClick={() => setShowDateRange(false)}
+									className="bg-primary w-24 text-sm h-8 mx-auto text-white py-2 rounded-md">
+									Done
+								</Button>
+							</div>
+						</div>
+					)}
 				</div>
 
 				<div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
@@ -89,6 +195,16 @@ const AdminDashboard: React.FC = () => {
 						<p className="text-2xl">{data?.statisticCard?.openTickets}</p>
 					</div>
 				</div>
+				<div className="grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4">
+					<div className="bg-white p-4 rounded-lg shadow-md text-center">
+						<h3 className="text-lg font-bold">Refunded Orders Amount</h3>
+						<p className="text-2xl">{data?.statisticCard?.refundedOrdersAmount}</p>
+					</div>
+					<div className="bg-white p-4 rounded-lg shadow-md text-center">
+						<h3 className="text-lg font-bold">Pending Refunded Amount</h3>
+						<p className="text-2xl">{data?.statisticCard?.pendingRefundedAmount}</p>
+					</div>
+				</div>
 
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 					<div className="bg-white p-4 rounded-lg shadow-md">
@@ -105,7 +221,7 @@ const AdminDashboard: React.FC = () => {
 									innerRadius={80}
 									fill="#8884d8"
 									dataKey="value">
-									{data?.earningRefunds?.map((_entry: any, index: number) => (
+									{data?.earningRefunds?.map((_entry: { name: string; value: number }, index: number) => (
 										<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
 									))}
 								</Pie>
@@ -129,7 +245,7 @@ const AdminDashboard: React.FC = () => {
 									innerRadius={80}
 									fill="#8884d8"
 									dataKey="value">
-									{data?.revenueByCategory?.map((_entry: any, index: number) => (
+									{data?.revenueByCategory?.map((_entry: { name: string; value: number }, index: number) => (
 										<Cell key={`cell-${index}`} fill={CATEGORY_COLORS[index % CATEGORY_COLORS.length]} />
 									))}
 								</Pie>
@@ -145,7 +261,6 @@ const AdminDashboard: React.FC = () => {
 						<h2 className="text-lg font-bold mb-2">Monthly Revenue Trend</h2>
 						<ResponsiveContainer width="100%" height={300}>
 							<LineChart data={data?.monthlyRevenue}>
-								{console.log("dd", data?.monthlyRevenue)}
 								<CartesianGrid stroke="#ccc" />
 								<XAxis dataKey="name" textAnchor="middle" tickFormatter={formatMonth} />
 								<YAxis />
@@ -182,6 +297,7 @@ const AdminDashboard: React.FC = () => {
 					<Profits profitsData={data?.profits} />
 					<RefundedOrders refundedOrdersData={data?.refundedOrders} />
 					<RefundsByCarrier refundsByCarrierData={data?.refundsByCarrier} />
+					<TopSpentUsers topSpentUsersData={data?.topUsers} />
 				</div>
 			</div>
 		</>

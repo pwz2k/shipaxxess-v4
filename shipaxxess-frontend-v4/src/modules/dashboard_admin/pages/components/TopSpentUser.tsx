@@ -1,29 +1,25 @@
 import React, { useState } from 'react';
 
-interface ReferralUser {
-    id: number;
-    name: string;
-    fullName: string;
+interface TopSpentUsersData {
+    first_name: string;
+    last_name: string;
     email: string;
-    timeZone: string;
-    referrals: number;
-    joined: string;
-    status: string;
+    total_spent: string;
 }
 
 interface Props {
-    referralUsersData: ReferralUser[];
+    topSpentUsersData: TopSpentUsersData[];
 }
 
-const TopReferralUsers: React.FC<Props> = ({ referralUsersData }) => {
+const TopSpentUsers: React.FC<Props> = ({ topSpentUsersData }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const usersPerPage = 5;
 
-    const totalPages = Math.ceil(referralUsersData?.length / usersPerPage);
+    const totalPages = Math.ceil(topSpentUsersData?.length / usersPerPage);
 
     const indexOfLastUser = currentPage * usersPerPage;
     const indexOfFirstUser = indexOfLastUser - usersPerPage;
-    const currentUsers = referralUsersData?.slice(indexOfFirstUser, indexOfLastUser);
+    const currentUsers = topSpentUsersData?.slice(indexOfFirstUser, indexOfLastUser);
 
     const paginate = (pageNumber: number) => {
         if (pageNumber >= 1 && pageNumber <= totalPages) {
@@ -31,22 +27,20 @@ const TopReferralUsers: React.FC<Props> = ({ referralUsersData }) => {
         }
     };
 
-    if (!referralUsersData || referralUsersData.length === 0) {
+    if (!topSpentUsersData || topSpentUsersData.length === 0) {
         return <div>No Data</div>;
     }
 
     return (
         <div className="bg-white w-full md:col-span-2 p-6 rounded-lg shadow-md flex flex-col justify-between">
             <div>
-                <h2 className="text-xl font-semibold mb-4">Top Referral Users</h2>
+                <h2 className="text-xl font-semibold mb-4">Top Spent Users</h2>
                 <ul>
                     {currentUsers.map((user, index:number) => (
                         <li key={index} className="flex justify-between gap-1 items-center border-b border-gray-200 py-2">
-                            <span className="text-gray-500">{user.name}</span>
-                            <span className="text-gray-500">{user.fullName}</span>
+                            <span className="text-gray-500">{user.first_name} {" "}{user.last_name}</span>
                             <span className="text-gray-500">{user.email}</span>
-                            <span className="text-gray-500">{user.referrals} referrals</span>
-                            <span className="text-gray-500">{user.status}</span>
+                            <span className="text-gray-500">${user.total_spent}</span>
                         </li>
                     ))}
                 </ul>
@@ -80,4 +74,4 @@ const TopReferralUsers: React.FC<Props> = ({ referralUsersData }) => {
     );
 };
 
-export default TopReferralUsers;
+export default TopSpentUsers;

@@ -7,7 +7,6 @@ const GetAll = async (c: Context<App>) => {
 	const model = new Model(c.env.DB);
 
 	const urs = await model.all(users);
-
 	return c.json(urs);
 };
 
