@@ -244,7 +244,6 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 		const weight = form.watch("package.weight");
 		const type_id = form.watch("type.id");
 		const type = form.watch("type.type");
-
 		if (weight === 0) return;
 
 		const req = await api.url("/user/weights").useAuth().post({ weight, type_id, type });
@@ -308,9 +307,9 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 													defaultValue={field.value}
 													onValueChange={(id) => {
 														if (!types.data) return;
-
 														const item = findItemById(types.data, Number(id));
 														if (!item) return;
+														console.log(item)
 
 														form.setValue("type.id", item.id);
 														form.setValue("type.label", item.label);

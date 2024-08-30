@@ -16,7 +16,6 @@ const NewBatchUserPage = () => {
 	if (addressesQuery.isLoading || packagesQuery.isLoading || typesQuery.isLoading) {
 		return <Loading />;
 	}
-
 	return (
 		<>
 			<Meta title="Create a New Label" />

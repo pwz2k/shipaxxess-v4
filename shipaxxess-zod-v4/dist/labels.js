@@ -1,18 +1,18 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function (o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
     if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
+        desc = { enumerable: true, get: function () { return m[k]; } };
     }
     Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
+}) : (function (o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
 }));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function (o, v) {
     Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
+}) : function (o, v) {
     o["default"] = v;
 });
 var __importStar = (this && this.__importStar) || function (mod) {
@@ -42,8 +42,8 @@ exports.COMMONSCHEMA = zod_1.z.object({
     shippingdate: zod_1.z
         .string()
         .transform(function (val) {
-        return (0, moment_timezone_1.default)(val).format("MM/DD/YYYY");
-    })
+            return (0, moment_timezone_1.default)(val).format("MM/DD/YYYY");
+        })
         .optional(),
     reference1: zod_1.z.string().optional(),
     description: zod_1.z.string().optional(),
@@ -66,7 +66,7 @@ exports.SEARCHZODSCHEMA = zod_1.z.object({
     uuid: zod_1.z.string().optional(),
     name: zod_1.z.string().optional(),
     weight: zod_1.z.string().optional(),
-    delivery_id: zod_1.z.string().optional(),
+    delivery_type: zod_1.z.string().optional(),
     weight_unit_query: zod_1.z.string().optional(),
     status: zod_1.z.string().optional(),
     from_date: zod_1.z.date().optional(),

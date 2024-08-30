@@ -58,7 +58,7 @@ const Create = async (c: Context<App>) => {
 		throw exception({ message: "Package dimensions are too large.", code: 508 });
 	}
 	log("Package dimensions are ok.");
-
+	console.log(parse.type.type, parse.type.id, parse.package.weight)
 	const weight = await manager.getWeightData(parse.type.type, parse.type.id, parse.package.weight);
 	if (!weight) {
 		throw exception({ message: "Weight not found.", code: 404 });
@@ -269,7 +269,7 @@ const DownloadBatch = async (c: Context<App>) => {
 
 const Search = async (c: Context<App>) => {
 	const body = await c.req.json();
-	const { search_type, delivery_id, end_date, from_date, name, status, uuid, weight, weight_unit_query } =
+	const { search_type, delivery_type, end_date, from_date, name, status, uuid, weight, weight_unit_query } =
 		Labels.SEARCHZODSCHEMA.parse(body);
 
 	// Label search

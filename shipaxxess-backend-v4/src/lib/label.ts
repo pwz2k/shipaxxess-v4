@@ -6,7 +6,6 @@ import { LabelsInsertModel, LabelsSelectModel, labels } from "@schemas/labels";
 import { payments } from "@schemas/payments";
 import { UsersSelectModel, users } from "@schemas/users";
 import { Address, Labels } from "@shipaxxess/shipaxxess-zod-v4";
-import { exception } from "@utils/error";
 import { girth } from "@utils/girth";
 import { log } from "@utils/log";
 import { eq } from "drizzle-orm";
@@ -20,13 +19,13 @@ export class LabelManager {
 	private crons: { uuid: string; message: string }[] = [];
 
 	constructor(private env: Bindings, private settings: { [x: string]: string }) {
-		if (!this.settings["label_apikey"]) {
-			throw exception({ message: "label_apikey is not defined", code: 404 });
-		}
+		// if (!this.settings["label_apikey"]) {
+		// 	throw exception({ message: "label_apikey is not defined", code: 404 });
+		// }
 
-		if (!this.settings["label_host"]) {
-			throw exception({ message: "label_host is not defined", code: 404 });
-		}
+		// if (!this.settings["label_host"]) {
+		// 	throw exception({ message: "label_host is not defined", code: 404 });
+		// }
 
 		log("Label manager is ready.");
 	}

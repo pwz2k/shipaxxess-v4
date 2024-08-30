@@ -54,7 +54,7 @@ export const SEARCHZODSCHEMA = z.object({
 	uuid: z.string().optional(),
 	name: z.string().optional(),
 	weight: z.string().optional(),
-	delivery_id: z.string().optional(),
+	delivery_type: z.string().optional(),
 	weight_unit_query: z.string().optional(),
 	status: z.string().optional(),
 	from_date: z.date().optional(),
