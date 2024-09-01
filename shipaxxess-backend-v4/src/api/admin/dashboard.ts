@@ -1,4 +1,6 @@
+import { weightsRelations } from "./../../database/drizzle-orm/schemas/relations";
 import { addresses } from "@schemas/addresses";
+import { adminWeights } from "@schemas/adminWeights";
 import { batchs } from "@schemas/batchs";
 import { payments } from "@schemas/payments";
 import { refunds } from "@schemas/refunds";
@@ -22,13 +24,13 @@ export const Get = async (c: Context<App>) => {
 		})
 		.from(users);
 
-
 	const OpenTicket = await db
 		.select({
 			count: count(),
 		})
 		.from(tickets)
 		.where(eq(tickets.status, "active"));
+	const today = new Date().toISOString().split("T")[0];
 	// calculate the peak order time from the batchs table using batch table
 	const peakOrderTime = await db
 		.select({
@@ -36,16 +38,15 @@ export const Get = async (c: Context<App>) => {
 			orderCount: count(),
 		})
 		.from(batchs)
-		// .where(eq(batchs.status_label, "active")) // Assuming 'active' batches are what you're interested in
+		.where(sql`strftime('%Y-%m-%d', created_at) = ${today}`) // Filter by today's date
 		.groupBy(sql`strftime('%Y-%m-%d %H', created_at)`)
 		.orderBy(desc(count()))
 		.limit(24);
 
 	const formattedPeakOrderTime = peakOrderTime.map((order: any) => {
 		const parts = order.timeFrame.split(" ");
-		const datePart = parts[0];
 		let timePart = parts[1];
-		const [hours, minutes] = timePart.split(":");
+		const [hours] = timePart.split(":");
 		return {
 			hours: `${hours}:00`,
 			orders: order.orderCount,
@@ -69,7 +70,8 @@ export const Get = async (c: Context<App>) => {
 			month: sql`strftime('%m', created_at)`,
 			orders: count(),
 		})
-		.from(batchs)
+		.from(refunds)
+		.where(eq(refunds.is_refunded, true))
 		.groupBy(sql`strftime('%m', created_at)`)
 		.orderBy(desc(count()));
 
@@ -133,14 +135,14 @@ export const Get = async (c: Context<App>) => {
 
 	// compute the total profit by summing the total credit in the payment table and subtracting the refunds and lables as expese where gateway is is label and refund in gateway
 	const profits = await db
-  .select({
-    month: sql`strftime('%m', created_at)`,
-    profit: sql`SUM(COALESCE(${payments.credit}, 0))`,
-  })
-  .from(payments)
-  .groupBy(sql`strftime('%m', created_at)`)
-  .orderBy(desc(sql`strftime('%m', created_at)`));
-		
+		.select({
+			month: sql`strftime('%m', created_at)`,
+			profit: sql`SUM(COALESCE(${payments.credit}, 0))`,
+		})
+		.from(payments)
+		.groupBy(sql`strftime('%m', created_at)`)
+		.orderBy(desc(sql`strftime('%m', created_at)`));
+
 	const profitByMonth = profits.map((profit: any) => {
 		const month = monthNames[parseInt(profit.month) - 1];
 
@@ -192,43 +194,71 @@ export const Get = async (c: Context<App>) => {
 		.map(([state, count]) => ({ state, orders: count }))
 		.sort((a, b) => b.orders - a.orders);
 
-	
-
-
-
-
-
-		const topSpenders = await db
-		.select({first_name: users.first_name, last_name: users.last_name, total_spent : users.total_spent, email: users.email_address})
+	const topSpenders = await db
+		.select({
+			first_name: users.first_name,
+			last_name: users.last_name,
+			total_spent: users.total_spent,
+			email: users.email_address,
+		})
 		.from(users)
-		.orderBy(desc(users.total_spent)) 
-		.limit(10); 
-		
+		.orderBy(desc(users.total_spent))
+		.limit(10);
 
-		const refundedOrdersAmount = await db
+	const refundedOrdersAmount = await db
 		.select({ count: count(refunds.is_refunded) })
 		.from(refunds)
 		.where(eq(refunds.is_refunded, true));
 
-		const pendingRefundedAmount = await db
+	const refundsRequests = await db
 		.select({ count: count(refunds.is_refunded) })
 		.from(refunds)
 		.where(eq(refunds.is_refunded, false));
 
+	const topShippingCategories = await db
+		.select({ value: count(batchs.id), name: batchs.type_value })
+		.from(batchs)
+		.groupBy(batchs.type_value)
+		// .where(eq(batchs.status_refund, false));
+
+	const pendingRefundedAmount = await db
+		.select({ count: count(refunds.is_refunded) })
+		.from(refunds)
+		.where(eq(refunds.is_refunded, false));
+		const newToday = new Date();
+		const currentYearMonth = `${newToday.getFullYear()}-${String(newToday.getMonth() + 1).padStart(2, '0')}`; // Get 'YYYY-MM' format
+		
+		const newlyRegisteredUsers = await db
+		    .select({ count: count(users.email_address) })
+		    .from(users)
+		    .where(sql`strftime('%Y-%m', ${users.created_at}) = ${currentYearMonth}`);
+		
+
+
+		    const profit = await db
+		    .select({
+		        label: adminWeights.type_id,
+		        fromWeight: adminWeights.from_weight,
+		        toWeight: adminWeights.to_weight,
+		        profit: sql`${adminWeights.user_cost} - ${adminWeights.reseller_cost}`.as('profit')
+		    })
+		    .from(adminWeights);
+		
 
 
 
 
 
 	const payload = {
-		topUsers : topSpenders,
+		topUsers: topSpenders,
+		profit,
 		statisticCard: {
 			totalUsers: totalUsers[0].count,
-			newlyRegisteredUsers: 4,
+			newlyRegisteredUsers: newlyRegisteredUsers[0].count,
 			openTickets: OpenTicket[0].count,
 			refundedOrdersAmount: refundedOrdersAmount[0].count,
-			refundsRequests: 200,
-			pendingRefundedAmount: pendingRefundedAmount[0].count
+			refundsRequests: refundsRequests[0].count,
+			pendingRefundedAmount: pendingRefundedAmount[0].count,
 		},
 		earningRefunds: earningRefunds,
 		revenueByCategory: [
@@ -256,21 +286,17 @@ export const Get = async (c: Context<App>) => {
 			{ name: "Product C", value: 300 },
 			{ name: "Product D", value: 200 },
 		],
-		shippingCategories: [
-			{ name: "Electronics", value: 400 },
-			{ name: "Fashion", value: 300 },
-			{ name: "Home & Garden", value: 300 },
-			{ name: "Sports", value: 200 },
-		],
+		shippingCategories: topShippingCategories,
 		peakOrderTime: formattedPeakOrderTime,
 		popularStates: formattedPopularStates,
-		
+
 		referralUsers: topReferralUsers,
 		paymentMethods: totalAmountByGateway,
 		profits: profitByMonth,
 
 		refundedOrders: formattedRefundedOrders,
 		refundsByCarrier: refundsByCarrier,
+		
 	};
 
 	// Return the payload as a JSON response

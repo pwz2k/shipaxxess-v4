@@ -159,7 +159,8 @@ const AdminDashboard: React.FC = () => {
 							className="shadow-2xl z-[999] absolute right-0 top-40 flex flex-col">
 							<DateRangePicker
 							staticRanges={predefinedRanges}
-								onChange={(item) => setState([item?.selection])}
+								// eslint-disable-next-line @typescript-eslint/no-explicit-any
+								onChange={(item:any) => setState([item?.selection])}
 								ranges={state}
 								inputRanges={[]} // Pass the empty inputRanges here
 								showMonthAndYearPickers={true}

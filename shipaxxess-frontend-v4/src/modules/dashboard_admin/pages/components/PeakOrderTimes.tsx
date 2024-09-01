@@ -3,7 +3,7 @@ import { BarChart, Bar, XAxis, CartesianGrid, Tooltip, ResponsiveContainer } fro
 
 
 interface PeakOrderTime {
-    hour: string;
+    hours: string;
     orders: number;
 }
 interface Props {
@@ -21,7 +21,7 @@ const PeakOrderTimes: React.FC<Props> = ({ peakOrderTimesData }) => {
                     <ResponsiveContainer width="100%" height={300}>
                         <BarChart data={peakOrderTimesData}>
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="hour" />
+                            <XAxis dataKey="hours" />
 
                             <Tooltip />
                             <Bar dataKey="orders" fill="#8884d8" />

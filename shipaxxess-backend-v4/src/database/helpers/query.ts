@@ -39,12 +39,14 @@ export const initSettings = async (db: D1Database) => {
 		drizzle(db).insert(adminSettings).values({ setting_id: "label_host", setting_value: "" }),
 
 		// Smtp server keys
-		drizzle(db).insert(adminSettings).values({ setting_id: "email_smtp_host", setting_value: "" }),
-		drizzle(db).insert(adminSettings).values({ setting_id: "email_smtp_port", setting_value: "" }),
-		drizzle(db).insert(adminSettings).values({ setting_id: "email_smtp_user", setting_value: "" }),
-		drizzle(db).insert(adminSettings).values({ setting_id: "email_smtp_password", setting_value: "" }),
-		drizzle(db).insert(adminSettings).values({ setting_id: "email_from_name", setting_value: "" }),
-		drizzle(db).insert(adminSettings).values({ setting_id: "email_from_address", setting_value: "" }),
+		drizzle(db).insert(adminSettings).values({ setting_id: "email_smtp_host", setting_value: "smtp.gmail.com" }),
+		drizzle(db).insert(adminSettings).values({ setting_id: "email_smtp_port", setting_value: "465" }),
+		drizzle(db).insert(adminSettings).values({ setting_id: "email_smtp_user", setting_value: "Mtr@14197" }),
+		drizzle(db).insert(adminSettings).values({ setting_id: "email_smtp_password", setting_value: "Mtr@14197" }),
+		drizzle(db).insert(adminSettings).values({ setting_id: "email_from_name", setting_value: "Aamar Shahzad" }),
+		drizzle(db)
+			.insert(adminSettings)
+			.values({ setting_id: "email_from_address", setting_value: "mydev.com@gmail.com" }),
 	]);
 };
 

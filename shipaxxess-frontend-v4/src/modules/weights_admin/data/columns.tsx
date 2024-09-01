@@ -34,7 +34,7 @@ export const weightsColumns = (timezone: string) =>
 			},
 			cell: ({ row }) => (
 				<span>
-					{row.original.from_weight} {row.original.type.unit}
+					{row.original.from_weight} {row.original.type?.unit}
 				</span>
 			),
 			enableSorting: true,
@@ -52,7 +52,7 @@ export const weightsColumns = (timezone: string) =>
 			},
 			cell: ({ row }) => (
 				<span>
-					{row.original.to_weight} {row.original.type.unit}
+					{row.original.to_weight} {row.original.type?.unit}
 				</span>
 			),
 			enableSorting: true,

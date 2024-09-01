@@ -15,7 +15,6 @@ export const SignUpUser = async (c: Context<App>) => {
 	try {
 		const body = await c.req.json();
 		const parse = Signup.ZODSCHEMA.parse(body);
-		console.log(parse);
 		const model = new Model(c.env.DB);
 
 		const haveUser = await model.get(users, eq(users.email_address, parse.email_address));
@@ -36,12 +35,11 @@ export const SignUpUser = async (c: Context<App>) => {
 		});
 
 		// console.log(insert);
-		console.log(parse.email_address);
-		if (insert.id === 1) {
+		console.log(insert.id, "id---------------->");
+		if (insert.id === 3) {
 			await initSettings(c.env.DB);
 			await model.update(users, { isadmin: true }, eq(users.id, insert.id));
 		}
-		console.log("email_code", email_code);
 
 		// if c.env==dev then return email_code in message else return message
 		if (String(c.env) == "dev") {
@@ -67,7 +65,7 @@ export const SignUpUser = async (c: Context<App>) => {
 		<h1>${email_code}</h1>
 		`,
 			}),
-		);
+		);	
 
 		return c.json({
 			message: "Verification mail is sent to your email address, please check the inbox/spam folder",
@@ -75,7 +73,6 @@ export const SignUpUser = async (c: Context<App>) => {
 			code: 1004,
 		});
 	} catch (error) {
-		
 		console.log("error", error);
 		return c.json(error);
 	}

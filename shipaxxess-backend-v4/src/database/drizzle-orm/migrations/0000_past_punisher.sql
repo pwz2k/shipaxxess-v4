@@ -205,6 +205,8 @@ CREATE TABLE `refunds` (
 	`batch_uuid` text,
 	`label_uuid` text,
 	`waiting_for` integer DEFAULT 3,
+	`is_refunded` integer DEFAULT false,
+	`is_recycled` integer DEFAULT false,
 	`created_at` text DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` text DEFAULT CURRENT_TIMESTAMP
 );
@@ -248,6 +250,15 @@ CREATE TABLE `stores` (
 	`et_shared_secret` text,
 	`created_at` text DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` text DEFAULT CURRENT_TIMESTAMP
+);
+--> statement-breakpoint
+CREATE TABLE `subscriptions` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`user_id` integer NOT NULL,
+	`token` text NOT NULL,
+	`created_at` text DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` text DEFAULT CURRENT_TIMESTAMP,
+	`is_active` integer DEFAULT true
 );
 --> statement-breakpoint
 CREATE TABLE `tickets` (
