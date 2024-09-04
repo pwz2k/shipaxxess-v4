@@ -30,13 +30,31 @@ import RefundsByCarrier from "./components/RefundsByCarrier";
 import { UseGet } from "@client/hooks/useGet";
 import TopSpentUsers from "./components/TopSpentUser";
 import { createStaticRanges, DateRangePicker } from "react-date-range";
-import {  endOfMonth, endOfYear, startOfMonth, startOfYear, subDays, subYears } from "date-fns";
+import { startOfMonth, endOfMonth, startOfYear, subDays, subMonths, subYears } from "date-fns";
 import { Button } from "@client/components/ui/button";
+
 const AdminDashboard: React.FC = () => {
-	const queryKey = "admin-dashboard";
-	const { data, isLoading } = UseGet(queryKey, "/admin/dashboard");
-	console.log("data ds", data);
+	const today = new Date();
+
+	// Set initial date range for the current month
+	const initialState = [
+		{
+			startDate: startOfMonth(today),
+			endDate: today,
+			key: "selection",
+		},
+	];
+
+	const [state, setState] = useState(initialState);
 	const [showDateRange, setShowDateRange] = useState<boolean>(false);
+
+	// Construct the query based on the selected date range
+	const startDate = state[0].startDate.toISOString();
+	const endDate = state[0].endDate.toISOString();
+	const queryKey = "admin-dashboard";
+	const { data, isLoading, refetch } = UseGet(queryKey, `/admin/dashboard?startDate=${startDate}&endDate=${endDate}`);
+
+	console.log("data ds", data);
 	const COLORS = ["#0088FE", "#00C49F"];
 	const CATEGORY_COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
@@ -58,20 +76,12 @@ const AdminDashboard: React.FC = () => {
 		return monthAbbreviations[month] || month;
 	};
 
-	const [state, setState] = useState([
-		{
-			startDate: new Date(),
-			endDate: new Date(),
-			key: "selection",
-		},
-	]);
-
 	const predefinedRanges = createStaticRanges([
 		{
 			label: "Today",
 			range: () => ({
-				startDate: new Date(),
-				endDate: new Date(),
+				startDate: new Date(new Date().setHours(0, 0, 0, 0)),
+				endDate: new Date(new Date().setSeconds(59, 999)),
 			}),
 		},
 		{
@@ -104,38 +114,50 @@ const AdminDashboard: React.FC = () => {
 		},
 		{
 			label: "Last Month",
-			range: () => ({
-				startDate: startOfMonth(subDays(new Date(), 30)),
-				endDate: endOfMonth(subDays(new Date(), 30)),
-			}),
+			range: () => {
+				const now = new Date();
+				const lastMonthStart = startOfMonth(subMonths(now, 1));
+				const lastMonthEnd = endOfMonth(subMonths(now, 1));
+				return {
+					startDate: lastMonthStart,
+					endDate: lastMonthEnd,
+				};
+			},
 		},
 		{
 			label: "Last 3 Months",
-			range: () => ({
-				startDate: subDays(new Date(), 90),
-				endDate: new Date(),
-			}),
+			range: () => {
+				const now = new Date();
+				const threeMonthsAgo = subMonths(now, 3);
+				return {
+					startDate: startOfMonth(threeMonthsAgo),
+					endDate: new Date(),
+				};
+			},
 		},
 		{
 			label: "Last 6 Months",
-			range: () => ({
-				startDate: subDays(new Date(), 180),
-				endDate: new Date(),
-			}),
-		},
-		
-			{
-				label: "Last 1 Year",
-				range: () => ({
-					startDate: startOfYear(subYears(new Date(), 1)),
-					endDate: endOfYear(subYears(new Date(), 1)),
-				}),
+			range: () => {
+				const now = new Date();
+				const sixMonthsAgo = subMonths(now, 6);
+				return {
+					startDate: startOfMonth(sixMonthsAgo),
+					endDate: new Date(),
+				};
 			},
-	
-		
+		},
+		{
+			label: "Last 1 Year",
+			range: () => {
+				const now = new Date();
+				const lastYearStart = startOfYear(subYears(now, 1));
+				return {
+					startDate: lastYearStart,
+					endDate: new Date(),
+				};
+			},
+		},
 	]);
-
-	console.log(state);
 
 	return (
 		<>
@@ -158,9 +180,9 @@ const AdminDashboard: React.FC = () => {
 							onKeyDown={() => setShowDateRange(false)}
 							className="shadow-2xl z-[999] absolute right-0 top-40 flex flex-col">
 							<DateRangePicker
-							staticRanges={predefinedRanges}
+								staticRanges={predefinedRanges}
 								// eslint-disable-next-line @typescript-eslint/no-explicit-any
-								onChange={(item:any) => setState([item?.selection])}
+								onChange={(item: any) => setState([item?.selection])}
 								ranges={state}
 								inputRanges={[]} // Pass the empty inputRanges here
 								showMonthAndYearPickers={true}
@@ -169,7 +191,7 @@ const AdminDashboard: React.FC = () => {
 							/>
 							<div className="bg-white  flex justify-center pb-2">
 								<Button
-									onClick={() => setShowDateRange(false)}
+									onClick={() => [setShowDateRange(false), refetch()]}
 									className="bg-primary w-24 text-sm h-8 mx-auto text-white py-2 rounded-md">
 									Done
 								</Button>
@@ -204,6 +226,10 @@ const AdminDashboard: React.FC = () => {
 					<div className="bg-white p-4 rounded-lg shadow-md text-center">
 						<h3 className="text-lg font-bold">Pending Refunded Amount</h3>
 						<p className="text-2xl">{data?.statisticCard?.pendingRefundedAmount}</p>
+					</div>
+					<div className="bg-white p-4 rounded-lg shadow-md text-center">
+						<h3 className="text-lg font-bold">Profit</h3>
+						<p className="text-2xl">${data?.totalProfit}</p>
 					</div>
 				</div>
 
@@ -295,7 +321,7 @@ const AdminDashboard: React.FC = () => {
 
 				<div className="grid grid-cols-1 md:grid-col-2  lg:grid-cols-4 gap-4 mb-4">
 					<PaymentMethodsBreakdown paymentMethodsData={data?.paymentMethods} />
-					<Profits profitsData={data?.profits} />
+					<Profits profitsData={data?.profitByMonth} />
 					<RefundedOrders refundedOrdersData={data?.refundedOrders} />
 					<RefundsByCarrier refundsByCarrierData={data?.refundsByCarrier} />
 					<TopSpentUsers topSpentUsersData={data?.topUsers} />

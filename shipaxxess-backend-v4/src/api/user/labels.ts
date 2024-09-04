@@ -42,7 +42,6 @@ const Get = async (c: Context<App, "/:uuid">) => {
 
 const Create = async (c: Context<App>) => {
 	log("Hit label batch endpoint.");
-	console.log("CENV", c);
 
 	const body = await c.req.json();
 	const parse = Labels.BATCHZODSCHEMA.parse(body);

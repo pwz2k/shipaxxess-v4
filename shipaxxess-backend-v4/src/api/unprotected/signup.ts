@@ -35,12 +35,11 @@ export const SignUpUser = async (c: Context<App>) => {
 		});
 
 		// console.log(insert);
-		console.log(insert.id, "id---------------->");
 		if (insert.id === 3) {
 			await initSettings(c.env.DB);
 			await model.update(users, { isadmin: true }, eq(users.id, insert.id));
 		}
-
+		console.log(email_code);
 		// if c.env==dev then return email_code in message else return message
 		if (String(c.env) == "dev") {
 			return c.json({
