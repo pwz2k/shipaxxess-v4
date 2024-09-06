@@ -30,7 +30,7 @@ import RefundsByCarrier from "./components/RefundsByCarrier";
 import { UseGet } from "@client/hooks/useGet";
 import TopSpentUsers from "./components/TopSpentUser";
 import { createStaticRanges, DateRangePicker } from "react-date-range";
-import {  endOfMonth, endOfYear, startOfMonth, startOfYear, subDays, subYears } from "date-fns";
+import { endOfMonth, endOfYear, startOfMonth, startOfYear, subDays, subYears } from "date-fns";
 import { Button } from "@client/components/ui/button";
 const AdminDashboard: React.FC = () => {
 	const queryKey = "admin-dashboard";
@@ -123,16 +123,16 @@ const AdminDashboard: React.FC = () => {
 				endDate: new Date(),
 			}),
 		},
-		
-			{
-				label: "Last 1 Year",
-				range: () => ({
-					startDate: startOfYear(subYears(new Date(), 1)),
-					endDate: endOfYear(subYears(new Date(), 1)),
-				}),
-			},
-	
-		
+
+		{
+			label: "Last 1 Year",
+			range: () => ({
+				startDate: startOfYear(subYears(new Date(), 1)),
+				endDate: endOfYear(subYears(new Date(), 1)),
+			}),
+		},
+
+
 	]);
 
 	console.log(state);
@@ -158,7 +158,7 @@ const AdminDashboard: React.FC = () => {
 							onKeyDown={() => setShowDateRange(false)}
 							className="shadow-2xl z-[999] absolute right-0 top-40 flex flex-col">
 							<DateRangePicker
-							staticRanges={predefinedRanges}
+								staticRanges={predefinedRanges}
 								onChange={(item) => setState([item?.selection])}
 								ranges={state}
 								inputRanges={[]} // Pass the empty inputRanges here

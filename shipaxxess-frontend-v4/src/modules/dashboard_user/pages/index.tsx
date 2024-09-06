@@ -41,7 +41,7 @@ const DashboardStats: React.FC = () => {
 	const totalShipmentsData = generateUpDownData(months);
 	const totalPaymentsData = generateUpDownData(months);
 	const averageCostData = generateUpDownData(months);
-	
+
 	const topStates = [
 		{ name: "Georgia", percentage: 15.53, shipments: 34, average: 3.59 },
 		{ name: "California", percentage: 9.13, shipments: 20, average: 3.4 },
@@ -81,7 +81,7 @@ const DashboardStats: React.FC = () => {
 				<>
 					<div className="px-4">
 						<div className='flex justify-between'>
-							<div className='flex items-center gap-x-1 sticky top-0 '>
+							<div className='flex items-center gap-x-1 py-5 sticky top-0 '>
 								<LayoutDashboardIcon size={24} />
 								<Title title="Dashboard" />
 							</div>
@@ -101,7 +101,7 @@ const DashboardStats: React.FC = () => {
 							<div className='flex flex-col h-full gap-y-6'>
 								<OverviewSection title="Total Shipping Cost" value={getRandomNumber(1000, 10000)} linkText={"View Transactions"} />
 								<OverviewSection title="Carrier Adjustment" value={-5.9} linkText={"View All Adjustment"} />
-								<OverviewSection title="Pending Refund" value={getRandomNumber(1000, 10000)} linkText={"View Refund History"} />
+								<OverviewSection title="Pending Refund" value={data?.staticsCard?.pendingRefund} linkText={"View Refund History"} />
 							</div>
 						</div>
 						<div className="col-span-1 lg:col-span-2">
@@ -158,7 +158,7 @@ const DashboardStats: React.FC = () => {
 						</div>
 
 						<div className="col-span-1 lg:col-span-3">
-							<TopRegions topStates={topStates} topCountries={topCountries} />
+							<TopRegions topStates={data?.topstates} topCountries={topCountries} />
 						</div>
 						<div className="col-span-1 lg:col-span-3 pb-10">
 

@@ -3,6 +3,9 @@ import * as am4core from '@amcharts/amcharts4/core';
 import * as am4maps from '@amcharts/amcharts4/maps';
 import am4geodata_usaLow from '@amcharts/amcharts4-geodata/usaLow';
 import am4geodata_worldLow from '@amcharts/amcharts4-geodata/worldLow';
+import { BarChart, CartesianGrid, XAxis, Tooltip, Legend, Bar, Cell, ResponsiveContainer, Text } from 'recharts';
+import { ChartData } from 'chart.js';
+
 
 interface RegionData {
     name: string;
@@ -73,11 +76,15 @@ const TopRegions: React.FC<TopRegionsProps> = ({ topStates, topCountries }) => {
             chartWorld.dispose();
         };
     }, [topStates]); // Re-run effect when topStates changes
-
+    const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF1493', '#DAA520', '#ADFF2F', '#20B2AA', '#8B4513'];
+    const data: ChartData[] = topStates.map((item, index) => ({
+        zone: `${item.name}`,
+        value: item.shipments, // Random value between 1000 and 6000
+    }));
     return (
         <div className="flex flex-col gap-y-8 m-10">
             <div className="flex flex-col md:flex-row justify-between">
-                <div>
+                <div className='w-1/2'>
                     <h2 className="text-xl font-bold mb-4">Top States</h2>
                     <ul>
                         {topStates.map((state, index) => (
@@ -88,7 +95,20 @@ const TopRegions: React.FC<TopRegionsProps> = ({ topStates, topCountries }) => {
                         ))}
                     </ul>
                 </div>
-                <div id="chartUS" style={{ width: '900px', height: '400px' }}></div>
+                {/* <div id="chartUS" style={{ width: '900px', height: '400px' }}></div> */}
+                <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={data}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="zone" />
+                        <Tooltip />
+                        <Legend />
+                        <Bar dataKey="value" fill="#8884d8">
+                            {data.map((_entry, index) => (
+                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                        </Bar>
+                    </BarChart>
+                </ResponsiveContainer>
             </div>
 
             <div className="flex flex-col md:flex-row justify-between">
