@@ -1,10 +1,13 @@
+import { weightsRelations } from "./../../database/drizzle-orm/schemas/relations";
 import { addresses } from "@schemas/addresses";
+import { adminWeights } from "@schemas/adminWeights";
 import { batchs } from "@schemas/batchs";
 import { payments } from "@schemas/payments";
 import { refunds } from "@schemas/refunds";
 import { tickets } from "@schemas/tickets";
 
 import { users } from "@schemas/users";
+import { weights } from "@schemas/weights";
 import { and, count, desc, eq, gt, not, sql, sum } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import { Context } from "hono";
@@ -16,19 +19,69 @@ const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep
 
 export const Get = async (c: Context<App>) => {
 	const db = drizzle(c.env.DB);
+
+	const { startDate, endDate } = c.req.query();
+
+	if (!startDate || !endDate) {
+		return c.json({ error: "startDate and endDate are required" }, 400);
+	}
+
+	const start = new Date(startDate);
+	const end = new Date(endDate);
+
+
+
+
+
+
+	if (start.toDateString() === end.toDateString()) {
+		// Set startDate to the first second of the day
+		start.setHours(0, 0, 0, 0);
+	
+		// Set endDate to the last second of the day
+		end.setHours(23, 59, 59, 999);
+	} else {
+		// Check if both dates are "yesterday"
+		const yesterday = new Date();
+		yesterday.setDate(yesterday.getDate() - 1);
+	
+		if (
+			start.toDateString() === yesterday.toDateString() &&
+			end.toDateString() === yesterday.toDateString()
+		) {
+			// Set startDate to the first second of "yesterday"
+			start.setHours(0, 0, 0, 0);
+	
+			// Set endDate to the last second of "yesterday"
+			end.setHours(23, 59, 59, 999);
+		}
+	}
+
+
+
+
+
+
+	console.log(start, end);
 	const totalUsers = await db
 		.select({
 			count: count(),
 		})
 		.from(users);
 
-
 	const OpenTicket = await db
 		.select({
 			count: count(),
 		})
 		.from(tickets)
-		.where(eq(tickets.status, "active"));
+		.where(
+			and(
+				eq(tickets.status, "active"),
+				sql`${tickets.created_at} >= ${start.toISOString()}`,
+				sql`${tickets.created_at} <= ${end.toISOString()}`,
+			),
+		);
+	const today = new Date().toISOString().split("T")[0];
 	// calculate the peak order time from the batchs table using batch table
 	const peakOrderTime = await db
 		.select({
@@ -36,21 +89,25 @@ export const Get = async (c: Context<App>) => {
 			orderCount: count(),
 		})
 		.from(batchs)
-		// .where(eq(batchs.status_label, "active")) // Assuming 'active' batches are what you're interested in
+		.where(sql`strftime('%Y-%m-%d', created_at) = ${today}`) // Filter by today's date
 		.groupBy(sql`strftime('%Y-%m-%d %H', created_at)`)
-		.orderBy(desc(count()))
-		.limit(24);
+		.orderBy(sql`strftime('%H', created_at)`); // Order by hour
 
-	const formattedPeakOrderTime = peakOrderTime.map((order: any) => {
-		const parts = order.timeFrame.split(" ");
-		const datePart = parts[0];
-		let timePart = parts[1];
-		const [hours, minutes] = timePart.split(":");
+	const hours = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, "0")}:00`);
+
+	const formattedPeakOrderTime = hours.map((hour) => {
+		// Extract only the hour part for comparison
+		const found = peakOrderTime.find((order: any) => {
+			const orderHour = order.timeFrame.split(" ")[1] + ":00"; // Add ":00" to match with 'hours'
+			return orderHour === hour;
+		});
+
 		return {
-			hours: `${hours}:00`,
-			orders: order.orderCount,
+			hours: hour,
+			orders: found ? found.orderCount : 0,
 		};
 	});
+
 	// compute paymentMethods and each method total value using payments table
 	const totalAmountByGateway = await db
 		.select({
@@ -59,7 +116,14 @@ export const Get = async (c: Context<App>) => {
 			value: sql`SUM(${payments.credit})`,
 		})
 		.from(payments)
-		.where(and(not(eq(payments.gateway, "Label")), not(eq(payments.gateway, "Refund")))) // Exclude third-party API payments and refunds
+		.where(
+			and(
+				not(eq(payments.gateway, "Label")),
+				not(eq(payments.gateway, "Refund")),
+				sql`${payments.created_at} >= ${start.toISOString()}`,
+				sql`${payments.created_at} <= ${end.toISOString()}`,
+			),
+		) // Exclude third-party API payments and refunds
 		.groupBy(payments.gateway) // Group by gateway only, not by user_id
 		.orderBy(payments.gateway);
 
@@ -69,7 +133,14 @@ export const Get = async (c: Context<App>) => {
 			month: sql`strftime('%m', created_at)`,
 			orders: count(),
 		})
-		.from(batchs)
+		.from(refunds)
+		.where(
+			and(
+				eq(refunds.is_refunded, true),
+				sql`${refunds.created_at} >= ${start.toISOString()}`,
+				sql`${refunds.created_at} <= ${end.toISOString()}`,
+			),
+		)
 		.groupBy(sql`strftime('%m', created_at)`)
 		.orderBy(desc(count()));
 
@@ -88,7 +159,13 @@ export const Get = async (c: Context<App>) => {
 		})
 		.from(batchs)
 		.groupBy(batchs.type)
-		.where(eq(batchs.status_refund, true));
+		.where(
+			and(
+				eq(batchs.status_refund, true),
+				sql`${batchs.created_at} >= ${start.toISOString()}`,
+				sql`${batchs.created_at} <= ${end.toISOString()}`,
+			),
+		);
 
 	// return the top 10 referralUsers that referred the most users if user not refer any it refer_from is null
 	const topReferralUsers = await db
@@ -106,24 +183,33 @@ export const Get = async (c: Context<App>) => {
 		.from(users)
 		.where(gt(users, 0))
 		.execute();
-	// compute the refund and earnings by
-	// in the payement column we have credit and current_balance and new_balance
-	// the gateway column is the payment method used by the user
-	// and also if the value in payent column Refund we can say that the user has refund the payment
-	// so we can compute the total earnings and refunds
+
 	const totalEarnings = await db
 		.select({
 			totalEarnings: sql`SUM(${payments.credit})`,
 		})
 		.from(payments)
-		.where(not(eq(payments.gateway, "Refund")))
+		.where(
+			and(
+				not(eq(payments.gateway, "Refund")),
+				sql`${payments.created_at} >= ${start.toISOString()}`,
+				sql`${payments.created_at} <= ${end.toISOString()}`,
+			),
+		)
 		.execute();
+
 	const totalRefunds = await db
 		.select({
 			totalRefunds: sql`SUM(${payments.credit})`,
 		})
 		.from(payments)
-		.where(eq(payments.gateway, "Refund"))
+		.where(
+			and(
+				eq(payments.gateway, "Refund"),
+				sql`${payments.created_at} >= ${start.toISOString()}`,
+				sql`${payments.created_at} <= ${end.toISOString()}`,
+			),
+		)
 		.execute();
 
 	const earningRefunds = [
@@ -133,14 +219,17 @@ export const Get = async (c: Context<App>) => {
 
 	// compute the total profit by summing the total credit in the payment table and subtracting the refunds and lables as expese where gateway is is label and refund in gateway
 	const profits = await db
-  .select({
-    month: sql`strftime('%m', created_at)`,
-    profit: sql`SUM(COALESCE(${payments.credit}, 0))`,
-  })
-  .from(payments)
-  .groupBy(sql`strftime('%m', created_at)`)
-  .orderBy(desc(sql`strftime('%m', created_at)`));
-		
+		.select({
+			month: sql`strftime('%m', created_at)`,
+			profit: sql`SUM(COALESCE(${payments.credit}, 0))`,
+		})
+		.from(payments)
+		.groupBy(sql`strftime('%m', created_at)`)
+		.orderBy(desc(sql`strftime('%m', created_at)`))
+		.where(
+			and(sql`${payments.created_at} >= ${start.toISOString()}`, sql`${payments.created_at} <= ${end.toISOString()}`),
+		);
+
 	const profitByMonth = profits.map((profit: any) => {
 		const month = monthNames[parseInt(profit.month) - 1];
 
@@ -150,25 +239,11 @@ export const Get = async (c: Context<App>) => {
 		};
 	});
 
-	const timeFrame = "day" as string; // Or "month" or other values
-	let dateFilter: string;
-	switch (timeFrame) {
-		case "day":
-			dateFilter = "datetime('now', '-1 day')";
-			break;
-		case "month":
-			dateFilter = "datetime('now', '-1 month')";
-			break;
-		default:
-			dateFilter = "datetime('now', '-1 year')";
-			break;
-	}
-
 	// Query batch data
 	const batchData = await db
 		.select({ recipients: batchs.recipients })
 		.from(batchs)
-		// .where(sql`${batchs.created_at} >= ${dateFilter}`)
+		.where(and(sql`${batchs.created_at} >= ${start.toISOString()}`, sql`${batchs.created_at} <= ${end.toISOString()}`))
 		.all();
 
 	// Process recipients
@@ -192,43 +267,99 @@ export const Get = async (c: Context<App>) => {
 		.map(([state, count]) => ({ state, orders: count }))
 		.sort((a, b) => b.orders - a.orders);
 
-	
-
-
-
-
-
-		const topSpenders = await db
-		.select({first_name: users.first_name, last_name: users.last_name, total_spent : users.total_spent, email: users.email_address})
+	const topSpenders = await db
+		.select({
+			first_name: users.first_name,
+			last_name: users.last_name,
+			total_spent: users.total_spent,
+			email: users.email_address,
+		})
 		.from(users)
-		.orderBy(desc(users.total_spent)) 
-		.limit(10); 
-		
+		.orderBy(desc(users.total_spent))
+		.where(and(sql`${users.created_at} >= ${start.toISOString()}`, sql`${users.created_at} <= ${end.toISOString()}`))
+		.limit(10);
 
-		const refundedOrdersAmount = await db
+	const refundedOrdersAmount = await db
 		.select({ count: count(refunds.is_refunded) })
 		.from(refunds)
-		.where(eq(refunds.is_refunded, true));
+		.where(
+			and(
+				eq(refunds.is_refunded, true),
+				sql`${refunds.created_at} >= ${start.toISOString()}`,
+				sql`${refunds.created_at} <= ${end.toISOString()}`,
+			),
+		);
 
-		const pendingRefundedAmount = await db
+	const refundsRequests = await db
 		.select({ count: count(refunds.is_refunded) })
 		.from(refunds)
-		.where(eq(refunds.is_refunded, false));
+		.where(
+			and(
+				eq(refunds.is_refunded, false),
+				sql`${refunds.created_at} >= ${start.toISOString()}`,
+				sql`${refunds.created_at} <= ${end.toISOString()}`,
+			),
+		);
 
+	const topShippingCategories = await db
+		.select({ value: count(batchs.id), name: batchs.type_value })
+		.from(batchs)
+		.groupBy(batchs.type_value)
+		.where(
+			and(
+				eq(batchs.status_refund, false),
+				sql`${batchs.created_at} >= ${start.toISOString()}`,
+				sql`${batchs.created_at} <= ${end.toISOString()}`,
+			),
+		);
+	// .where(eq(batchs.status_refund, false));
 
+	const pendingRefundedAmount = await db
+		.select({ count: count(refunds.is_refunded) })
+		.from(refunds)
+		.where(
+			and(
+				eq(refunds.is_refunded, false),
+				sql`${refunds.created_at} >= ${start.toISOString()}`,
+				sql`${refunds.created_at} <= ${end.toISOString()}`,
+			),
+		);
 
+	const newlyRegisteredUsers = await db
+		.select({ count: count(users.email_address) })
+		.from(users)
+		.where(and(sql`${users.created_at} >= ${start.toISOString()}`, sql`${users.created_at} <= ${end.toISOString()}`));
 
+	const totalProfitsWithType = await db
+		.select({
+			type: batchs.type,
+			profit: sum(sql<number>`((${batchs.cost_user} - ${batchs.cost_reseller}))`).as("total_profit"),
+		})
+		.from(batchs)
+		.where(
+			and(
+				eq(batchs.status_label, "completed"),
+				sql`${batchs.created_at} >= ${start.toISOString()}`,
+				sql`${batchs.created_at} <= ${end.toISOString()}`,
+			),
+		)
+		.groupBy(batchs.type)
+		.execute();
 
+	const totalProfit = totalProfitsWithType.reduce((acc, data) => acc + Number(data.profit), 0);
 
 	const payload = {
-		topUsers : topSpenders,
+		totalProfitsWithType,
+		topUsers: topSpenders,
+		profits,
+		totalProfit,
 		statisticCard: {
 			totalUsers: totalUsers[0].count,
-			newlyRegisteredUsers: 4,
+			newlyRegisteredUsers: newlyRegisteredUsers[0].count,
 			openTickets: OpenTicket[0].count,
 			refundedOrdersAmount: refundedOrdersAmount[0].count,
-			refundsRequests: 200,
-			pendingRefundedAmount: pendingRefundedAmount[0].count
+			refundsRequests: refundsRequests[0].count,
+			pendingRefundedAmount: pendingRefundedAmount[0].count,
 		},
 		earningRefunds: earningRefunds,
 		revenueByCategory: [
@@ -256,18 +387,13 @@ export const Get = async (c: Context<App>) => {
 			{ name: "Product C", value: 300 },
 			{ name: "Product D", value: 200 },
 		],
-		shippingCategories: [
-			{ name: "Electronics", value: 400 },
-			{ name: "Fashion", value: 300 },
-			{ name: "Home & Garden", value: 300 },
-			{ name: "Sports", value: 200 },
-		],
+		shippingCategories: topShippingCategories,
 		peakOrderTime: formattedPeakOrderTime,
 		popularStates: formattedPopularStates,
-		
+
 		referralUsers: topReferralUsers,
 		paymentMethods: totalAmountByGateway,
-		profits: profitByMonth,
+		profitByMonth: profitByMonth,
 
 		refundedOrders: formattedRefundedOrders,
 		refundsByCarrier: refundsByCarrier,

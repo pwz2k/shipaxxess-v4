@@ -15,6 +15,7 @@ import { users } from "./users";
 import { weights } from "./weights";
 
 import { adminWeightsRelations, weightsRelations } from "./relations";
+import { adminSettings } from "./adminSettings";
 
 export default {
 	addresses,
@@ -34,4 +35,5 @@ export default {
 	weightsRelations,
 	adminWeights,
 	adminWeightsRelations,
+	adminSettings
 };

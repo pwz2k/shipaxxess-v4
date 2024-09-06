@@ -18,7 +18,7 @@ const TopShippingCategories: React.FC<Props> = ({ shippingCategoriesData }) => {
     return (
         <div className="bg-white p-4 md:col-span-2 rounded-lg shadow-md">
             <h2 className="text-lg font-bold mb-2">Top Shipping Categories</h2>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={350}>
                 <PieChart>
                     <Pie
                         data={shippingCategoriesData}
