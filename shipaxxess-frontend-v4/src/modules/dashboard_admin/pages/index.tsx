@@ -180,7 +180,8 @@ const AdminDashboard: React.FC = () => {
 							className="shadow-2xl z-[999] absolute right-0 top-40 flex flex-col">
 							<DateRangePicker
 								staticRanges={predefinedRanges}
-								onChange={(item) => setState([item?.selection])}
+								// eslint-disable-next-line @typescript-eslint/no-explicit-any
+								onChange={(item:any) => setState([item?.selection])}
 								ranges={state}
 								inputRanges={[]} // Pass the empty inputRanges here
 								showMonthAndYearPickers={true}
@@ -318,9 +319,9 @@ const AdminDashboard: React.FC = () => {
 				</div>
 
 				<div className="grid grid-cols-1 md:grid-col-2  lg:grid-cols-4 gap-4 mb-4">
-					<PaymentMethodsBreakdown paymentMethodsData={data?.paymentMethods} />
+					<PaymentMethodsBreakdown paymentMethodsBreakdownByGateway={data?.paymentMethodsBreakdownByGateway} />
 					<Profits profitsData={data?.profitByMonth} />
-					<RefundedOrders refundedOrdersData={data?.refundedOrders} />
+					<RefundedOrders  refundedOrdersData={data?.refundedOrders} />
 					<RefundsByCarrier refundsByCarrierData={data?.refundsByCarrier} />
 					<TopSpentUsers topSpentUsersData={data?.topUsers} />
 				</div>

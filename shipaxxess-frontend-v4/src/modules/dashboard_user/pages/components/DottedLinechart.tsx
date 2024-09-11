@@ -17,8 +17,8 @@ interface GenericLineChartProps {
 }
 
 const GenericLineChart: React.FC<GenericLineChartProps> = ({ data, title, valueKey, icon, width = "100%", height = 400 }) => {
-    const totalValue = data.reduce((acc, item) => acc + item.value, 0);
-
+    const totalValue = data.reduce((acc, item) => Number(acc) + Number(item.value), 0);
+console.log(totalValue);
     return (
         <div className="p-4 bg-white shadow-md rounded-lg">
             <div className='flex justify-center gap-x-1'>
@@ -26,7 +26,7 @@ const GenericLineChart: React.FC<GenericLineChartProps> = ({ data, title, valueK
                 <h2 className="text-2xl font-bold mb-2">{title}</h2>
             </div>
             <div className="flex justify-center mb-4">
-                <h3 className="text-xl font-bold">${totalValue.toFixed(2)}</h3>
+                <h3 className="text-xl font-bold">{totalValue}</h3>
             </div>
 
             <ResponsiveContainer width={width} height={height}>

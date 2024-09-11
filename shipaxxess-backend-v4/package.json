@@ -24,6 +24,7 @@
 	},
 	"devDependencies": {
 		"@cloudflare/workers-types": "^4.20230914.0",
+		"@types/nodemailer": "^6.4.15",
 		"@types/web-push": "^3.6.3",
 		"drizzle-kit": "^0.24.2",
 		"wrangler": "^3.25.0"

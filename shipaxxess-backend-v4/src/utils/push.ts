@@ -93,7 +93,7 @@ async function getAccessToken(SERVICE_ACCOUNT_KEY_BASE64: string): Promise<strin
         const data = await response.json();
         console.log('dataa', data)
      
-        if (data.error) {
+        if (data?.error) {
             throw new Error(data.error_description || 'Error fetching access token');
         }
         return data.access_token;

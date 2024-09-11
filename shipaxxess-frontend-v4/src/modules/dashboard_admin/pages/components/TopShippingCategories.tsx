@@ -18,7 +18,9 @@ const TopShippingCategories: React.FC<Props> = ({ shippingCategoriesData }) => {
     return (
         <div className="bg-white p-4 md:col-span-2 rounded-lg shadow-md">
             <h2 className="text-lg font-bold mb-2">Top Shipping Categories</h2>
-            <ResponsiveContainer width="100%" height={350}>
+            {shippingCategoriesData?.length === 0 && <h1 className='mt-32 flex justify-center items-center'>No data available for shipping categories</h1>  }
+            {shippingCategoriesData?.length > 0 &&
+             <ResponsiveContainer width="100%" height={350}>
                 <PieChart>
                     <Pie
                         data={shippingCategoriesData}
@@ -37,7 +39,7 @@ const TopShippingCategories: React.FC<Props> = ({ shippingCategoriesData }) => {
                      <Legend verticalAlign="bottom" height={15} />
                     <Tooltip />
                 </PieChart>
-            </ResponsiveContainer>
+            </ResponsiveContainer>}
         </div>
     );
 };

@@ -107,7 +107,7 @@ export const Get = async (c: Context<App>) => {
 			orders: found ? found.orderCount : 0,
 		};
 	});
-
+	const paymentGateways = ['cashapp', 'venmo', 'zelle', 'crypto', 'card'];
 	// compute paymentMethods and each method total value using payments table
 	const totalAmountByGateway = await db
 		.select({
@@ -127,7 +127,25 @@ export const Get = async (c: Context<App>) => {
 		.groupBy(payments.gateway) // Group by gateway only, not by user_id
 		.orderBy(payments.gateway);
 
+		const paymentMethodsBreakdownByGateway = paymentGateways.map(gateway => {
+			const paymentData = totalAmountByGateway.find(payment => payment.name === gateway);
+			return {
+			  gateway: paymentData?.name,
+			  value: paymentData ? paymentData.value : 0,  // Assign value 0 if not present in the result
+			};
+		             });
+
+
+
+
+
+
 	// compute refunder orders using batchs table by each month by name
+
+	const monthsOfYear = Array.from({ length: 12 }, (_, i) => ({
+		month: (i + 1).toString().padStart(2, "0"), // "01" to "12"
+	}));
+
 	const refundedOrders = await db
 		.select({
 			month: sql`strftime('%m', created_at)`,
@@ -144,13 +162,23 @@ export const Get = async (c: Context<App>) => {
 		.groupBy(sql`strftime('%m', created_at)`)
 		.orderBy(desc(count()));
 
-	const formattedRefundedOrders = refundedOrders.map((order: any) => {
-		const month = monthNames[parseInt(order.month) - 1];
+	
+
+
+
+	const formattedRefundedOrders = monthsOfYear.map((month) => {
+		const foundOrder = refundedOrders.find((order: any) => order.month === month.month);
+		const monthName = monthNames[parseInt(month.month) - 1]; // Get month name from month number
 		return {
-			month,
-			orders: order.orders,
+			month: monthName,
+			orders: foundOrder ? foundOrder.orders : 0, // If no orders, return 0
 		};
 	});
+
+
+
+
+	
 	// compute  refundsByCarrier using batchs table by each carrier
 	const refundsByCarrier = await db
 		.select({
@@ -214,7 +242,7 @@ export const Get = async (c: Context<App>) => {
 
 	const earningRefunds = [
 		{ name: "Total Earnings", value: totalEarnings[0].totalEarnings },
-		{ name: "Refunds", value: totalRefunds[0].totalRefunds },
+		{ name: "Refunds", value: totalRefunds[0].totalRefunds ? totalRefunds[0].totalRefunds : 0 },
 	];
 
 	// compute the total profit by summing the total credit in the payment table and subtracting the refunds and lables as expese where gateway is is label and refund in gateway
@@ -392,7 +420,7 @@ export const Get = async (c: Context<App>) => {
 		popularStates: formattedPopularStates,
 
 		referralUsers: topReferralUsers,
-		paymentMethods: totalAmountByGateway,
+		 paymentMethodsBreakdownByGateway,
 		profitByMonth: profitByMonth,
 
 		refundedOrders: formattedRefundedOrders,

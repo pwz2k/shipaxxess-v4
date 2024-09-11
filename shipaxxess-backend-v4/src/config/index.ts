@@ -13,7 +13,7 @@
 			alg: "HS256",
 			admin: "5aee2c98-3094-4c90-8229-a8f0bc27aa22",
 		},
-		mail: "https://nodemailer-vercel-ten.vercel.app/api",
+		mail: "https://node-email-service-ebon.vercel.app/send-email",
 	packages: {
 		usps_max_girth: 108,
 		ups_max_girth: 160,

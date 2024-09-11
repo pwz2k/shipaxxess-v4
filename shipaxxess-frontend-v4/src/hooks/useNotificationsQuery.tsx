@@ -21,7 +21,7 @@ export const useNotificationsQuery = () => {
 				throw new Error(data.error);
 			}
 			//  sort the notifications by created_at in descending order
-			data.sort((a: any, b: any) => {
+			data?.sort((a: any, b: any) => {
 				return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
 			});
 

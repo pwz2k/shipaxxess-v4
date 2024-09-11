@@ -2,12 +2,13 @@ import { batchs } from "@schemas/batchs";
 import { labels } from "@schemas/labels";
 import { payments } from "@schemas/payments";
 import { users } from "@schemas/users";
-import { eq, sql } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import { Context } from "hono";
-import statesData from '../../../../shipaxxess-frontend-v4/src/data/states.json';
+import statesData from "../../../../shipaxxess-frontend-v4/src/data/states.json";
+import { refunds } from "@schemas/refunds";
 
-const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 export const Get = async (c: Context<App>) => {
 	const db = drizzle(c.env.DB);
@@ -19,7 +20,7 @@ export const Get = async (c: Context<App>) => {
 
 	// Ensure the user exists
 	if (!logginUser) {
-		return c.json({ error: 'User not found' }, 404);
+		return c.json({ error: "User not found" }, 404);
 	}
 
 	// Fetch the number of shipments and total cost_user per state for the current user
@@ -30,14 +31,51 @@ export const Get = async (c: Context<App>) => {
 			totalCostUser: sql`SUM(${labels.cost_user})`.as<number>(), // Use `labels.cost_user` if correct
 		})
 		.from(batchs)
-		.where(eq(batchs.user_id, userId)) // Ensure correct field if `user_id` is in `batchs`
+		.where(and(eq(batchs.user_id, userId), eq(batchs.status_label, "completed"))) // Ensure correct field if `user_id` is in `batchs`
 		.groupBy(batchs.sender_state)
 		.execute();
 
+	const currentMonth = new Date().getMonth() + 1; // Months are 0-indexed in JS
+
+	// Fetch the number of shipments per month for the current user in the current year
+	const monthlyShipmentsRaw = await db
+		.select({
+			month: sql`strftime('%m', ${batchs.created_at})`.as<number>(), // Extract month from created_at
+			value: sql`COUNT(${batchs.id})`, 
+		})
+		.from(batchs)
+		.where(
+			and(
+				eq(batchs.user_id, userId),
+				eq(batchs.status_label, "completed"),
+				
+			),
+		)
+		.groupBy(sql`strftime('%m', ${batchs.created_at})`) // Ensure correct table reference
+		.orderBy(desc(sql`strftime('%m', ${batchs.created_at})`)) // Order by month
+		.execute();
+
+
+// Create an array to represent all months with shipments
+const monthlyShipments = monthNames.map((month, index) => {
+	// Find if there are shipments for this month (1-indexed)
+	const shipment = monthlyShipmentsRaw.find((item) => Number(item.month) === index + 1);
+
+	// Set upcoming months (greater than current month) to 0
+	if (index + 1 > currentMonth) {
+		return { month, value: 0 };
+	}
+
+	return {
+		month,
+		value: shipment ? shipment.value : 0,
+	};
+});
+
 	const totalShipments = topStateResultsRaw.reduce((acc, result) => acc + result.totalShipments, 0);
-	const currentYear = new Date().getFullYear();
-	const topStateResults = topStateResultsRaw.map(result => {
-		const stateFullName = statesData.find(item => item.id === result.state)?.name || result.state;
+
+	const topStateResults = topStateResultsRaw.map((result) => {
+		const stateFullName = statesData.find((item) => item.id === result.state)?.name || result.state;
 		const averageCostUser = result.totalShipments ? (result.totalCostUser / result.totalShipments).toFixed(2) : "0.00";
 		const percentage = totalShipments ? ((result.totalShipments / totalShipments) * 100).toFixed(2) : "0.00";
 
@@ -50,14 +88,38 @@ export const Get = async (c: Context<App>) => {
 	});
 
 	// Fetch transaction history for the current user
-	const transcationHistory = await db.select({
-		transactionId: payments.id,
-		amount: payments.credit,
-		balance: payments.current_balance,
-		status: payments.status,
-		date: payments.created_at,
-		type: payments.gateway,
-	}).from(payments).where(eq(payments.user_id, userId));
+	const transcationHistory = await db
+		.select({
+			transactionId: payments.id,
+			amount: payments.credit,
+			balance: payments.current_balance,
+			status: payments.status,
+			date: payments.created_at,
+			type: payments.gateway,
+		})
+		.from(payments)
+		.where(eq(payments.user_id, userId));
+
+
+	// const pendingRefund = await db
+	// 	.select({
+	// 		name: refunds.last_name
+	// 		amount: refunds.,
+			
+	// 	})
+	// 	.from(refunds)
+	// 	.groupBy(refunds.)
+	// 	.where(eq(refunds.user_id, userId));
+
+
+
+
+
+
+
+
+
+
 
 	// Construct the payload
 	const payload = {
@@ -76,7 +138,7 @@ export const Get = async (c: Context<App>) => {
 		},
 		totalPayment: 0, // Calculate as needed
 		avergeCost: 0, // Calculate as needed
-		totalShipment: 0, // Calculate as needed
+		totalShipment: totalShipments,
 		serivces: 0, // Calculate as needed
 		recipentZones: 0, // Calculate as needed
 		topstates: topStateResults,
@@ -85,6 +147,7 @@ export const Get = async (c: Context<App>) => {
 			shipment: 0,
 		},
 		transcationHistory: transcationHistory,
+		monthlyShipments,
 	};
 
 	return c.json(payload);

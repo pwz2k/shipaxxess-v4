@@ -17,8 +17,8 @@ export const SignUpUser = async (c: Context<App>) => {
 		const parse = Signup.ZODSCHEMA.parse(body);
 		const model = new Model(c.env.DB);
 
-		const haveUser = await model.get(users, eq(users.email_address, parse.email_address));
-		if (haveUser) throw exception({ message: "Already have an account", code: 1000 });
+		//const haveUser = await model.get(users, eq(users.email_address, parse.email_address));
+		//if (haveUser) throw exception({ message: "Already have an account", code: 1000 });
 		// console.log(haveUser);
 		const email_code = generateSixDigitRandomNumber();
 		const passwordHash = await hash(parse.password);
@@ -41,13 +41,13 @@ export const SignUpUser = async (c: Context<App>) => {
 		}
 		console.log(email_code);
 		// if c.env==dev then return email_code in message else return message
-		if (String(c.env) == "dev") {
-			return c.json({
-				message: `Verification code is ${email_code}`,
-				success: true,
-				code: 1004,
-			});
-		}
+		// if (String(c.env) == "dev") {
+		// 	return c.json({
+		// 		message: `Verification code is ${email_code}`,
+		// 		success: true,
+		// 		code: 1004,
+		// 	});
+		// }
 
 		c.executionCtx.waitUntil(
 			mail(c.env.DB, {
