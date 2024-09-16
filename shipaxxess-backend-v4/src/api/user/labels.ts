@@ -36,7 +36,7 @@ const Get = async (c: Context<App, "/:uuid">) => {
 
 	const batchLabels = await model.all(labels, eq(labels.batch_uuid, batch_uuid));
 
-	return c.json({ labels: batchLabels, batch: { name: batch.name, status_refund: batch.status_refund } });
+	return c.json({ labels: batchLabels, batch: { name: batch?.name, status_refund: batch.status_refund } });
 };
 
 
@@ -59,7 +59,7 @@ const Create = async (c: Context<App>) => {
 	log("Package dimensions are ok.");
 	console.log(parse.type.type, parse.type.id, parse.package.weight)
 	const weight = await manager.getWeightData(parse.type.type, parse.type.id, parse.package.weight);
-	console.log(weight,"weight------->");
+	console.log(weight, "weight------->");
 	if (!weight) {
 		throw exception({ message: "Weight not found.", code: 404 });
 	}

@@ -66,7 +66,7 @@ export class LabelManager {
 				package_weight: params.package.weight,
 				package_width: params.package.width,
 				package_id: params.package.id,
-				package_name: params.package.name,
+				package_name: params.package?.name,
 				recipients: params.recipient,
 				sender_phone: params.sender.phone,
 				sender_city: params.sender.city,
@@ -89,7 +89,7 @@ export class LabelManager {
 				signature: params.signature,
 				cost_user: user_cost,
 				cost_reseller: reseller_cost,
-				name: params.name,
+				name: params?.name,
 			})
 			.returning({ id: batchs.id });
 

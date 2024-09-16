@@ -5,7 +5,6 @@ export const users = sqliteTable("users", {
 	// Ids
 	id: integer("id").primaryKey({ autoIncrement: true }),
 	uuid: text("uuid").notNull(),
-
 	// Information
 	first_name: text("first_name").notNull(),
 	last_name: text("last_name").notNull(),
