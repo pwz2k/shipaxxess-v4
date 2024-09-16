@@ -14,12 +14,13 @@ interface GenericLineChartProps {
     width?: number;
     height?: number;
     xAxisLink?: string;
+    isDollarIcon?: boolean;
 }
 
-const GenericLineChart: React.FC<GenericLineChartProps> = ({ data, title, valueKey, icon, width = "100%", height = 400 }) => {
+const GenericLineChart: React.FC<GenericLineChartProps> = ({ data, title, valueKey, icon, width = "100%", height = 400, isDollarIcon=true }) => {
     const totalValue = data.reduce((acc, item) => Number(acc) + Number(item.value), 0);
     const tooltipFormatter = (value: number) => {
-        return [`$${value}`]; 
+        return [`${isDollarIcon ? "$" : ""}${value}`]; 
     };
 
   

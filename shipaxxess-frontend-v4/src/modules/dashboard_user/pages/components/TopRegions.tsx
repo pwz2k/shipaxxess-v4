@@ -3,8 +3,7 @@ import * as am4core from '@amcharts/amcharts4/core';
 import * as am4maps from '@amcharts/amcharts4/maps';
 import am4geodata_usaLow from '@amcharts/amcharts4-geodata/usaLow';
 import am4geodata_worldLow from '@amcharts/amcharts4-geodata/worldLow';
-import { BarChart, CartesianGrid, XAxis, Tooltip, Legend, Bar, Cell, ResponsiveContainer, Text } from 'recharts';
-import { ChartData } from 'chart.js';
+import { BarChart, CartesianGrid, XAxis, Tooltip, Legend, Bar, Cell, ResponsiveContainer } from 'recharts';
 
 
 interface RegionData {
@@ -19,10 +18,10 @@ interface TopRegionsProps {
     topCountries: RegionData[];
 }
 
-const TopRegions: React.FC<TopRegionsProps> = ({ topStates, topCountries }) => {
+const TopRegions: React.FC<TopRegionsProps> = ({ topStates }) => {
     useEffect(() => {
         // Create a chart instance for US map
-        let chartUS = am4core.create('chartUS', am4maps.MapChart);
+        const chartUS = am4core.create('chartUS', am4maps.MapChart);
         chartUS.zoomControl = new am4maps.ZoomControl();
         // create a color set for the heat map
 
@@ -31,11 +30,11 @@ const TopRegions: React.FC<TopRegionsProps> = ({ topStates, topCountries }) => {
         chartUS.projection = new am4maps.projections.AlbersUsa();
 
 
-        let polygonSeriesUS = chartUS.series.push(new am4maps.MapPolygonSeries());
+        const polygonSeriesUS = chartUS.series.push(new am4maps.MapPolygonSeries());
         polygonSeriesUS.useGeodata = true;
 
         // Configure map polygon series
-        let polygonTemplate = polygonSeriesUS.mapPolygons.template;
+        const polygonTemplate = polygonSeriesUS.mapPolygons.template;
         polygonTemplate.tooltipText = '{name}: {value}';
         polygonTemplate.fill = am4core.color('#D6D6DA');
         polygonTemplate.stroke = am4core.color('#FFFFFF');
@@ -59,13 +58,13 @@ const TopRegions: React.FC<TopRegionsProps> = ({ topStates, topCountries }) => {
         });
 
         // Create a chart instance for World map
-        let chartWorld = am4core.create('chartWorld', am4maps.MapChart);
+        const chartWorld = am4core.create('chartWorld', am4maps.MapChart);
         chartWorld.zoomControl = new am4maps.ZoomControl();
 
         chartWorld.geodata = am4geodata_worldLow;
         chartWorld.projection = new am4maps.projections.EqualEarth();
 
-        let polygonSeriesWorld = chartWorld.series.push(new am4maps.MapPolygonSeries());
+        const polygonSeriesWorld = chartWorld.series.push(new am4maps.MapPolygonSeries());
         polygonSeriesWorld.useGeodata = true;
         polygonSeriesWorld.mapPolygons.template.fill = am4core.color('#D6D6DA');
         polygonSeriesWorld.mapPolygons.template.stroke = am4core.color('#FFFFFF');
@@ -77,7 +76,7 @@ const TopRegions: React.FC<TopRegionsProps> = ({ topStates, topCountries }) => {
         };
     }, [topStates]); // Re-run effect when topStates changes
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#FF1493', '#DAA520', '#ADFF2F', '#20B2AA', '#8B4513'];
-    const data: ChartData[] = topStates.map((item, index) => ({
+    const data = topStates.map((item) => ({
         zone: `${item.name}`,
         value: item.shipments, // Random value between 1000 and 6000
     }));

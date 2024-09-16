@@ -10,10 +10,11 @@ import TransactionHistory from "./components/TransactionHistory";
 // import ServicePieChart from "./components/Services";
 // import DateBarChart from "./components/Zone";
 import { UseGet } from "@client/hooks/useGet";
-import { createStaticRanges, DateRangePicker } from "react-date-range";
-import { startOfMonth, endOfMonth, startOfYear, subDays, subMonths, subYears, endOfYear } from "date-fns";
+import {  DateRangePicker } from "react-date-range";
+import { startOfMonth } from "date-fns";
 import { Button } from "@client/components/ui/button";
 import TopRegions from "./components/TopRegions";
+import { predefinedRanges } from "@client/data/layout";
 
 const DashboardStats: React.FC = () => {
 	const getRandomNumber = (min: number, max: number) => {
@@ -43,85 +44,7 @@ const DashboardStats: React.FC = () => {
 
 	console.log(data, "dashboard data");
 
-	const predefinedRanges = createStaticRanges([
-		{
-			label: "Today",
-			range: () => ({
-				startDate: new Date(new Date().setHours(0, 0, 0, 0)),
-				endDate: new Date(new Date().setSeconds(59, 999)),
-			}),
-		},
-		{
-			label: "Yesterday",
-			range: () => ({
-				startDate: subDays(new Date(), 1),
-				endDate: subDays(new Date(), 1),
-			}),
-		},
-		{
-			label: "Last 7 Days",
-			range: () => ({
-				startDate: subDays(new Date(), 6),
-				endDate: new Date(),
-			}),
-		},
-		{
-			label: "Last 30 Days",
-			range: () => ({
-				startDate: subDays(new Date(), 29),
-				endDate: new Date(),
-			}),
-		},
-		{
-			label: "This Month",
-			range: () => ({
-				startDate: startOfMonth(new Date()),
-				endDate: endOfMonth(new Date()),
-			}),
-		},
-		{
-			label: "Last Month",
-			range: () => {
-				const now = new Date();
-				const lastMonthStart = startOfMonth(subMonths(now, 1));
-				const lastMonthEnd = endOfMonth(subMonths(now, 1));
-				return {
-					startDate: lastMonthStart,
-					endDate: lastMonthEnd,
-				};
-			},
-		},
-		{
-			label: "Last 3 Months",
-			range: () => {
-				const now = new Date();
-				const threeMonthsAgo = subMonths(now, 3);
-				return {
-					startDate: startOfMonth(threeMonthsAgo),
-					endDate: new Date(),
-				};
-			},
-		},
-		{
-			label: "Last 6 Months",
-			range: () => {
-				const now = new Date();
-				const sixMonthsAgo = subMonths(now, 6);
-				return {
-					startDate: startOfMonth(sixMonthsAgo),
-					endDate: new Date(),
-				};
-			},
-		},
-
-		{
-			label: "Last 1 Year",
-			range: () => ({
-				startDate: startOfYear(subYears(new Date(), 1)),
-				endDate: endOfYear(subYears(new Date(), 1)),
-			}),
-		},
-	]);
+	
 
 	const generateUpDownData = (labels: string[]) => {
 		const midPoint = Math.floor(labels.length / 2);
@@ -285,8 +208,9 @@ const DashboardStats: React.FC = () => {
 						</div>
 						<div className="col-span-1 lg:col-span-2">
 							<GenericLineChart
-								data={data?.monthlyShipments.map((item: { month: string; value: number }) => ({
-									label: item.month,
+							isDollarIcon={false}
+								data={data?.monthlyShipments.map((item: { date: string; value: number }) => ({
+									label: item.date,
 									value: item.value,
 								}))}
 								title="Total Shipments"
