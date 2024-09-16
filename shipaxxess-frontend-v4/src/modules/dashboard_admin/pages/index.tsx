@@ -32,6 +32,8 @@ import TopSpentUsers from "./components/TopSpentUser";
 import { createStaticRanges, DateRangePicker } from "react-date-range";
 import { startOfMonth, endOfMonth, startOfYear, subDays, subMonths, subYears, endOfYear } from "date-fns";
 import { Button } from "@client/components/ui/button";
+import { startOfDay } from "date-fns";
+import { endOfDay } from "date-fns";
 
 const AdminDashboard: React.FC = () => {
 	const today = new Date();
@@ -76,6 +78,9 @@ const AdminDashboard: React.FC = () => {
 		return monthAbbreviations[month] || month;
 	};
 
+	const now = new Date();
+	const startDateforLastThiryDay = subDays(now, 29);
+
 	const predefinedRanges = createStaticRanges([
 		{
 			label: "Today",
@@ -101,8 +106,8 @@ const AdminDashboard: React.FC = () => {
 		{
 			label: "Last 30 Days",
 			range: () => ({
-				startDate: subDays(new Date(), 29),
-				endDate: new Date(),
+				startDate: startOfDay(startDateforLastThiryDay),
+				endDate: endOfDay(now),
 			}),
 		},
 		{
@@ -128,10 +133,13 @@ const AdminDashboard: React.FC = () => {
 			label: "Last 3 Months",
 			range: () => {
 				const now = new Date();
-				const threeMonthsAgo = subMonths(now, 3);
+				const threeMonthsAgo = subMonths(now, 2);
+				// Start from the same day, 3 months ago
+				const startDate = threeMonthsAgo;
+				const endDate = new Date(); // Till today's date
 				return {
-					startDate: startOfMonth(threeMonthsAgo),
-					endDate: new Date(),
+					startDate,
+					endDate,
 				};
 			},
 		},
@@ -139,7 +147,7 @@ const AdminDashboard: React.FC = () => {
 			label: "Last 6 Months",
 			range: () => {
 				const now = new Date();
-				const sixMonthsAgo = subMonths(now, 6);
+				const sixMonthsAgo = subMonths(now, 5);
 				return {
 					startDate: startOfMonth(sixMonthsAgo),
 					endDate: new Date(),
@@ -154,8 +162,6 @@ const AdminDashboard: React.FC = () => {
 				endDate: endOfYear(subYears(new Date(), 1)),
 			}),
 		},
-
-
 	]);
 
 	return (
@@ -181,7 +187,7 @@ const AdminDashboard: React.FC = () => {
 							<DateRangePicker
 								staticRanges={predefinedRanges}
 								// eslint-disable-next-line @typescript-eslint/no-explicit-any
-								onChange={(item:any) => setState([item?.selection])}
+								onChange={(item: any) => setState([item?.selection])}
 								ranges={state}
 								inputRanges={[]} // Pass the empty inputRanges here
 								showMonthAndYearPickers={true}
@@ -313,6 +319,7 @@ const AdminDashboard: React.FC = () => {
 
 				<div className="grid grid-cols-1 md:grid-col-2 lg:grid-cols-4 gap-4 mb-4">
 					<TopShippingCategories shippingCategoriesData={data?.shippingCategories} />
+					<Profits profitsData={data?.profitByMonth} />
 					<PeakOrderTimes peakOrderTimesData={data?.peakOrderTime} />
 					<MostPopularStates popularStatesData={data?.popularStates} />
 					<TopReferralUsers referralUsersData={data?.referralUsers} />
@@ -320,8 +327,7 @@ const AdminDashboard: React.FC = () => {
 
 				<div className="grid grid-cols-1 md:grid-col-2  lg:grid-cols-4 gap-4 mb-4">
 					<PaymentMethodsBreakdown paymentMethodsBreakdownByGateway={data?.paymentMethodsBreakdownByGateway} />
-					<Profits profitsData={data?.profitByMonth} />
-					<RefundedOrders  refundedOrdersData={data?.refundedOrders} />
+					<RefundedOrders refundedOrdersData={data?.refundedOrders} />
 					<RefundsByCarrier refundsByCarrierData={data?.refundsByCarrier} />
 					<TopSpentUsers topSpentUsersData={data?.topUsers} />
 				</div>

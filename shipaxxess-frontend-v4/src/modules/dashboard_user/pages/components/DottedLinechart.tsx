@@ -18,7 +18,11 @@ interface GenericLineChartProps {
 
 const GenericLineChart: React.FC<GenericLineChartProps> = ({ data, title, valueKey, icon, width = "100%", height = 400 }) => {
     const totalValue = data.reduce((acc, item) => Number(acc) + Number(item.value), 0);
-console.log(totalValue);
+    const tooltipFormatter = (value: number) => {
+        return [`$${value}`]; 
+    };
+
+  
     return (
         <div className="p-4 bg-white shadow-md rounded-lg">
             <div className='flex justify-center gap-x-1'>
@@ -34,7 +38,9 @@ console.log(totalValue);
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="label"
                     />
-                    <Tooltip />
+                  <Tooltip 
+                        formatter={tooltipFormatter} 
+                    />
                     <Legend />
                     <Line
                         type="linear"

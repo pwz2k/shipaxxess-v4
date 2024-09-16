@@ -11,6 +11,7 @@ import { weights } from "@schemas/weights";
 import { and, count, desc, eq, gt, not, sql, sum } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 import { Context } from "hono";
+import { differenceInDays } from 'date-fns';
 interface Order {
 	id: number;
 	created_at: string; // Assuming ISO 8601 datetime format
@@ -28,41 +29,27 @@ export const Get = async (c: Context<App>) => {
 
 	const start = new Date(startDate);
 	const end = new Date(endDate);
-
-
-
-
-
-
+	const isMoreThanMonth = differenceInDays(endDate, startDate) > 30;
 	if (start.toDateString() === end.toDateString()) {
 		// Set startDate to the first second of the day
 		start.setHours(0, 0, 0, 0);
-	
+
 		// Set endDate to the last second of the day
 		end.setHours(23, 59, 59, 999);
 	} else {
 		// Check if both dates are "yesterday"
 		const yesterday = new Date();
 		yesterday.setDate(yesterday.getDate() - 1);
-	
-		if (
-			start.toDateString() === yesterday.toDateString() &&
-			end.toDateString() === yesterday.toDateString()
-		) {
+
+		if (start.toDateString() === yesterday.toDateString() && end.toDateString() === yesterday.toDateString()) {
 			// Set startDate to the first second of "yesterday"
 			start.setHours(0, 0, 0, 0);
-	
+
 			// Set endDate to the last second of "yesterday"
 			end.setHours(23, 59, 59, 999);
 		}
 	}
 
-
-
-
-
-
-	console.log(start, end);
 	const totalUsers = await db
 		.select({
 			count: count(),
@@ -107,7 +94,7 @@ export const Get = async (c: Context<App>) => {
 			orders: found ? found.orderCount : 0,
 		};
 	});
-	const paymentGateways = ['cashapp', 'venmo', 'zelle', 'crypto', 'card'];
+	const paymentGateways = ["cashapp", "venmo", "zelle", "crypto", "card"];
 	// compute paymentMethods and each method total value using payments table
 	const totalAmountByGateway = await db
 		.select({
@@ -127,58 +114,112 @@ export const Get = async (c: Context<App>) => {
 		.groupBy(payments.gateway) // Group by gateway only, not by user_id
 		.orderBy(payments.gateway);
 
-		const paymentMethodsBreakdownByGateway = paymentGateways.map(gateway => {
-			const paymentData = totalAmountByGateway.find(payment => payment.name === gateway);
-			return {
-			  gateway: paymentData?.name,
-			  value: paymentData ? paymentData.value : 0,  // Assign value 0 if not present in the result
-			};
-		             });
-
-
-
-
-
-
-	// compute refunder orders using batchs table by each month by name
-
-	const monthsOfYear = Array.from({ length: 12 }, (_, i) => ({
-		month: (i + 1).toString().padStart(2, "0"), // "01" to "12"
-	}));
-
-	const refundedOrders = await db
-		.select({
-			month: sql`strftime('%m', created_at)`,
-			orders: count(),
-		})
-		.from(refunds)
-		.where(
-			and(
-				eq(refunds.is_refunded, true),
-				sql`${refunds.created_at} >= ${start.toISOString()}`,
-				sql`${refunds.created_at} <= ${end.toISOString()}`,
-			),
-		)
-		.groupBy(sql`strftime('%m', created_at)`)
-		.orderBy(desc(count()));
-
-	
-
-
-
-	const formattedRefundedOrders = monthsOfYear.map((month) => {
-		const foundOrder = refundedOrders.find((order: any) => order.month === month.month);
-		const monthName = monthNames[parseInt(month.month) - 1]; // Get month name from month number
+	const paymentMethodsBreakdownByGateway = paymentGateways.map((gateway) => {
+		const paymentData = totalAmountByGateway.find((payment) => payment.name === gateway);
 		return {
-			month: monthName,
-			orders: foundOrder ? foundOrder.orders : 0, // If no orders, return 0
+			gateway: paymentData?.name,
+			value: paymentData ? paymentData.value : 0, // Assign value 0 if not present in the result
 		};
 	});
 
-
-
+	// compute refunder orders using batchs table by each month by name
 
 	
+
+	
+
+	const formatDate = (date: Date) => {
+		const day = date.getDate().toString().padStart(2, "0");
+		const month = (date.getMonth() + 1).toString().padStart(2, "0");
+		const year = date.getFullYear();
+		return `${day}/${month}/${year}`; // Ensure this matches the format in your database
+	};
+
+	const generateDateRange = (startDate: Date, endDate: Date) => {
+		const dates = [];
+		let currentDate = new Date(startDate);
+		while (currentDate <= endDate) {
+			dates.push(new Date(currentDate));
+			currentDate.setDate(currentDate.getDate() + 1);
+		}
+		return dates;
+	};
+
+	const generateMonthRange = (startDate: Date, endDate: Date) => {
+		const months = [];
+		let currentDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+		while (currentDate <= endDate) {
+			months.push(new Date(currentDate));
+			currentDate.setMonth(currentDate.getMonth() + 1);
+		}
+		return months;
+	};
+
+	let refundedOrders: any;
+	let formattedRefundedOrders: any[] = [];
+
+	// Fetch and format refunded orders data
+	if (isMoreThanMonth) {
+		// Aggregate by month
+		refundedOrders = await db
+			.select({
+				month: sql`strftime('%Y-%m', created_at)`,
+				count: count(),
+			})
+			.from(refunds)
+			.where(
+				and(
+					eq(refunds.is_refunded, true),
+					sql`${refunds.created_at} >= ${start.toISOString()}`,
+					sql`${refunds.created_at} <= ${end.toISOString()}`,
+				),
+			)
+			.groupBy(sql`strftime('%Y-%m', created_at)`)
+			.orderBy(desc(count()));
+
+		// Generate all months in the range
+		const allMonths = generateMonthRange(start, end);
+
+		// Fill in missing months with 0
+		formattedRefundedOrders = allMonths.map((date) => {
+			const month = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}`;
+			const monthName = monthNames[date.getMonth()];
+			return {
+				date: `${monthName} ${date.getFullYear()}`,
+				orders: refundedOrders.find((order: any) => order.month === month)?.count || 0,
+			};
+		});
+	} else {
+		// Aggregate by day
+		refundedOrders = await db
+			.select({
+				date: sql`strftime('%d/%m/%Y', created_at)`,
+				count: count(),
+			})
+			.from(refunds)
+			.where(
+				and(
+					eq(refunds.is_refunded, true),
+					sql`${refunds.created_at} >= ${start.toISOString()}`,
+					sql`${refunds.created_at} <= ${end.toISOString()}`,
+				),
+			)
+			.groupBy(sql`strftime('%d/%m/%Y', created_at)`)
+			.orderBy(sql`strftime('%d/%m/%Y', created_at)`);
+
+		// Generate all dates in the range
+		const allDates = generateDateRange(start, end);
+
+		// Fill in missing dates with 0
+		formattedRefundedOrders = allDates.map((date) => {
+			const formattedDate = formatDate(date);
+			return {
+				date: formattedDate,
+				orders: refundedOrders.find((order: any) => order.date === formattedDate)?.count || 0,
+			};
+		});
+	}
+
 	// compute  refundsByCarrier using batchs table by each carrier
 	const refundsByCarrier = await db
 		.select({
@@ -241,33 +282,85 @@ export const Get = async (c: Context<App>) => {
 		.execute();
 
 	const earningRefunds = [
-		{ name: "Total Earnings", value: totalEarnings[0].totalEarnings },
+		{ name: "Total Earnings", value: totalEarnings[0].totalEarnings ? totalEarnings[0].totalEarnings : 0 },
 		{ name: "Refunds", value: totalRefunds[0].totalRefunds ? totalRefunds[0].totalRefunds : 0 },
 	];
 
 	// compute the total profit by summing the total credit in the payment table and subtracting the refunds and lables as expese where gateway is is label and refund in gateway
-	const profits = await db
-		.select({
-			month: sql`strftime('%m', created_at)`,
-			profit: sql`SUM(COALESCE(${payments.credit}, 0))`,
-		})
-		.from(payments)
-		.groupBy(sql`strftime('%m', created_at)`)
-		.orderBy(desc(sql`strftime('%m', created_at)`))
-		.where(
-			and(sql`${payments.created_at} >= ${start.toISOString()}`, sql`${payments.created_at} <= ${end.toISOString()}`),
-		);
 
-	const profitByMonth = profits.map((profit: any) => {
-		const month = monthNames[parseInt(profit.month) - 1];
+	// Determine if the date range spans more than a month
 
-		return {
-			month,
-			profit: `$${profit.profit}`,
-		};
-	});
+	let profits;
+	let profitByMonths: any[] = [];
+
+	// Fetch data
+	if (isMoreThanMonth) {
+		// Aggregate by month
+		profits = await db
+			.select({
+				month: sql`strftime('%Y-%m', created_at)`,
+				profit: sql`SUM(COALESCE(${payments.credit}, 0))`,
+			})
+			.from(payments)
+			.groupBy(sql`strftime('%Y-%m', created_at)`)
+			.orderBy(desc(sql`strftime('%Y-%m', created_at)`))
+			.where(
+				and(sql`${payments.created_at} >= ${start.toISOString()}`, sql`${payments.created_at} <= ${end.toISOString()}`),
+			);
+
+		// Format for months
+		const profitByMonth = profits.map((profit: any) => ({
+			date: profit.month, // Format as YYYY-MM
+			profit: parseFloat(profit.profit),
+		}));
+
+		// Generate all months in the range
+		const allMonths = generateMonthRange(start, end);
+
+		// Fill in missing months with profit of 0
+		profitByMonths = allMonths.map((date) => {
+			const month = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}`;
+			const monthName = monthNames[date.getMonth()];
+			return {
+				date: `${monthName} ${date.getFullYear()}`, // Use month name and year
+				profit: profitByMonth.find((item: any) => item.date === month)?.profit || 0, // Default to 0 if no data
+			};
+		});
+	} else {
+		// Aggregate by day
+		profits = await db
+			.select({
+				date: sql`strftime('%d/%m/%Y', created_at)`, // Format as DD/MM/YYYY
+				profit: sql`SUM(COALESCE(${payments.credit}, 0))`,
+			})
+			.from(payments)
+			.groupBy(sql`strftime('%d/%m/%Y', created_at)`)
+			.orderBy(sql`strftime('%d/%m/%Y', created_at)`)
+			.where(
+				and(sql`${payments.created_at} >= ${start.toISOString()}`, sql`${payments.created_at} <= ${end.toISOString()}`),
+			);
+
+		// Format for days
+		const profitByDay = profits.map((profit: any) => ({
+			date: profit.date, // Format as DD/MM/YYYY
+			profit: parseFloat(profit.profit),
+		}));
+
+		// Generate all dates in the range
+		const allDates = generateDateRange(start, end);
+
+		// Fill in missing dates with profit of 0
+		profitByMonths = allDates.map((date) => {
+			const formattedDate = formatDate(date);
+			return {
+				date: formattedDate,
+				profit: profitByDay.find((item: any) => item.date === formattedDate)?.profit || 0, // Default to 0 if no data
+			};
+		});
+	}
 
 	// Query batch data
+
 	const batchData = await db
 		.select({ recipients: batchs.recipients })
 		.from(batchs)
@@ -420,8 +513,8 @@ export const Get = async (c: Context<App>) => {
 		popularStates: formattedPopularStates,
 
 		referralUsers: topReferralUsers,
-		 paymentMethodsBreakdownByGateway,
-		profitByMonth: profitByMonth,
+		paymentMethodsBreakdownByGateway,
+		profitByMonth: profitByMonths,
 
 		refundedOrders: formattedRefundedOrders,
 		refundsByCarrier: refundsByCarrier,

@@ -111,7 +111,7 @@ const TopRegions: React.FC<TopRegionsProps> = ({ topStates, topCountries }) => {
                 </ResponsiveContainer>
             </div>
 
-            <div className="flex flex-col md:flex-row justify-between">
+            {/* <div className="flex flex-col md:flex-row justify-between">
                 <div>
                     <h2 className="text-xl font-bold mb-4">Top International Countries</h2>
                     <ul>
@@ -124,7 +124,7 @@ const TopRegions: React.FC<TopRegionsProps> = ({ topStates, topCountries }) => {
                     </ul>
                 </div>
                 <div id="chartWorld" style={{ width: '900px', height: '400px' }}></div>
-            </div>
+            </div> */}
         </div>
     );
 };

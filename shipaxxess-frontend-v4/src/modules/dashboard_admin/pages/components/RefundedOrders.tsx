@@ -45,7 +45,7 @@ const RefundedOrders: React.FC<Props> = ({ refundedOrdersData }) => {
 						<ResponsiveContainer width="100%" height={300}>
 							<LineChart data={refundedOrdersData}>
 								<CartesianGrid stroke="#ccc" />
-								<XAxis dataKey="month" textAnchor="middle" tickFormatter={formatMonth} />
+								<XAxis dataKey="date" textAnchor="middle" tickFormatter={formatMonth} />
 								<YAxis />
 								<Tooltip />
 								<Line type="monotone" dataKey="orders" stroke="#8884d8" />

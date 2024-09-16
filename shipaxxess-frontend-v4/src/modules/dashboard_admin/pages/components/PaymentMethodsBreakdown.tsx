@@ -15,30 +15,29 @@ const PaymentMethodsBreakdown: React.FC<Props> = ({ paymentMethodsBreakdownByGat
 	return (
 		<div className="bg-white  md:col-span-2  p-4 rounded-lg shadow-md">
 			<h2 className="text-lg font-bold mb-2">Payment Methods Breakdown</h2>
-
-			<ResponsiveContainer width="100%" height={400}>
+			{paymentMethodsBreakdownByGateway?.length < 1 && <div>No data available</div>}
+			{paymentMethodsBreakdownByGateway?.length > 0 && <ResponsiveContainer width="100%" height={400}>
 				<PieChart>
 					<Pie
-                     
-                    nameKey="gateway"
+						nameKey="gateway"
 						data={paymentMethodsBreakdownByGateway}
 						cx="50%"
 						cy="50%"
-                        labelLine={false}
-                        paddingAngle={2}
-                        label={({ gateway, value }) => (value > 9 ? `${gateway}: $${value}` : '')}
+						labelLine={false}
+						paddingAngle={2}
+						label={({ gateway, value }) => (value > 9 ? `${gateway}: $${value}` : "")}
 						outerRadius={120}
 						innerRadius={80}
 						fill="#8884d8"
 						dataKey="value">
 						{paymentMethodsBreakdownByGateway?.map((_entry, index: number) => (
-							<Cell key={`cell-${index}`} fill={CATEGORY_COLORS[index % CATEGORY_COLORS.length]} />
+							<Cell key={`cell-${index}`} fill={CATEGORY_COLORS[index % CATEGORY_COLORS?.length]} />
 						))}
 					</Pie>
-					<Legend  verticalAlign="bottom" height={15} />
+					<Legend verticalAlign="bottom" height={15} />
 					<Tooltip />
 				</PieChart>
-			</ResponsiveContainer>
+			</ResponsiveContainer>}
 		</div>
 	);
 };
