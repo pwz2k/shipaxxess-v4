@@ -7,6 +7,7 @@ export const packages = sqliteTable("packages", {
 	user_id: integer("user_id"),
 	name: text("name").notNull(),
 	weight: integer("weight").notNull(),
+	unit: text("unit").notNull(),
 	height: integer("height").notNull(),
 	width: integer("width").notNull(),
 	length: integer("length").notNull(),

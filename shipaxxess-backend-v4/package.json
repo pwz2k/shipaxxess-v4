@@ -4,7 +4,7 @@
 	"scripts": {
 		"dev": "wrangler dev src/index.ts --port 8787",
 		"deploy": "wrangler deploy --minify src/index.ts",
-		"generate": "npx drizzle-kit generate:sqlite --config ./src/database/drizzle-orm/drizzle.config.ts",
+		"generate": "npx drizzle-kit generate --config ./src/database/drizzle-orm/drizzle.config.ts",
 		"migrate": "set NO_D1_WARNING=true && npx wrangler d1 migrations apply shipaxxess-backend-d1",
 		"tail": "npx wrangler tail",
 		"studio": "drizzle-kit studio --config ./src/database/drizzle-orm/drizzle.config.ts"
@@ -13,7 +13,7 @@
 		"@shipaxxess/shipaxxess-zod-v4": "workspace:*",
 		"@types/uuid": "^9.0.7",
 		"date-fns": "^3.6.0",
-		"drizzle-orm": "^0.29.2",
+		"drizzle-orm": "^0.33.0",
 		"google-auth-library": "^9.11.0",
 		"googleapis": "^140.0.0",
 		"hono": "^3.11.2",

@@ -1,7 +1,10 @@
 import type { Config } from "drizzle-kit";
 
-export default {
-  schema: "./src/database/drizzle-orm/schemas/*",
-  out: "./src/database/drizzle-orm/migrations",
-  driver: "pg",
-} satisfies Config;
+const config: Config = {
+  schema: "./src/database/drizzle-orm/schemas/*",  // Path to schema files
+  out: "./src/database/drizzle-orm/migrations",    // Path to migration files
+  dialect: "postgresql",
+  // driver: "pglite",                              // Dialect for PostgreSQL
+};
+
+export default config satisfies Config;

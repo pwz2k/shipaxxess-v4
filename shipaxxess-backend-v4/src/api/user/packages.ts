@@ -27,6 +27,7 @@ const Get = async (c: Context<App, "/:uuid">) => {
 const Create = async (c: Context<App>) => {
 	// Validation
 	const body = await c.req.json();
+	console.log(body)
 	const parse = Package.ZODSCHEMA.parse(body);
 
 	const model = new Model(c.env.DB);
@@ -34,11 +35,12 @@ const Create = async (c: Context<App>) => {
 	await model.insert(packages, {
 		height: parse.height,
 		length: parse.length,
-		name: parse.name,
+		name: parse?.name,
 		uuid: v4(),
 		weight: parse.weight,
 		width: parse.width,
 		user_id: c.get("jwtPayload").id,
+		unit: parse.radio
 	});
 
 	return c.json({ success: true });
@@ -48,6 +50,7 @@ const Edit = async (c: Context<App>) => {
 	// Validation
 	const body = await c.req.json();
 	const parse = Package.IDZODSCHEMA.parse(body);
+	console.log(parse)
 
 	const model = new Model(c.env.DB);
 
@@ -75,3 +78,4 @@ const Delete = async (c: Context<App>) => {
 const PackagesUser = { Get, Create, Edit, Delete, GetAll };
 
 export { PackagesUser };
+
