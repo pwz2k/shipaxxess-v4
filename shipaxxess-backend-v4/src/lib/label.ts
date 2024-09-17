@@ -30,7 +30,7 @@ export class LabelManager {
 		log("Label manager is ready.");
 	}
 
-	haveGrithOk(height: number, length: number, width: number, type: "ups" | "usps") {
+	haveGrithOk(height: number, length: number, width: number, type: "ups" | "usps" | "fedex") {
 		const isGirthOk = girth([height, length, width]);
 
 		if (type === "ups" && isGirthOk > config.packages.ups_max_girth) {
@@ -48,8 +48,8 @@ export class LabelManager {
 		return await drizzle(this.env.DB).select().from(users).where(eq(users.id, user_id)).get();
 	}
 
-	async getWeightData(type: "usps" | "ups", type_id: number, weight: number) {
-		return await getWeight(this.env.DB, { type, type_id, weight });
+	async getWeightData(type: "usps" | "ups" | "fedex", type_id: number, weight: number, width: number, height: number, length: number) {
+		return await getWeight(this.env.DB, { type, type_id, weight, width, height, length });
 	}
 
 	async getBatchData(batch_id: number) {

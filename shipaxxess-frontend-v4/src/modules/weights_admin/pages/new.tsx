@@ -17,8 +17,13 @@ const NewWeightAdminPage = () => {
 	const form = useForm<Weights.CREATESCHEMA>({
 		defaultValues: {
 			reseller_cost: 0,
-			from_weight: 0,
-			to_weight: 0,
+			height: 0,
+			weight: 0,
+			width: 0,
+			length: 0,
+			width_percent: 0,
+			height_percent: 0,
+			length_percent: 0,
 			user_cost: 0,
 		},
 		resolver: zodResolver(Weights.CREATESCHEMA),

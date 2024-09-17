@@ -19,8 +19,13 @@ const EditWeightAdminPage = () => {
 	const form = useForm<Weights.CREATESCHEMA>({
 		defaultValues: {
 			reseller_cost: 0,
-			from_weight: 0,
-			to_weight: 0,
+			height: 0,
+			width: 0,
+			weight: 0,
+			length: 0,
+			width_percent: 0,
+			height_percent: 0,
+			length_percent: 0,
 			user_cost: 0,
 		},
 		resolver: zodResolver(Weights.CREATESCHEMA),
@@ -57,13 +62,19 @@ const EditWeightAdminPage = () => {
 
 	React.useEffect(() => {
 		if (weightQuery.data && typesQuery.data) {
-			form.setValue("from_weight", weightQuery.data.from_weight);
-			form.setValue("to_weight", weightQuery.data.to_weight);
+			form.setValue("weight", weightQuery.data.weight);
+			form.setValue("width", weightQuery.data.width);
+			form.setValue("height", weightQuery.data.height);
+			form.setValue("length", weightQuery.data.length);
+			form.setValue("width_percent", weightQuery.data.width_percent);
+			form.setValue("height_percent", weightQuery.data.height_percent);
+			form.setValue("length_percent", weightQuery.data.length_percent);
 			form.setValue("type_id", weightQuery.data.type_id.toString());
 			form.setValue("user_cost", weightQuery.data.user_cost);
 			form.setValue("reseller_cost", weightQuery.data.reseller_cost);
 		}
 	}, [form, typesQuery.data, weightQuery.data]);
+
 
 	if (typesQuery.isLoading) {
 		return <Loading />;

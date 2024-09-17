@@ -1,33 +1,43 @@
-import { adminWeights } from "@schemas/adminWeights";
-import { Weights } from "@shipaxxess/shipaxxess-zod-v4";
-import { exception } from "@utils/error";
-import { and, eq } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/d1";
-import { Context } from "hono";
+import { adminWeights } from '@schemas/adminWeights';
+import { Weights } from '@shipaxxess/shipaxxess-zod-v4'; // Adjust import based on your setup
+import { exception } from '@utils/error';
+import { eq } from 'drizzle-orm';
+import { drizzle } from 'drizzle-orm/d1';
+import { Context } from 'hono';
 
 const Post = async (c: Context<App>) => {
 	const body = await c.req.json();
 	const parse = Weights.FETCHSCHEMA.parse(body);
-	console.log(parse)
-	// const weight = await drizzle(c.env.DB, { schema }).query.adminWeights.findFirst({
-	// 	with: {
-	// 		type: {
-	// 			// @ts-ignore
-	// 			where: eq(types.type, parse.type),
-	// 		},
-	// 	},
-	// 	where: and(
-	// 		eq(adminWeights.type_id, Number(parse.type_id)),
-	// 		lte(adminWeights.from_weight, parse.weight),
-	// 		gte(adminWeights.to_weight, parse.weight),
-	// 	),
-	// });
+	console.log(parse);
 
-	const weight = await drizzle(c.env.DB).select().from(adminWeights).where(and(eq(adminWeights.type_id, parse.type_id))).get()
-	console.log(weight)
-	if (!weight) throw exception({ code: 40405, message: "Weight not found test" });
+	// Fetch all records with the matching type_id
+	const allRecords = await drizzle(c.env.DB).select().from(adminWeights).where(eq(adminWeights.type_id, parse.type_id)).all();
 
-	return c.json(weight);
+	// Check if allRecords is an array
+	if (!Array.isArray(allRecords)) {
+		throw exception({ code: 500, message: "Database query did not return an array" });
+	}
+
+	// Calculate the difference for each record and find the closest match
+	let closestRecord = null;
+	let minDifference = Infinity;
+
+	for (const record of allRecords) {
+		const widthDiff = Math.abs(record.width - parse.width);
+		const heightDiff = Math.abs(record.height - parse.height);
+		const lengthDiff = Math.abs(record.length - parse.length);
+
+		const totalDifference = widthDiff + heightDiff + lengthDiff;
+
+		if (totalDifference < minDifference) {
+			minDifference = totalDifference;
+			closestRecord = record;
+		}
+	}
+
+	if (!closestRecord) throw exception({ code: 40405, message: "Weight not found" });
+
+	return c.json(closestRecord);
 };
 
 const WeightsUser = { Post };

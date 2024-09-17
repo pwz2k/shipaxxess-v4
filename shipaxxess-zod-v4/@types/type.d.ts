@@ -3,33 +3,33 @@ export declare const ZODSCHEMA: z.ZodObject<{
     label: z.ZodString;
     value: z.ZodString;
     unit: z.ZodEnum<["oz", "lb"]>;
-    type: z.ZodEnum<["usps", "ups"]>;
+    type: z.ZodEnum<["usps", "ups", "fedex"]>;
 }, "strip", z.ZodTypeAny, {
     label?: string;
     value?: string;
     unit?: "oz" | "lb";
-    type?: "usps" | "ups";
+    type?: "usps" | "ups" | "fedex";
 }, {
     label?: string;
     value?: string;
     unit?: "oz" | "lb";
-    type?: "usps" | "ups";
+    type?: "usps" | "ups" | "fedex";
 }>;
 export type ZODSCHEMA = z.infer<typeof ZODSCHEMA>;
 export declare const IDZODSCHEMA: z.ZodObject<{
-    type: z.ZodEnum<["usps", "ups"]>;
+    type: z.ZodEnum<["usps", "ups", "fedex"]>;
     value: z.ZodString;
     label: z.ZodString;
     unit: z.ZodEnum<["oz", "lb"]>;
     id: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
-    type?: "usps" | "ups";
+    type?: "usps" | "ups" | "fedex";
     value?: string;
     label?: string;
     unit?: "oz" | "lb";
     id?: number;
 }, {
-    type?: "usps" | "ups";
+    type?: "usps" | "ups" | "fedex";
     value?: string;
     label?: string;
     unit?: "oz" | "lb";
@@ -40,33 +40,33 @@ export declare const CREATESCHEMA: z.ZodObject<{
     label: z.ZodString;
     value: z.ZodString;
     unit: z.ZodEnum<["oz", "lb"]>;
-    type: z.ZodEnum<["usps", "ups"]>;
+    type: z.ZodEnum<["usps", "ups", "fedex"]>;
 }, "strip", z.ZodTypeAny, {
     label?: string;
     value?: string;
     unit?: "oz" | "lb";
-    type?: "usps" | "ups";
+    type?: "usps" | "ups" | "fedex";
 }, {
     label?: string;
     value?: string;
     unit?: "oz" | "lb";
-    type?: "usps" | "ups";
+    type?: "usps" | "ups" | "fedex";
 }>;
 export type CREATESCHEMA = z.infer<typeof CREATESCHEMA>;
 export declare const EDITSCHEMA: z.ZodObject<{
-    type: z.ZodEnum<["usps", "ups"]>;
+    type: z.ZodEnum<["usps", "ups", "fedex"]>;
     value: z.ZodString;
     label: z.ZodString;
     unit: z.ZodEnum<["oz", "lb"]>;
     id: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
-    type?: "usps" | "ups";
+    type?: "usps" | "ups" | "fedex";
     value?: string;
     label?: string;
     unit?: "oz" | "lb";
     id?: number;
 }, {
-    type?: "usps" | "ups";
+    type?: "usps" | "ups" | "fedex";
     value?: string;
     label?: string;
     unit?: "oz" | "lb";

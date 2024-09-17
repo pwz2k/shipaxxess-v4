@@ -1,0 +1,1 @@
+ALTER TABLE `adminWeights` ADD `weight` integer NOT NULL;

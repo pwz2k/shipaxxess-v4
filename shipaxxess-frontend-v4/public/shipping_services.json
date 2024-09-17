@@ -1,0 +1,64 @@
+{
+    "services": [
+        {
+            "name": "USPS Priority Mail",
+            "token": "usps_priority",
+            "provider": "usps"
+        },
+        {
+            "name": "USPS Express Mail",
+            "token": "usps_express",
+            "provider": "usps"
+        },
+        {
+            "name": "USPS Ground Advantage",
+            "token": "usps_ground",
+            "provider": "usps"
+        },
+        {
+            "name": "USPS Signature (Priority)",
+            "token": "usps_priority_with_signature",
+            "provider": "usps"
+        },
+        {
+            "name": "UPS Ground",
+            "token": "ups_ground",
+            "provider": "ups"
+        },
+        {
+            "name": "UPS 2nd Day Air",
+            "token": "ups_2nd_day_air",
+            "provider": "ups"
+        },
+        {
+            "name": "UPS Next Day Air",
+            "token": "ups_next_day_air",
+            "provider": "ups"
+        },
+        {
+            "name": "UPS Next Day Air Early",
+            "token": "ups_next_day_air_early",
+            "provider": "ups"
+        },
+        {
+            "name": "UPS 3 Day Select",
+            "token": "ups_3_day_select",
+            "provider": "ups"
+        },
+        {
+            "name": "FedEx Priority Overnight",
+            "token": "fedex_priority_overnight",
+            "provider": "fedex"
+        },
+        {
+            "name": "FedEx Freight",
+            "token": "fedex_freight",
+            "provider": "fedex"
+        },
+        {
+            "name": "FedEx International Priority",
+            "token": "fedex_international_priority",
+            "provider": "fedex"
+        }
+    ]
+}

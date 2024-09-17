@@ -1,26 +1,35 @@
 import { adminSettings } from "@schemas/adminSettings";
 import { adminWeights } from "@schemas/adminWeights";
 import schema from "@schemas/index";
-import { types } from "@schemas/types";
 import { Weights } from "@shipaxxess/shipaxxess-zod-v4";
-import { and, eq, gte, lte } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 
 export const getWeight = async (db: D1Database, parse: Weights.FETCHSCHEMA) => {
-	return await drizzle(db, { schema }).query.adminWeights.findFirst({
-		with: {
-			type: {
-				// @ts-ignore
-				where: eq(types.type, parse.type),
-			},
-		},
-		where: and(
-			eq(adminWeights.type_id, Number(parse.type_id)),
-			lte(adminWeights.from_weight, parse.weight),
-			gte(adminWeights.to_weight, parse.weight),
-		),
+	// Fetch all records from the database
+	const allRecords = await drizzle(db, { schema }).query.adminWeights.findMany({
+		where: eq(adminWeights.type_id, Number(parse.type_id)),
 	});
+	console.log("TEST", allRecords)
+	// Calculate the difference for each record and find the closest match
+	let closestRecord = null;
+	let minDifference = Infinity;
+	for (const record of allRecords) {
+		const widthDiff = Math.abs(record.width - parse.width);
+		const heightDiff = Math.abs(record.height - parse.height);
+		const lengthDiff = Math.abs(record.length - parse.length);
+
+		const totalDifference = widthDiff + heightDiff + lengthDiff;
+
+		if (totalDifference < minDifference) {
+			minDifference = totalDifference;
+			closestRecord = record;
+		}
+	}
+
+	return closestRecord;
 };
+
 
 export const initSettings = async (db: D1Database) => {
 	return await drizzle(db).batch([

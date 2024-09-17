@@ -59,19 +59,19 @@ export declare const COMMONSCHEMA: z.ZodObject<{
     }>;
     package_select: z.ZodOptional<z.ZodString>;
     type: z.ZodObject<{
-        type: z.ZodEnum<["usps", "ups"]>;
+        type: z.ZodEnum<["usps", "ups", "fedex"]>;
         value: z.ZodString;
         label: z.ZodString;
         unit: z.ZodEnum<["oz", "lb"]>;
         id: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
-        type?: "usps" | "ups";
+        type?: "usps" | "ups" | "fedex";
         value?: string;
         label?: string;
         unit?: "oz" | "lb";
         id?: number;
     }, {
-        type?: "usps" | "ups";
+        type?: "usps" | "ups" | "fedex";
         value?: string;
         label?: string;
         unit?: "oz" | "lb";
@@ -109,7 +109,7 @@ export declare const COMMONSCHEMA: z.ZodObject<{
     };
     package_select?: string;
     type?: {
-        type?: "usps" | "ups";
+        type?: "usps" | "ups" | "fedex";
         value?: string;
         label?: string;
         unit?: "oz" | "lb";
@@ -147,7 +147,7 @@ export declare const COMMONSCHEMA: z.ZodObject<{
     };
     package_select?: string;
     type?: {
-        type?: "usps" | "ups";
+        type?: "usps" | "ups" | "fedex";
         value?: string;
         label?: string;
         unit?: "oz" | "lb";
@@ -165,19 +165,19 @@ export declare const COMMONSCHEMA: z.ZodObject<{
 export type COMMONSCHEMA = z.infer<typeof COMMONSCHEMA>;
 export declare const ZODSCHEMA: z.ZodObject<{
     type: z.ZodObject<{
-        type: z.ZodEnum<["usps", "ups"]>;
+        type: z.ZodEnum<["usps", "ups", "fedex"]>;
         value: z.ZodString;
         label: z.ZodString;
         unit: z.ZodEnum<["oz", "lb"]>;
         id: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
-        type?: "usps" | "ups";
+        type?: "usps" | "ups" | "fedex";
         value?: string;
         label?: string;
         unit?: "oz" | "lb";
         id?: number;
     }, {
-        type?: "usps" | "ups";
+        type?: "usps" | "ups" | "fedex";
         value?: string;
         label?: string;
         unit?: "oz" | "lb";
@@ -282,7 +282,7 @@ export declare const ZODSCHEMA: z.ZodObject<{
     }>;
 }, "strip", z.ZodTypeAny, {
     type?: {
-        type?: "usps" | "ups";
+        type?: "usps" | "ups" | "fedex";
         value?: string;
         label?: string;
         unit?: "oz" | "lb";
@@ -331,7 +331,7 @@ export declare const ZODSCHEMA: z.ZodObject<{
     };
 }, {
     type?: {
-        type?: "usps" | "ups";
+        type?: "usps" | "ups" | "fedex";
         value?: string;
         label?: string;
         unit?: "oz" | "lb";
@@ -417,19 +417,19 @@ export declare const RECIPIENTSCHEMAARRAY: z.ZodArray<z.ZodObject<{
 export type RECIPIENTSCHEMAARRAY = z.infer<typeof RECIPIENTSCHEMAARRAY>;
 export declare const BATCHZODSCHEMA: z.ZodObject<{
     type: z.ZodObject<{
-        type: z.ZodEnum<["usps", "ups"]>;
+        type: z.ZodEnum<["usps", "ups", "fedex"]>;
         value: z.ZodString;
         label: z.ZodString;
         unit: z.ZodEnum<["oz", "lb"]>;
         id: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
-        type?: "usps" | "ups";
+        type?: "usps" | "ups" | "fedex";
         value?: string;
         label?: string;
         unit?: "oz" | "lb";
         id?: number;
     }, {
-        type?: "usps" | "ups";
+        type?: "usps" | "ups" | "fedex";
         value?: string;
         label?: string;
         unit?: "oz" | "lb";
@@ -538,7 +538,7 @@ export declare const BATCHZODSCHEMA: z.ZodObject<{
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
     type?: {
-        type?: "usps" | "ups";
+        type?: "usps" | "ups" | "fedex";
         value?: string;
         label?: string;
         unit?: "oz" | "lb";
@@ -589,7 +589,7 @@ export declare const BATCHZODSCHEMA: z.ZodObject<{
     }[];
 }, {
     type?: {
-        type?: "usps" | "ups";
+        type?: "usps" | "ups" | "fedex";
         value?: string;
         label?: string;
         unit?: "oz" | "lb";

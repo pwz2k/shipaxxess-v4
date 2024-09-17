@@ -58,7 +58,7 @@ const Create = async (c: Context<App>) => {
 	}
 	log("Package dimensions are ok.");
 	console.log(parse.type.type, parse.type.id, parse.package.weight)
-	const weight = await manager.getWeightData(parse.type.type, parse.type.id, parse.package.weight);
+	const weight = await manager.getWeightData(parse.type.type, parse.type.id, parse.package.weight, parse.package.width, parse.package.height, parse.package.length);
 	console.log(weight, "weight------->");
 	if (!weight) {
 		throw exception({ message: "Weight not found.", code: 404 });

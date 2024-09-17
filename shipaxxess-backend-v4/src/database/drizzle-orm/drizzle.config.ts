@@ -3,7 +3,7 @@ import type { Config } from "drizzle-kit";
 const config: Config = {
   schema: "./src/database/drizzle-orm/schemas/*",  // Path to schema files
   out: "./src/database/drizzle-orm/migrations",    // Path to migration files
-  dialect: "postgresql",
+  dialect: "sqlite",
   // driver: "pglite",                              // Dialect for PostgreSQL
 };
 

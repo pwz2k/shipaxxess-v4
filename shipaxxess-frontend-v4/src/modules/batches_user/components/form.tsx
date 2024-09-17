@@ -242,11 +242,14 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 
 	React.useMemo(async () => {
 		const weight = form.watch("package.weight");
+		const width = form.watch("package.width");
+		const height = form.watch("package.height");
+		const length = form.watch("package.length");
 		const type_id = form.watch("type.id");
 		const type = form.watch("type.type");
 		if (weight === 0) return;
 
-		const req = await api.url("/user/weights").useAuth().post({ weight, type_id, type });
+		const req = await api.url("/user/weights").useAuth().post({ weight, type_id, type, width, height, length });
 		const res = await req.json<WeightsSelectModel & { type: TypesSelectModel } & { message?: string }>();
 
 		if (res.message) {
@@ -933,7 +936,6 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 								</div>
 								<div className="flex items-center justify-end pt-4">{SubmitBatchButton}</div>
 							</Card>
-							//test
 							<div className="py-4 mt-4 bg-white rounded-lg shadow">
 								<p className="px-4 text-xs text-justify text-muted-foreground">
 									Note: You are responsible for all variable and transactional costs of using the service (including but

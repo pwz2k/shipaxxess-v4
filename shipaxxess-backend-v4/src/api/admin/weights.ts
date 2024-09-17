@@ -34,8 +34,13 @@ const Create = async (c: Context<App>) => {
 		reseller_cost: parse.reseller_cost,
 		user_cost: parse.user_cost,
 		type_id: parseInt(parse.type_id),
-		from_weight: parse.from_weight,
-		to_weight: parse.to_weight,
+		weight: parseInt(parse.weight),
+		width: parseInt(parse.width),
+		width_percent: parseInt(parse.width_percent),
+		height: parseInt(parse.height),
+		height_percent: parseInt(parse.height_percent),
+		length: parseInt(parse.length),
+		length_percent: parseInt(parse.length_percent),
 		uuid: v4(),
 	});
 
@@ -54,8 +59,12 @@ const Edit = async (c: Context<App>) => {
 			reseller_cost: parse.reseller_cost,
 			user_cost: parse.user_cost,
 			type_id: parseInt(parse.type_id),
-			from_weight: parse.from_weight,
-			to_weight: parse.to_weight,
+			width: parseInt(parse.width),
+			width_percent: parseInt(parse.width_percent),
+			height: parseInt(parse.height),
+			height_percent: parseInt(parse.height_percent),
+			length: parseInt(parse.length),
+			length_percent: parseInt(parse.length_percent),
 		},
 		eq(adminWeights.id, parse.id),
 	);
@@ -80,3 +89,4 @@ const Delete = async (c: Context<App>) => {
 const WeightsAdmin = { GetAll, Create, Edit, Delete, Get };
 
 export { WeightsAdmin };
+

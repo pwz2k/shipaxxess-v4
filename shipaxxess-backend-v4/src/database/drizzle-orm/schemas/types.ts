@@ -7,7 +7,7 @@ export const types = sqliteTable("types", {
 	label: text("label").notNull(),
 	value: text("value").notNull(),
 	unit: text("unit").$type<"oz" | "lb">().default("lb"),
-	type: text("type").$type<"usps" | "ups">().default("usps"),
+	type: text("type").$type<"usps" | "ups" | "fedex">().default("usps"),
 	created_at: text("created_at").default(sql`CURRENT_TIMESTAMP`),
 	updated_at: text("updated_at").default(sql`CURRENT_TIMESTAMP`),
 });

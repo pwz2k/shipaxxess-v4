@@ -23,36 +23,54 @@ export const weightsColumns = (timezone: string) =>
 			enableHiding: true,
 		},
 		{
-			accessorKey: "from_weight",
+			accessorKey: "width",
 			header: ({ column }) => {
 				return (
 					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						From Weight
+						Width
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
 			},
 			cell: ({ row }) => (
 				<span>
-					{row.original.from_weight} {row.original.type?.unit}
+					{row.original.width} inch
 				</span>
 			),
 			enableSorting: true,
 			enableHiding: true,
 		},
 		{
-			accessorKey: "to_weight",
+			accessorKey: "height",
 			header: ({ column }) => {
 				return (
 					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
-						To Weight
+						Height
 						<ArrowUpDown className="w-4 h-4 ml-2" />
 					</Button>
 				);
 			},
 			cell: ({ row }) => (
 				<span>
-					{row.original.to_weight} {row.original.type?.unit}
+					{row.original.height} inch
+				</span>
+			),
+			enableSorting: true,
+			enableHiding: true,
+		},
+		{
+			accessorKey: "length",
+			header: ({ column }) => {
+				return (
+					<Button className="px-0" variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+						Length
+						<ArrowUpDown className="w-4 h-4 ml-2" />
+					</Button>
+				);
+			},
+			cell: ({ row }) => (
+				<span>
+					{row.original.length} inch
 				</span>
 			),
 			enableSorting: true,
