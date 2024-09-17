@@ -933,6 +933,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 								</div>
 								<div className="flex items-center justify-end pt-4">{SubmitBatchButton}</div>
 							</Card>
+							//test
 							<div className="py-4 mt-4 bg-white rounded-lg shadow">
 								<p className="px-4 text-xs text-justify text-muted-foreground">
 									Note: You are responsible for all variable and transactional costs of using the service (including but
