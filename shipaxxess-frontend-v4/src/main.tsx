@@ -10,7 +10,7 @@ import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-qu
 const queryClient = new QueryClient({
 	queryCache: new QueryCache({
 		onError: (error) => {
-			toast.error((error as Error).message);
+			toast.error((error as Error)?.message || '');
 		},
 	}),
 });
@@ -19,7 +19,7 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<React.StrictMode>
 
-		
+
 		<QueryClientProvider client={queryClient}>
 			<TimezoneProvider>
 				<RouterProvider router={router} />

@@ -1,4 +1,5 @@
 import { Hono } from "hono";
+import { CouponsAdmin } from "./coupon";
 import { CronsAdmin } from "./crons";
 import { DashboardAdmin } from "./dashboard";
 import { LabelsAdmin } from "./labels";
@@ -41,6 +42,14 @@ admin.post("/types", TypesAdmin.Create);
 admin.patch("/types", TypesAdmin.Edit);
 admin.delete("/types", TypesAdmin.Delete);
 admin.get("/types/:uuid", TypesAdmin.Get);
+
+// Coupon routes
+admin.post("/coupons", CouponsAdmin.Create);
+admin.get("/coupons", CouponsAdmin.GetAll);
+admin.get("/coupons/:id", CouponsAdmin.Get);
+admin.delete("/coupons", CouponsAdmin.Delete);
+admin.patch("/coupons", CouponsAdmin.Edit);
+
 
 // Users routes
 admin.get("/users", UsersAdmin.GetAll);

@@ -25,6 +25,7 @@ import WeightsAdminRoutes from "@client/modules/weights_admin/routes";
 import TypesAdminRoutes from "@client/modules/types_admin/routes";
 import BatchsAdminRoutes from "@client/modules/batches_admin/routes";
 import RefundAdminRoutes from "@client/modules/refunds_admin/routes";
+import CouponAdminRoutes from "@client/modules/coupons_admin/routes";
 interface ErrorFallbackProps {
 	error: Error;
 	resetErrorBoundary: () => void;
@@ -87,6 +88,7 @@ export const router = createBrowserRouter([
 			...BatchsAdminRoutes,
 			...RefundAdminRoutes,
 			...DashboardAdminRoute,
+			...CouponAdminRoutes,
 		],
 	},
 ]);

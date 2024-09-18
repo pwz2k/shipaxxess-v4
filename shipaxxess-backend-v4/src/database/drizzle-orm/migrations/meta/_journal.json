@@ -15,6 +15,13 @@
       "when": 1726586023263,
       "tag": "0001_plain_tattoo",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1726657137362,
+      "tag": "0002_unusual_dexter_bennett",
+      "breakpoints": true
     }
   ]
 }

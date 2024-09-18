@@ -65,6 +65,7 @@ export const sidebarItems: SidebarProps[] = [
 		slug: "/tickets",
 		badge: "new",
 	},
+
 	{
 		icon: <Users color="#fff" size={20} />,
 		label: "Referrals",
@@ -119,6 +120,12 @@ export const adminSidebarItems: SidebarProps[] = [
 		icon: <Ticket color="#fff" size={20} />,
 		label: "Tickets",
 		slug: "/admin/tickets",
+		badge: "new",
+	},
+	{
+		icon: <BadgePercent color="#fff" size={20} />,
+		label: "Coupons",
+		slug: "/admin/coupons",
 		badge: "new",
 	},
 	{

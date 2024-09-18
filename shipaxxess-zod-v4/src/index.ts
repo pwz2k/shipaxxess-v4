@@ -1,6 +1,7 @@
 import * as Address from "./address";
 import * as Chats from "./chats";
 import * as Costs from "./costs";
+import * as Coupon from "./coupon";
 import * as Forget from "./forget";
 import * as Id from "./id";
 import * as Labels from "./labels";
@@ -18,8 +19,7 @@ import * as Weights from "./weights";
 export {
 	Address,
 	Chats,
-	Costs,
-	Forget,
+	Costs, Coupon, Forget,
 	Id,
 	Labels,
 	Package,
@@ -31,5 +31,6 @@ export {
 	Tickets,
 	Type,
 	Verify,
-	Weights,
+	Weights
 };
+
