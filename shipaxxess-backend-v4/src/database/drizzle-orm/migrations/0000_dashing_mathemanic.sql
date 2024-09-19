@@ -28,6 +28,7 @@ CREATE TABLE `adminWeights` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`uuid` text NOT NULL,
 	`type_id` integer NOT NULL,
+	`weight` integer NOT NULL,
 	`width` integer NOT NULL,
 	`width_percent` integer NOT NULL,
 	`height` integer NOT NULL,
@@ -97,6 +98,15 @@ CREATE TABLE `chats` (
 	`updated_at` text DEFAULT CURRENT_TIMESTAMP
 );
 --> statement-breakpoint
+CREATE TABLE `coupons` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`value` real NOT NULL,
+	`code` text NOT NULL,
+	`usedCount` integer DEFAULT 0,
+	`created_at` text DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` text DEFAULT CURRENT_TIMESTAMP
+);
+--> statement-breakpoint
 CREATE TABLE `crons` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`uuid` text NOT NULL,
@@ -104,6 +114,11 @@ CREATE TABLE `crons` (
 	`meta_data` text NOT NULL,
 	`created_at` text DEFAULT CURRENT_TIMESTAMP,
 	`updated_at` text DEFAULT CURRENT_TIMESTAMP
+);
+--> statement-breakpoint
+CREATE TABLE `discount` (
+	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	`value` integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE `labels` (

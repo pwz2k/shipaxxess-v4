@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { CouponsAdmin } from "./coupon";
 import { CronsAdmin } from "./crons";
 import { DashboardAdmin } from "./dashboard";
+import { DiscountAdmin } from "./discount";
 import { LabelsAdmin } from "./labels";
 import { AdminNotification } from "./notifcaitons";
 import { PaymentsAdmin } from "./payments";
@@ -50,6 +51,9 @@ admin.get("/coupons/:id", CouponsAdmin.Get);
 admin.delete("/coupons", CouponsAdmin.Delete);
 admin.patch("/coupons", CouponsAdmin.Edit);
 
+// Discount routes 
+admin.get("/discounts", DiscountAdmin.GetAll)
+admin.post("/discounts", DiscountAdmin.Edit)
 
 // Users routes
 admin.get("/users", UsersAdmin.GetAll);

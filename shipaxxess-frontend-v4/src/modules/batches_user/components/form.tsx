@@ -635,19 +635,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 										</FormItem>
 									)}
 								/>
-								<FormField
-									control={form.control}
-									name="package.length"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel>Length (inch)</FormLabel>
-											<FormControl>
-												<Input {...field} type="number" disabled={form.watch("type.id") ? false : true} />
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
+
 								<FormField
 									name="package.width"
 									control={form.control}
@@ -667,6 +655,19 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 									render={({ field }) => (
 										<FormItem>
 											<FormLabel>Height (inch)</FormLabel>
+											<FormControl>
+												<Input {...field} type="number" disabled={form.watch("type.id") ? false : true} />
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name="package.length"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Length (inch)</FormLabel>
 											<FormControl>
 												<Input {...field} type="number" disabled={form.watch("type.id") ? false : true} />
 											</FormControl>

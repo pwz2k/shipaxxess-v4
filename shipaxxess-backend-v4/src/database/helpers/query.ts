@@ -6,12 +6,9 @@ import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/d1";
 
 export const getWeight = async (db: D1Database, parse: Weights.FETCHSCHEMA) => {
-	// Fetch all records from the database
 	const allRecords = await drizzle(db, { schema }).query.adminWeights.findMany({
 		where: eq(adminWeights.type_id, Number(parse.type_id)),
 	});
-	console.log("TEST", allRecords)
-	// Calculate the difference for each record and find the closest match
 	let closestRecord = null;
 	let minDifference = Infinity;
 	for (const record of allRecords) {

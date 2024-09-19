@@ -2,6 +2,7 @@ import * as Address from "./address";
 import * as Chats from "./chats";
 import * as Costs from "./costs";
 import * as Coupon from "./coupon";
+import * as Discount from "./discount";
 import * as Forget from "./forget";
 import * as Id from "./id";
 import * as Labels from "./labels";
@@ -19,7 +20,7 @@ import * as Weights from "./weights";
 export {
 	Address,
 	Chats,
-	Costs, Coupon, Forget,
+	Costs, Coupon, Discount, Forget,
 	Id,
 	Labels,
 	Package,

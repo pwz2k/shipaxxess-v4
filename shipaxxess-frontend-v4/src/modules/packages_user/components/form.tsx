@@ -72,19 +72,7 @@ const PackageForm = ({
 						</FormItem>
 					)}
 				/>
-				<FormField
-					control={form.control}
-					name="length"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Length (inch)</FormLabel>
-							<FormControl>
-								<Input {...field} type="number" onChange={(event) => field.onChange(+event.target.value)} />
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
+
 				<FormField
 					control={form.control}
 					name="width"
@@ -111,7 +99,19 @@ const PackageForm = ({
 						</FormItem>
 					)}
 				/>
-
+				<FormField
+					control={form.control}
+					name="length"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Length (inch)</FormLabel>
+							<FormControl>
+								<Input {...field} type="number" onChange={(event) => field.onChange(+event.target.value)} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
 				{button}
 			</form>
 		</Form>
