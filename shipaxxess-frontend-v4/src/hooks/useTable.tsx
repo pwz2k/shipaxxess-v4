@@ -42,7 +42,6 @@ const useTable = <T,>({
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(
 		() => getLocalcolumnVisibility(`${key}_columns`) // Using an initializer function to avoid unnecessary computation
 	);
-	console.log(columnVisibility)
 	useEffect(() => {
 		setColumnVisibility(JSON.parse(localStorage.getItem(`${key}_columns`) || '{}') as { [x: string]: boolean })
 		visCng = Math.random()

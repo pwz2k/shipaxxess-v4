@@ -47,6 +47,7 @@ admin.get("/types/:uuid", TypesAdmin.Get);
 // Coupon routes
 admin.post("/coupons", CouponsAdmin.Create);
 admin.get("/coupons", CouponsAdmin.GetAll);
+admin.get("/couponsByCode/:code", CouponsAdmin.GetCouponByCode);
 admin.get("/coupons/:id", CouponsAdmin.Get);
 admin.delete("/coupons", CouponsAdmin.Delete);
 admin.patch("/coupons", CouponsAdmin.Edit);

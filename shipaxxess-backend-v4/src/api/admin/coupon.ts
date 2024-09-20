@@ -22,6 +22,19 @@ const Get = async (c: Context<App, "/:id">) => {
 
     return c.json(tp);
 };
+const GetCouponByCode = async (c: Context<App, "/:code">) => {
+    const coupon_code = c.req.param("code");
+
+    const model = new Model(c.env.DB);
+
+    const tp = await model.get(coupons, eq(coupons.code, coupon_code));
+    if (tp) {
+        return c.json(tp);
+
+    } else {
+        return c.json({})
+    }
+};
 
 const Create = async (c: Context<App>) => {
     const body = await c.req.json();
@@ -76,7 +89,7 @@ const Delete = async (c: Context<App>) => {
     return c.json({ success: true });
 };
 
-const CouponsAdmin = { GetAll, Create, Edit, Delete, Get };
+const CouponsAdmin = { GetAll, Create, Edit, Delete, Get, GetCouponByCode };
 
 export { CouponsAdmin };
 

@@ -4,6 +4,8 @@ import { DashboardUser } from "./dashboard";
 import { EbayUser } from "./ebay";
 import { LabelsUser } from "./labels";
 
+import { CouponsAdmin } from "@api/admin/coupon";
+import { DiscountAdmin } from "@api/admin/discount";
 import { UserNotification } from "./notification";
 import { PackagesUser } from "./packages";
 import { PaymentUser } from "./payment";
@@ -34,6 +36,8 @@ user.post("/labels/batch/download", LabelsUser.DownloadBatch);
 user.get("/labels/batch/:uuid", LabelsUser.Get);
 user.post("/labels/batch/refund", LabelsUser.RefundAsBatch);
 user.post("/labels/batch/search", LabelsUser.Search);
+// Discounts routes 
+user.get('/discounts', DiscountAdmin.GetAll)
 
 // Addresses routes
 user.get("/addresses", AddressesUser.GetAll);
@@ -78,6 +82,8 @@ user.post("/settings/coupon", SettingsUser.Coupon);
 
 // Weights routes
 user.post("/weights", WeightsUser.Post);
+// coupon routes 
+user.get('/couponsByCode/:code', CouponsAdmin.GetCouponByCode)
 
 // Types routes
 user.get("/types", TypeUser.GetAll);

@@ -23,6 +23,7 @@ export const COMMONSCHEMA = z.object({
 	signature: z.boolean().optional(),
 	name: z.string().optional(),
 	saved_sender: z.boolean().default(false),
+	// coupon: Coupon.IDZODSCHEMA
 });
 
 export type COMMONSCHEMA = z.infer<typeof COMMONSCHEMA>;
@@ -45,6 +46,7 @@ export const BATCHZODSCHEMA = COMMONSCHEMA.merge(
 	z.object({
 		batch_uuid: z.string().uuid(),
 		recipient: RECIPIENTSCHEMAARRAY,
+		coupon: z.string()
 	}),
 );
 

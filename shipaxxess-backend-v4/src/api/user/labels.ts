@@ -2,6 +2,8 @@ import { LabelManager } from "@lib/label";
 import { Model } from "@lib/model";
 import { addresses } from "@schemas/addresses";
 import { batchs } from "@schemas/batchs";
+import { coupons } from "@schemas/coupons";
+import { discount } from "@schemas/discount";
 import { labels } from "@schemas/labels";
 import { refunds } from "@schemas/refunds";
 import { subscriptions } from "@schemas/subscriptions";
@@ -46,10 +48,10 @@ const Create = async (c: Context<App>) => {
 	const body = await c.req.json();
 	const parse = Labels.BATCHZODSCHEMA.parse(body);
 	log("Parsed body.");
-
 	const settings = await getSettings(c.env.DB);
+	const model = new Model(c.env.DB);
 
-
+	const coupon = await model.get(coupons, eq(coupons.code, parse.coupon))
 	const manager = new LabelManager(c.env, settings);
 	log("Created label manager.");
 
@@ -57,16 +59,16 @@ const Create = async (c: Context<App>) => {
 		throw exception({ message: "Package dimensions are too large.", code: 508 });
 	}
 	log("Package dimensions are ok.");
-	console.log(parse.type.type, parse.type.id, parse.package.weight)
 	const weight = await manager.getWeightData(parse.type.type, parse.type.id, parse.package.weight, parse.package.width, parse.package.height, parse.package.length);
-	console.log(weight, "weight------->");
 	if (!weight) {
 		throw exception({ message: "Weight not found.", code: 404 });
 	}
 	log("Weight is ok.");
+	const discountData = await model.all(discount);
+	const discountPercentage = (discountData && discountData[0]?.value) || 0;
 
 	const total_labels = parse.recipient.length;
-	const user_cost = weight.user_cost * total_labels;
+	const user_cost = (weight.user_cost - (weight.user_cost * (coupon?.value ? coupon?.value : discountPercentage) / 100)) * total_labels;
 	const reseller_cost = weight.reseller_cost * total_labels;
 
 	const user = await manager.getUserData(c.get("jwtPayload").id);
