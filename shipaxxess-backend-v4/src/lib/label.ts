@@ -6,6 +6,7 @@ import { LabelsInsertModel, LabelsSelectModel, labels } from "@schemas/labels";
 import { payments } from "@schemas/payments";
 import { UsersSelectModel, users } from "@schemas/users";
 import { Address, Labels } from "@shipaxxess/shipaxxess-zod-v4";
+import { exception } from "@utils/error";
 import { girth } from "@utils/girth";
 import { log } from "@utils/log";
 import { eq } from "drizzle-orm";

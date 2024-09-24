@@ -293,20 +293,24 @@ export const Get = async (c: Context<App>) => {
 	let profits;
 	let profitByMonths: any[] = [];
 
-	// Fetch data
+	// // Fetch data
 	if (isMoreThanMonth) {
 		// Aggregate by month
 		profits = await db
 			.select({
 				month: sql`strftime('%Y-%m', created_at)`,
-				profit: sql`SUM(COALESCE(${payments.credit}, 0))`,
+				profit: sum(sql<number>`((${batchs.cost_reseller} - ${batchs.cost_user}))`),
 			})
-			.from(payments)
+			.from(batchs)
 			.groupBy(sql`strftime('%Y-%m', created_at)`)
 			.orderBy(desc(sql`strftime('%Y-%m', created_at)`))
 			.where(
-				and(sql`${payments.created_at} >= ${start.toISOString()}`, sql`${payments.created_at} <= ${end.toISOString()}`),
-			);
+				and(
+					eq(batchs.status_label, "completed"),
+					sql`${batchs.updated_at} >= ${start.toISOString()}`,
+					sql`${batchs.updated_at} <= ${end.toISOString()}`,
+				),
+			)
 
 		// Format for months
 		const profitByMonth = profits.map((profit: any) => ({
@@ -331,13 +335,17 @@ export const Get = async (c: Context<App>) => {
 		profits = await db
 			.select({
 				date: sql`strftime('%d/%m/%Y', created_at)`, // Format as DD/MM/YYYY
-				profit: sql`SUM(COALESCE(${payments.credit}, 0))`,
+				profit: sum(sql<number>`((${batchs.cost_reseller} - ${batchs.cost_user}))`),
 			})
-			.from(payments)
+			.from(batchs)
 			.groupBy(sql`strftime('%d/%m/%Y', created_at)`)
 			.orderBy(sql`strftime('%d/%m/%Y', created_at)`)
 			.where(
-				and(sql`${payments.created_at} >= ${start.toISOString()}`, sql`${payments.created_at} <= ${end.toISOString()}`),
+				and(
+					eq(batchs.status_label, "completed"),
+					sql`${batchs.updated_at} >= ${start.toISOString()}`,
+					sql`${batchs.updated_at} <= ${end.toISOString()}`,
+				),
 			);
 
 		// Format for days
@@ -360,6 +368,20 @@ export const Get = async (c: Context<App>) => {
 	}
 
 	// Query batch data
+
+
+
+	const demo = await db
+			.select({
+				month: sql`strftime('%Y-%m', created_at)`,
+				profit: sum(sql<number>`((${batchs.cost_reseller} - ${batchs.cost_user}))`),
+			})
+			.from(batchs)
+			.groupBy(sql`strftime('%Y-%m', created_at)`)
+			.orderBy(desc(sql`strftime('%Y-%m', created_at)`))
+			
+console.log(demo, "--------------> demo");
+
 
 	const batchData = await db
 		.select({ recipients: batchs.recipients })
@@ -454,7 +476,7 @@ export const Get = async (c: Context<App>) => {
 	const totalProfitsWithType = await db
 		.select({
 			type: batchs.type,
-			profit: sum(sql<number>`((${batchs.cost_user} - ${batchs.cost_reseller}))`).as("total_profit"),
+			profit: sum(sql<number>`((${batchs.cost_reseller} - ${batchs.cost_user}))`).as("total_profit"),
 		})
 		.from(batchs)
 		.where(
@@ -472,7 +494,7 @@ export const Get = async (c: Context<App>) => {
 	const payload = {
 		totalProfitsWithType,
 		topUsers: topSpenders,
-		profits,
+		profits: profits,
 		totalProfit,
 		statisticCard: {
 			totalUsers: totalUsers[0].count,
@@ -515,6 +537,7 @@ export const Get = async (c: Context<App>) => {
 		referralUsers: topReferralUsers,
 		paymentMethodsBreakdownByGateway,
 		profitByMonth: profitByMonths,
+	
 
 		refundedOrders: formattedRefundedOrders,
 		refundsByCarrier: refundsByCarrier,

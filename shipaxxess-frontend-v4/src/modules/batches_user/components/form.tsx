@@ -57,7 +57,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 	const [couponApplied, setCouponApplied] = React.useState(false)
 	const [coupon, setCoupon] = React.useState({})
 	const { button: SubmitBatchButton, setIsLoading } = useLoading({ label: "Confirm & Pay", className: "w-full" });
-	const discountPercent = useDiscountsQuery()?.data?.[0].value || 0;
+	const discountPercent = useDiscountsQuery()?.data?.[0]?.value || 0;
 	const form = useForm<Labels.BATCHZODSCHEMA>({
 		defaultValues: {
 			batch_uuid: v4(),
@@ -285,11 +285,11 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 	const { data: couponData, refetch } = useCouponQuery(couponCode, !!couponCode)
 
 	const handleApplyCoupon = async () => {
-		const { data } = await refetch()
-		if (data.value) {
+		const { data } = await refetch() as any;
+		if (data?.value) {
 			setCoupon(data || {})
 		} else {
-			toast.error('Coupon dont exists')
+			toast.error('Coupon does not exists')
 
 		}
 	}

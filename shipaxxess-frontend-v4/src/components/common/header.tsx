@@ -27,7 +27,6 @@ import { onMessage } from "firebase/messaging";
 import { messaging } from "@client/firebase/firebaseConfig";
 import { toast } from "sonner";
 
-
 const Header = ({ items, user }: { items: HeaderProps[]; user: UseQueryResult<UsersSelectModel> }) => {
 	const notificationsQuery = useNotificationsQuery();
 	onMessage(messaging, (payload: any) => {
@@ -45,14 +44,12 @@ const Header = ({ items, user }: { items: HeaderProps[]; user: UseQueryResult<Us
 
 		// Refetch notifications
 		notificationsQuery.refetch();
-
-
-
 	});
 	return (
 		<header
-			className={`sticky h-16 border-b border-primary/5 shadow bg-white flex items-center px-4 justify-between z-40 ${app.mode === "dev" ? "top-9" : "top-0"
-				}`}>
+			className={`sticky h-16 border-b border-primary/5 shadow bg-white flex items-center px-4 justify-between z-40 ${
+				app.mode === "dev" ? "top-9" : "top-0"
+			}`}>
 			<ProfileDropDownMenu items={items} userQuery={user} />
 
 			{/* <NotificationsComponent userQuery={user} bellRing={bellRing} resetRing={resetBell} /> */}
@@ -148,7 +145,7 @@ const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<Users
 	const [unreadNotifcationCount, setUnreadNotificationCount] = useState(0);
 	const markAsReadMutation = useMarkAsReadMutation();
 	const [showBellDot, setShowBellDot] = useState(false);
-	notificationsQuery.data?.forEach((notification: { title: any; description: any; created_at: any; read: any; }) => {
+	notificationsQuery.data?.forEach((notification: { title: any; description: any; created_at: any; read: any }) => {
 		notifications.push({
 			title: notification.title,
 			description: notification.description,
@@ -159,7 +156,7 @@ const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<Users
 
 	useEffect(() => {
 		if (notificationsQuery.isSuccess) {
-			const unreadNotifications = notificationsQuery.data?.filter((notification: { read: any; }) => !notification.read);
+			const unreadNotifications = notificationsQuery.data?.filter((notification: { read: any }) => !notification.read);
 			if (unreadNotifications?.length) {
 				setShowBellDot(true);
 			} else {
@@ -168,33 +165,25 @@ const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<Users
 		}
 	}, [notificationsQuery.data]);
 
-
-
 	const markAllAsRead = async () => {
 		await markAsReadMutation.mutateAsync();
 		setShowBellDot(false);
 		// update the notification locally
-		notificationsQuery.data?.forEach((notification: { read: boolean; }) => {
+		notificationsQuery.data?.forEach((notification: { read: boolean }) => {
 			notification.read = true;
 		});
 		setUnreadNotificationCount(0);
-
-
-
-	}
+	};
 
 	// count unread notifications
 	useEffect(() => {
 		if (notificationsQuery.isSuccess) {
-			const unreadNotifications = notificationsQuery.data?.filter((notification: { read: any; }) => !notification.read);
+			const unreadNotifications = notificationsQuery.data?.filter((notification: { read: any }) => !notification.read);
 			setUnreadNotificationCount(unreadNotifications?.length || 0);
 		}
 	}, [notificationsQuery.data]);
 
-
-
-
-
+	const userTimeZone = moment.tz.guess();
 
 	return (
 		<div className="flex items-center gap-4">
@@ -238,12 +227,16 @@ const NotificationsComponent = ({ userQuery }: { userQuery: UseQueryResult<Users
 									<div
 										key={index}
 										className="mb-4 grid grid-cols-[25px_1fr] items-start pb-4 last:mb-0 last:pb-0 hover:bg-primary/5 py-4 px-3 rounded-lg">
-										{!notification.read == true ? <span className="flex w-2 h-2 translate-y-1 rounded-full bg-primary" /> : <span className="flex w-2 h-2 translate-y-1 rounded-full" />}
+										{!notification.read == true ? (
+											<span className="flex w-2 h-2 translate-y-1 rounded-full bg-primary" />
+										) : (
+											<span className="flex w-2 h-2 translate-y-1 rounded-full" />
+										)}
 										<div className="space-y-1">
 											<p className="flex items-center justify-between text-sm font-medium leading-none">
 												<span>{notification.title}</span>
 												<span className="text-xs font-light text-muted-foreground">
-													{moment(notification.created_at).fromNow()}
+													{moment(notification.created_at).tz(userTimeZone).fromNow()}
 												</span>
 											</p>
 											<p className="text-sm text-muted-foreground">{notification.description}</p>

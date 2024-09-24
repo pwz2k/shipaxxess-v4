@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import { toast } from "sonner";
 
 const TableMenu = ({ row }: { row: Row<BatchsSelectModel> }) => {
+	console.log(row, "-------->row");
 	const queryClient = useQueryClient();
 
 	const [refund, setRefund] = React.useState(false);
@@ -96,7 +97,7 @@ const TableMenu = ({ row }: { row: Row<BatchsSelectModel> }) => {
 						<Button
 							variant="outline"
 							size="icon"
-							disabled={row.original.is_downloaded === false}
+							disabled={!row.original.is_downloaded === true}
 							onClick={downloadSinglePDF}>
 							<FileDown />
 						</Button>

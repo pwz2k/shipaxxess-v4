@@ -28,6 +28,6 @@
 		"@types/nodemailer": "^6.4.15",
 		"@types/web-push": "^3.6.3",
 		"drizzle-kit": "^0.24.2",
-		"wrangler": "^3.25.0"
+		"wrangler": "^3.78.6"
 	}
 }

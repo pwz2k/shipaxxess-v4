@@ -1,3 +1,4 @@
+import { config } from "@config";
 import { Model } from "@lib/model";
 import { batchs } from "@schemas/batchs";
 import { labels } from "@schemas/labels";
@@ -6,6 +7,7 @@ import { refunds } from "@schemas/refunds";
 import { users } from "@schemas/users";
 import { exception } from "@utils/error";
 import { log } from "@utils/log";
+import { mail } from "@utils/mail";
 import { getSettings } from "@utils/settings";
 import { eq } from "drizzle-orm";
 import { Context } from "hono";
@@ -60,6 +62,22 @@ const Refund = async (c: Context<App, "/:uuid">) => {
 
 	await model.update(batchs, { status_label: "refunded" }, eq(batchs.uuid, batch.uuid));
 
+	console.log("refunding messaeg sending-------->");
+	console.log("refunding messaeg sending-------->");
+	console.log("refunding messaeg sending-------->");
+	console.log("refunding messaeg sending-------->");
+	c.executionCtx.waitUntil(
+		mail(c.env.DB, {
+			to: user.email_address,
+			subject: `Refund Successful`,
+			html: `
+			<p>Hi ${user.first_name},</p>
+<p>You have successfully received your refund</p>
+<p>Thanks</p>
+<p>The ${config.app.name} Team</p>`,
+		}),
+	);
+
 	return c.json({ success: true, message: "Refunded successfully" });
 };
 
@@ -104,8 +122,18 @@ const LabelRefund = async (c: Context<App, "/:uuid">) => {
 
 	await model.update(refunds, { is_refunded: true }, eq(refunds.label_uuid, label.uuid));
 
+	c.executionCtx.waitUntil(
+		mail(c.env.DB, {
+			to: user.email_address,
+			subject: `Refund Successful`,
+			html: `
+			<p>Hi ${user.first_name},</p>
+<p>You have successfully received your refund</p>
+<p>Thanks</p>
+<p>The ${config.app.name} Team</p>`,
+		}),
+	);
 	//send an email to user to notify label was refunded successfully
-	
 
 	return c.json({ success: true, message: "Refunded successfully" });
 };

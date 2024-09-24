@@ -1,8 +1,11 @@
+import { user } from "@api/user/routes";
+import { config } from "@config";
 import { Model } from "@lib/model";
 import { payments } from "@schemas/payments";
 import { users } from "@schemas/users";
 import { Payment } from "@shipaxxess/shipaxxess-zod-v4";
 import { exception } from "@utils/error";
+import { mail } from "@utils/mail";
 import { eq, ne } from "drizzle-orm";
 import { Context } from "hono";
 
@@ -39,6 +42,25 @@ const Accept = async (c: Context<App>) => {
 		eq(users.id, payment.user_id),
 	);
 
+	const emailBody = `<p>Hi ${payment.user_name},</p>
+	<p>Your Payment request has been accepted by admin</p>
+	<p>Payment Request Id: ${payment.uuid}</p>
+	
+
+	<p>Thanks</p>
+	<p>The ${config.app.name} Team</p>
+
+`;
+
+	//send an email to user to notify payment decline on account
+	c.executionCtx.waitUntil(
+		mail(c.env.DB, {
+			to: payment.user_email,
+			subject: "Your payment requested accepted",
+			html: emailBody,
+		}),
+	);
+
 	return c.json({ success: true });
 };
 
@@ -60,8 +82,24 @@ const Reject = async (c: Context<App>) => {
 		eq(payments.id, parse.payment_id),
 	);
 
+	const emailBody = `<p>Hi ${payment.user_name},</p>
+			<p>Your Payment request has been rejected by admin</p>
+			<p>Payment Request Id: ${payment.uuid}</p>
+			
+
+			<p>Thanks</p>
+			<p>The ${config.app.name} Team</p>
+
+`;
+
 	//send an email to user to notify payment decline on account
-	
+	c.executionCtx.waitUntil(
+		mail(c.env.DB, {
+			to: payment.user_email,
+			subject: "Your payment requested rejected",
+			html: emailBody,
+		}),
+	);
 
 	return c.json({ success: true });
 };

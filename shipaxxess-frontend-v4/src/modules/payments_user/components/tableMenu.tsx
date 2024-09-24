@@ -11,7 +11,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import jsPDF from "jspdf";
-//import "jspdf-autotable";
+// import "jspdf-autotable";
 
 
 const TableMenu = ({ row }: { row: Row<any> }) => {
@@ -74,7 +74,7 @@ const TableMenu = ({ row }: { row: Row<any> }) => {
 			["Type", row.original.gateway],
 		];
 
-		// @ts-ignore
+		//@ts-expect-error fgdfg
 		doc.autoTable({
 			startY: 60,
 			// head: [["Field", "Value"]],
@@ -115,7 +115,7 @@ const TableMenu = ({ row }: { row: Row<any> }) => {
 			<Button
 				variant="outline"
 				size="icon"
-				disabled={row.original.is_downloaded === false}
+				disabled={!row.original.is_downloaded === false}
 				onClick={downloadSinglePDF}>
 				<FileDown />
 			</Button>

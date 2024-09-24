@@ -19,9 +19,11 @@ const TableMenu = ({ row }: { row: Row<LabelsSelectModel> }) => {
 						id: row.original.id,
 					}),
 				})
-					.then((response) => {
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					.then((response:any) => {
+						
 						if (!response.ok) {
-							throw new Error(response.statusText);
+							throw new Error(response?.message);
 						}
 						return response.blob();
 					})
@@ -40,6 +42,7 @@ const TableMenu = ({ row }: { row: Row<LabelsSelectModel> }) => {
 						resolve(true);
 					})
 					.catch((error) => {
+						console.log(error);
 						reject(error);
 					});
 			});
