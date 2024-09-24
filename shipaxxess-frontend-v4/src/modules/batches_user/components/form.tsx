@@ -53,7 +53,7 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 
 	const [costs, setCosts] = React.useState(0);
 	const [weightCost, setweightCost] = React.useState(0)
-	const [couponCode, setCouponCode] = React.useState('t')
+	const [couponCode, setCouponCode] = React.useState('')
 	const [couponApplied, setCouponApplied] = React.useState(false)
 	const [coupon, setCoupon] = React.useState({})
 	const { button: SubmitBatchButton, setIsLoading } = useLoading({ label: "Confirm & Pay", className: "w-full" });
@@ -632,7 +632,8 @@ const BatchNewForm = ({ addresses, packages, types }: BatchNewFormProps) => {
 
 														field.onChange(id);
 													}}
-													disabled={form.watch("type.id") ? false : true}>
+													disabled={form.watch("type.id") ? false : true}
+												>
 													<FormControl>
 														<SelectTrigger>
 															<SelectValue placeholder="Choose a package" />

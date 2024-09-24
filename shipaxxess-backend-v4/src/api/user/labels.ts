@@ -81,7 +81,16 @@ const Create = async (c: Context<App>) => {
 		throw exception({ message: "Insufficient funds.", code: 402 });
 	}
 	log("User has enough funds.");
+	if (coupon?.value) {
+		await model.update(
+			coupons,                           // Collection or table
+			{ usedCount: (coupon?.usedCount || 0) + 1 },  // Field to update
+			eq(coupons.code, parse.coupon),     // Condition for the update
+		);
+	}
 
+	console.log(coupon?.usedCount)
+	// return
 	const batch = await manager.saveIntoBatchTable(parse, user_cost, reseller_cost, user.id);
 	log("Batch saved.");
 
